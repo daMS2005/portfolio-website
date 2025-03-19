@@ -3,6 +3,11 @@ document.getElementById('learnMoreBtn').addEventListener('click', function() {
   document.getElementById('aboutMe').scrollIntoView({ behavior: 'smooth' });
 });
 
+// Add smooth scrolling for View Projects button
+document.getElementById('viewProjectsBtn').addEventListener('click', function() {
+    document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+});
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -113,5 +118,88 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Auto-advance images every 5 seconds
         setInterval(nextImage, 5000);
+    });
+});
+
+// Popup Modal Functions
+function showComingSoonPopup() {
+    const modal = document.getElementById('comingSoonModal');
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+}
+
+// Close modal when clicking the X button
+document.querySelector('.close-modal').addEventListener('click', function() {
+    const modal = document.getElementById('comingSoonModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore scrolling
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('comingSoonModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('comingSoonModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+});
+
+function showPrivateRepoPopup() {
+    const modal = document.getElementById('comingSoonModal');
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal when clicking the close button
+document.querySelector('.close-modal').addEventListener('click', function() {
+    const modal = document.getElementById('comingSoonModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('comingSoonModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('comingSoonModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// Prevent navigation when clicking screenshot buttons
+document.addEventListener('DOMContentLoaded', function() {
+    const prevButtons = document.querySelectorAll('.prev-btn');
+    const nextButtons = document.querySelectorAll('.next-btn');
+    
+    prevButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+    
+    nextButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
     });
 });

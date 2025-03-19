@@ -37,7 +37,7 @@
             <p class="tagline">Transforming ideas into intelligent solutions through AI and innovative technology</p>
             <div class="cta-buttons">
                 <button id="learnMoreBtn" class="primary-btn">Learn More</button>
-                <button class="secondary-btn">View Projects</button>
+                <button id="viewProjectsBtn" class="secondary-btn" aria-label="View my projects">View Projects</button>
             </div>
         </div>
     </section>
@@ -85,20 +85,21 @@
                     <div class="card-inner">
                         <div class="card-front">
                             <h3>Alien Invasion</h3>
-                            <p>A classic arcade-style shooting game built with C++ and SDL2. Features player-controlled spaceship, AI enemies, and dynamic gameplay mechanics.</p>
+                            <p>Designed and implemented a 2D shooter game in C++, featuring real-time enemy AI, dynamic difficulty scaling, and engaging gameplay mechanics.</p>
                             <div class="project-tech">
                                 <span>C++</span>
-                                <span>SDL2</span>
-                                <span>Game Development</span>
+                                <span>SFML</span>
+                                <span>OpenGL</span>
+                                <span>SDL</span>
                             </div>
                         </div>
                         <div class="card-back">
-                            <div class="game-screenshots">
+                            <div class="project-screenshots">
                                 <div class="screenshot-gallery">
-                                    <img src="alieninvasionpics/Screenshot 2025-03-17 at 15.52.27.png" alt="Alien Invasion Gameplay" class="active">
-                                    <img src="alieninvasionpics/Screenshot 2025-03-17 at 15.59.02.png" alt="Alien Invasion Gameplay">
-                                    <img src="alieninvasionpics/Screenshot 2025-03-17 at 15.59.39.png" alt="Alien Invasion Gameplay">
-                                    <img src="alieninvasionpics/Screenshot 2025-03-17 at 16.00.04.png" alt="Alien Invasion Gameplay">
+                                    <img src="alieninvasionpics/gameplay.png" alt="Alien Invasion Gameplay" class="active">
+                                    <img src="alieninvasionpics/enemies.png" alt="Alien Invasion Enemies">
+                                    <img src="alieninvasionpics/shooting.png" alt="Alien Invasion Shooting Mechanics">
+                                    <img src="alieninvasionpics/score.png" alt="Alien Invasion Scoring System">
                                 </div>
                                 <div class="screenshot-nav">
                                     <button class="prev-btn">❮</button>
@@ -107,51 +108,165 @@
                             </div>
                             <h3>Game Features</h3>
                             <ul class="feature-list">
-                                <li>🎮 Player-Controlled Spaceship</li>
-                                <li>👾 AI-Controlled Aliens</li>
-                                <li>🔄 Game Loop Optimization</li>
-                                <li>💥 Collision Detection</li>
-                                <li>🎨 2D Graphics & Animations</li>
+                                <li>🎮 Real-time Enemy AI</li>
+                                <li>📈 Dynamic Difficulty Scaling</li>
+                                <li>🎯 Pathfinding AI</li>
+                                <li>💥 Optimized Game Loop</li>
+                                <li>🎨 2D Graphics & Rendering</li>
                             </ul>
                             <h3>Technologies Used</h3>
                             <ul class="tech-list">
                                 <li>C++: Object-oriented programming</li>
-                                <li>SDL2: Graphics & event management</li>
-                                <li>Game Physics: Movement & trajectories</li>
+                                <li>SFML: Game development framework</li>
+                                <li>OpenGL & SDL: Graphics & rendering</li>
+                                <li>GitHub: Version control</li>
                             </ul>
                         </div>
                     </div>
                 </a>
-                <a href="https://github.com/daMS2005/Cloud-Banking-Platform" target="_blank" class="project-card">
-                    <h3>Cloud-Based Banking Platform</h3>
-                    <p>Full-stack banking web application with CI/CD pipeline, deployed on Azure Cloud</p>
-                    <div class="project-tech">
-                        <span>Azure</span>
-                        <span>CI/CD</span>
-                        <span>Full-Stack</span>
+                <a href="https://github.com/daMS2005/ai-sales-chatbot" target="_blank" class="project-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>AI Sales Chatbot</h3>
+                            <p>Engineered an AI-driven chatbot leveraging NLP to enhance customer support automation, handling real-time inquiries and product recommendations.</p>
+                            <div class="project-tech">
+                                <span>OpenAI GPT</span>
+                                <span>NLP</span>
+                                <span>React</span>
+                                <span>Python</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h3>Features</h3>
+                            <ul class="feature-list">
+                                <li>🤖 Real-time Customer Support</li>
+                                <li>💬 Natural Language Processing</li>
+                                <li>🛍️ Product Recommendations</li>
+                                <li>📱 Multi-platform Integration</li>
+                                <li>📊 Analytics Dashboard</li>
+                            </ul>
+                            <h3>Technologies Used</h3>
+                            <ul class="tech-list">
+                                <li>AI & NLP: OpenAI GPT, spaCy, NLTK</li>
+                                <li>Backend: Python (Flask, FastAPI)</li>
+                                <li>Frontend: React.js, Next.js</li>
+                                <li>Cloud: AWS Lambda, Firebase</li>
+                                <li>Database: MongoDB, Redis</li>
+                            </ul>
+                        </div>
                     </div>
                 </a>
-                <a href="https://github.com/daMS2005/AI-Sales-Chatbot" target="_blank" class="project-card">
-                    <h3>AI-Powered Sales Chatbot</h3>
-                    <p>Intelligent chatbot leveraging NLP for automated customer support</p>
-                    <div class="project-tech">
-                        <span>NLP</span>
-                        <span>AI</span>
-                        <span>Python</span>
+                <a href="https://github.com/daMS2005/cloud-banking-platform" target="_blank" class="project-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>Cloud Banking Platform</h3>
+                            <p>Developed a full-stack banking web application with a robust CI/CD pipeline and deployed on Azure Cloud, featuring secure authentication and transaction processing.</p>
+                            <div class="project-tech">
+                                <span>Azure</span>
+                                <span>React</span>
+                                <span>Python</span>
+                                <span>Docker</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h3>Features</h3>
+                            <ul class="feature-list">
+                                <li>🔒 Secure Authentication</li>
+                                <li>💳 Account Management</li>
+                                <li>💸 Transaction Processing</li>
+                                <li>📊 Analytics Dashboard</li>
+                                <li>🔄 CI/CD Pipeline</li>
+                            </ul>
+                            <h3>Technologies Used</h3>
+                            <ul class="tech-list">
+                                <li>Backend: Python (FastAPI), Node.js</li>
+                                <li>Frontend: React.js, TailwindCSS</li>
+                                <li>Cloud: Azure, Docker, Kubernetes</li>
+                                <li>Security: OAuth2, JWT</li>
+                                <li>CI/CD: GitHub Actions, Azure DevOps</li>
+                            </ul>
+                        </div>
                     </div>
                 </a>
-                <a href="https://github.com/daMS2005/Content-Scraper" target="_blank" class="project-card">
-                    <h3>Content Scraper & Analytics</h3>
-                    <p>Cloud-based solution for web scraping and AI-driven content analysis</p>
-                    <div class="project-tech">
-                        <span>Cloud</span>
-                        <span>AI</span>
-                        <span>Data Analysis</span>
+                <a href="https://github.com/EduRecommender/LearnMate" target="_blank" class="project-card">
+                    <div class="coming-soon-tag">In Development</div>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>LearnMate</h3>
+                            <p>Developed an AI-driven study material recommendation system that personalizes learning content based on user preferences, performance, and engagement history. The system features a chatbot powered by ChatGPT for interactive learning assistance and an intelligent recommendation engine that suggests the most relevant study materials using a mix of collaborative filtering, content-based filtering, and ranking algorithms.</p>
+                            <div class="project-tech">
+                                <span>TensorFlow</span>
+                                <span>FastAPI</span>
+                                <span>Streamlit</span>
+                                <span>ChatGPT</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h3>Features</h3>
+                            <ul class="feature-list">
+                                <li>🤖 ChatGPT-Powered Learning Assistant</li>
+                                <li>🎯 Personalized Learning Recommendations</li>
+                                <li>📊 Performance Analytics</li>
+                                <li>🔄 Cross-Model Validation</li>
+                                <li>🌐 Multi-Platform Integration</li>
+                            </ul>
+                            <h3>Technologies Used</h3>
+                            <ul class="tech-list">
+                                <li>ML & AI: TensorFlow, Scikit-Learn, Collaborative & Content-Based Filtering</li>
+                                <li>NLP: ChatGPT, spaCy, NLTK, Hugging Face Transformers</li>
+                                <li>Cross-Model: DeepSeek</li>
+                                <li>Backend: Python (FastAPI, Flask)</li>
+                                <li>Frontend: Streamlit</li>
+                                <li>APIs: OpenAI (ChatGPT), Google Books, YouTube Data, Deepseek</li>
+                            </ul>
+                        </div>
                     </div>
                 </a>
+                <div class="project-card" onclick="showPrivateRepoPopup()">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>Content Scraper & Analytics</h3>
+                            <p>Cloud-based solution for web scraping, data processing, and engagement tracking with AI-driven content creation and reinforcement learning.</p>
+                            <div class="project-tech">
+                                <span>Python</span>
+                                <span>TensorFlow</span>
+                                <span>AWS</span>
+                                <span>Flask</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h3>Features</h3>
+                            <ul class="feature-list">
+                                <li>🌐 Web Scraping & Data Extraction</li>
+                                <li>📊 Data Processing & Analytics</li>
+                                <li>🤖 AI-Driven Content Creation</li>
+                                <li>📈 Engagement Tracking</li>
+                                <li>🔄 Automated Task Scheduling</li>
+                            </ul>
+                            <h3>Technologies Used</h3>
+                            <ul class="tech-list">
+                                <li>Web Scraping: BeautifulSoup, Scrapy, Selenium</li>
+                                <li>Data Processing: Pandas, NumPy, Apache Spark</li>
+                                <li>AI & ML: TensorFlow, OpenAI GPT</li>
+                                <li>Cloud: AWS S3, Google Cloud Functions</li>
+                                <li>Backend: Python (Flask), Celery</li>
+                                <li>Database: PostgreSQL, Firebase Firestore</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+
+    <!-- Popup Modal -->
+    <div id="comingSoonModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Private Repository</h3>
+            <p>This project is currently in a private repository. Please contact me for more information or to view the code.</p>
+        </div>
+    </div>
 
     <!-- Skills Section -->
     <section id="skills" class="section">

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daniel Mora - AI & Software Engineer</title>
+    <link rel="stylesheet" href="css-files/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Add blobs to simulate the lava lamp -->
+    <div class="lava-lamp">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">DM</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#aboutMe">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Daniel Mora</h1>
+            <h2>AI Engineer & Full-Stack Developer</h2>
+            <p class="tagline">Transforming ideas into intelligent solutions through AI and innovative technology</p>
+            <div class="cta-buttons">
+                <button id="learnMoreBtn" class="primary-btn">Learn More</button>
+                <button class="secondary-btn">View Projects</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="aboutMe" class="section">
+        <div class="container">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        I'm a Computer Science and AI student at IE University, specializing in machine learning, 
+                        AI-driven analytics, and cloud computing. With a passion for building intelligent solutions, 
+                        I combine technical expertise with entrepreneurial spirit to create innovative applications 
+                        that solve real-world problems.
+                    </p>
+                    <div class="about-details">
+                        <div class="detail-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>IE University</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-code"></i>
+                            <span>AI & ML Expert</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-globe"></i>
+                            <span>3 Languages</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <!-- Add your profile image here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2>Featured Projects</h2>
+            <div class="projects-grid">
+                <a href="https://github.com/daMS2005/alieninvasion" target="_blank" class="project-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>Alien Invasion</h3>
+                            <p>A classic arcade-style shooting game built with C++ and SDL2. Features player-controlled spaceship, AI enemies, and dynamic gameplay mechanics.</p>
+                            <div class="project-tech">
+                                <span>C++</span>
+                                <span>SDL2</span>
+                                <span>Game Development</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="game-screenshots">
+                                <div class="screenshot-gallery">
+                                    <img src="alieninvasionpics/Screenshot 2025-03-17 at 15.52.27.png" alt="Alien Invasion Gameplay" class="active">
+                                    <img src="alieninvasionpics/Screenshot 2025-03-17 at 15.59.02.png" alt="Alien Invasion Gameplay">
+                                    <img src="alieninvasionpics/Screenshot 2025-03-17 at 15.59.39.png" alt="Alien Invasion Gameplay">
+                                    <img src="alieninvasionpics/Screenshot 2025-03-17 at 16.00.04.png" alt="Alien Invasion Gameplay">
+                                </div>
+                                <div class="screenshot-nav">
+                                    <button class="prev-btn">❮</button>
+                                    <button class="next-btn">❯</button>
+                                </div>
+                            </div>
+                            <h3>Game Features</h3>
+                            <ul class="feature-list">
+                                <li>🎮 Player-Controlled Spaceship</li>
+                                <li>👾 AI-Controlled Aliens</li>
+                                <li>🔄 Game Loop Optimization</li>
+                                <li>💥 Collision Detection</li>
+                                <li>🎨 2D Graphics & Animations</li>
+                            </ul>
+                            <h3>Technologies Used</h3>
+                            <ul class="tech-list">
+                                <li>C++: Object-oriented programming</li>
+                                <li>SDL2: Graphics & event management</li>
+                                <li>Game Physics: Movement & trajectories</li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
+                <a href="https://github.com/daMS2005/Cloud-Banking-Platform" target="_blank" class="project-card">
+                    <h3>Cloud-Based Banking Platform</h3>
+                    <p>Full-stack banking web application with CI/CD pipeline, deployed on Azure Cloud</p>
+                    <div class="project-tech">
+                        <span>Azure</span>
+                        <span>CI/CD</span>
+                        <span>Full-Stack</span>
+                    </div>
+                </a>
+                <a href="https://github.com/daMS2005/AI-Sales-Chatbot" target="_blank" class="project-card">
+                    <h3>AI-Powered Sales Chatbot</h3>
+                    <p>Intelligent chatbot leveraging NLP for automated customer support</p>
+                    <div class="project-tech">
+                        <span>NLP</span>
+                        <span>AI</span>
+                        <span>Python</span>
+                    </div>
+                </a>
+                <a href="https://github.com/daMS2005/Content-Scraper" target="_blank" class="project-card">
+                    <h3>Content Scraper & Analytics</h3>
+                    <p>Cloud-based solution for web scraping and AI-driven content analysis</p>
+                    <div class="project-tech">
+                        <span>Cloud</span>
+                        <span>AI</span>
+                        <span>Data Analysis</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <div class="container">
+            <h2>Skills & Expertise</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>AI & Machine Learning</h3>
+                    <ul>
+                        <li>TensorFlow</li>
+                        <li>Scikit-Learn</li>
+                        <li>NLP</li>
+                        <li>AI Security Models</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Programming & Development</h3>
+                    <ul>
+                        <li>Python (Advanced)</li>
+                        <li>JavaScript</li>
+                        <li>C++</li>
+                        <li>Node.js</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Data & Cloud</h3>
+                    <ul>
+                        <li>Power BI</li>
+                        <li>Tableau</li>
+                        <li>Azure</li>
+                        <li>SQL (Advanced)</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Tools & Others</h3>
+                    <ul>
+                        <li>Git</li>
+                        <li>Docker</li>
+                        <li>MongoDB</li>
+                        <li>Photoshop</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2>Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>damorasoler@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+34 614 21 17 93</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Madrid, Spain</span>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <input type="text" placeholder="Name" required>
+                    <input type="email" placeholder="Email" required>
+                    <textarea placeholder="Message" required></textarea>
+                    <button type="submit" class="primary-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-links">
+                    <a href="https://github.com/daMS2005" target="_blank" title="GitHub Profile"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" title="LinkedIn Profile"><i class="fab fa-linkedin"></i></a>
+                </div>
+                <p>&copy; 2024 Daniel Mora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="javascript-files/main.js"></script>
+</body>
+</html>

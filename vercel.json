@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css-files/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "javascript-files/*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "alieninvasionpics/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+} 

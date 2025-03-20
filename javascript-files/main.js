@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const cardInner = card.querySelector('.card-inner');
                     cardInner.style.transform = 'rotateY(180deg)';
                 }
-            }, 3000);
+            }, 2500);
         });
 
         // Clear timer and reset card when mouse leaves

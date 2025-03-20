@@ -203,3 +203,45 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Remove flip button event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const flipButtons = document.querySelectorAll('.flip-btn');
+    
+    flipButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const cardInner = this.closest('.card-inner');
+            cardInner.classList.toggle('flipped');
+        });
+    });
+});
+
+// Remove auto-scroll project cards
+document.addEventListener('DOMContentLoaded', function() {
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    projectCards.forEach(card => {
+        let autoScrollTimer;
+        let isHovered = false;
+
+        // Start auto-scroll after 3 seconds of hovering
+        card.addEventListener('mouseenter', () => {
+            isHovered = true;
+            autoScrollTimer = setTimeout(() => {
+                if (isHovered) {
+                    const cardInner = card.querySelector('.card-inner');
+                    cardInner.style.transform = 'rotateY(180deg)';
+                }
+            }, 3000);
+        });
+
+        // Clear timer and reset card when mouse leaves
+        card.addEventListener('mouseleave', () => {
+            isHovered = false;
+            clearTimeout(autoScrollTimer);
+            const cardInner = card.querySelector('.card-inner');
+            cardInner.style.transform = 'rotateY(0deg)';
+        });
+    });
+});

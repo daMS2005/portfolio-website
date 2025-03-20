@@ -18,7 +18,17 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-content">
-            <div class="logo">DM</div>
+            <div class="logo-section">
+                <div class="logo">DM</div>
+                <div class="social-nav">
+                    <a href="https://github.com/daMS2005" target="_blank" class="github-link">
+                        <img src="images/githubpfp.png" alt="GitHub Profile" class="github-profile-pic">
+                    </a>
+                    <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" class="linkedin-nav">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#aboutMe">About</a></li>
@@ -49,10 +59,7 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>
-                        I'm a Computer Science and AI student at IE University, specializing in machine learning, 
-                        AI-driven analytics, and cloud computing. With a passion for building intelligent solutions, 
-                        I combine technical expertise with entrepreneurial spirit to create innovative applications 
-                        that solve real-world problems.
+                        Hey, I'm Daniel! I'm a software engineer who loves building cool and useful tech. Whether it's AI-powered chatbots, recommendation systems, full-stack apps, or game development, I'm always working on something exciting. I enjoy tackling challenges, optimizing code, and finding creative ways to make things run smoother. I'm also into the mix of tech and business, looking for ways to build scalable and impactful solutions. Always learning, always building—let's create something awesome! 🚀
                     </p>
                     <div class="about-details">
                         <div class="detail-item">
@@ -70,7 +77,8 @@
                     </div>
                 </div>
                 <div class="about-image">
-                    <!-- Add your profile image here -->
+                    <img src="images/profile.png" alt="Daniel Mora - AI & Software Engineer" class="profile-image">
+                    <div class="image-backdrop"></div>
                 </div>
             </div>
         </div>
@@ -193,7 +201,7 @@
                     <div class="card-inner">
                         <div class="card-front">
                             <h3>LearnMate</h3>
-                            <p>Developed an AI-driven study material recommendation system that personalizes learning content based on user preferences, performance, and engagement history. The system features a chatbot powered by ChatGPT for interactive learning assistance and an intelligent recommendation engine that suggests the most relevant study materials using a mix of collaborative filtering, content-based filtering, and ranking algorithms.</p>
+                            <p>An AI-powered study platform that personalizes learning content and provides intelligent recommendations. Features a ChatGPT learning assistant for interactive help.</p>
                             <div class="project-tech">
                                 <span>TensorFlow</span>
                                 <span>FastAPI</span>
@@ -226,11 +234,11 @@
                     <div class="card-inner">
                         <div class="card-front">
                             <h3>Content Scraper & Analytics</h3>
-                            <p>Cloud-based solution for web scraping, data processing, and engagement tracking with AI-driven content creation and reinforcement learning.</p>
+                            <p>A web scraping platform that automatically collects and analyzes data from multiple sources, with automated scheduling and engagement tracking.</p>
                             <div class="project-tech">
                                 <span>Python</span>
                                 <span>TensorFlow</span>
-                                <span>AWS</span>
+            
                                 <span>Flask</span>
                             </div>
                         </div>
@@ -274,39 +282,96 @@
             <h2>Skills & Expertise</h2>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3>AI & Machine Learning</h3>
-                    <ul>
-                        <li>TensorFlow</li>
-                        <li>Scikit-Learn</li>
-                        <li>NLP</li>
-                        <li>AI Security Models</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
                     <h3>Programming & Development</h3>
+                    <div class="skill-subcategory">
+                        <h4>Languages</h4>
+                        <ul>
+                            <li>Python (Advanced)</li>
+                            <li>C++ (Intermediate)</li>
+                            <li>JavaScript (Intermediate)</li>
+                            <li>SQL (Advanced)</li>
+                        </ul>
+                    </div>
+                    <div class="skill-subcategory">
+                        <h4>Backend Development</h4>
+                        <ul>
+                            <li>Python (FastAPI, Flask)</li>
+                            <li>Node.js (Intermediate)</li>
+                        </ul>
+                    </div>
+                    <div class="skill-subcategory">
+                        <h4>Frontend Development</h4>
+                        <ul>
+                            <li>Vue.js</li>
+                        </ul>
+                    </div>
+                    <div class="skill-subcategory">
+                        <h4>Cloud & DevOps</h4>
+                        <ul>
+                            <li>Azure</li>
+                            <li>Bicep (Intermediate)</li>
+                        </ul>
+                    </div>
+                    <div class="skill-subcategory">
+                        <h4>Infrastructure Tools</h4>
+                        <ul>
+                            <li>CMake</li>
+                            <li>Makefile</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>CI/CD & DevOps</h3>
                     <ul>
-                        <li>Python (Advanced)</li>
-                        <li>JavaScript</li>
-                        <li>C++</li>
-                        <li>Node.js</li>
+                        <li>GitHub Actions</li>
+                        <li>Azure DevOps</li>
+                        <li>Docker & Containerization</li>
+                        <li>Kubernetes Orchestration</li>
+                        <li>Jenkins Pipeline Automation</li>
+                        <li>Infrastructure as Code (IaC)</li>
+                        <li>Automated Testing Integration</li>
+                        <li>Continuous Deployment</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Data & Cloud</h3>
+                    <h3>Game Development</h3>
                     <ul>
-                        <li>Power BI</li>
-                        <li>Tableau</li>
-                        <li>Azure</li>
-                        <li>SQL (Advanced)</li>
+                        <li>Object-Oriented Programming (OOP)</li>
+                        <li>Game Mechanics Design</li>
+                        <li>SFML for Graphics Rendering</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Tools & Others</h3>
+                    <h3>Machine Learning & AI</h3>
                     <ul>
-                        <li>Git</li>
-                        <li>Docker</li>
-                        <li>MongoDB</li>
-                        <li>Photoshop</li>
+                        <li>Natural Language Processing (NLP)</li>
+                        <li>Scikit-Learn, TensorFlow</li>
+                        <li>AI-based Security Models</li>
+                        <li>Recommendation Systems</li>
+                        <li>CrewAI for AI Chatbot Development</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Data Processing & Visualization</h3>
+                    <ul>
+                        <li>Power BI, Tableau</li>
+                        <li>Pandas, NumPy</li>
+                        <li>MySQL, PostgreSQL, MongoDB</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Software Testing & Automation</h3>
+                    <ul>
+                        <li>ML Model Testing & Hyperparameter Tuning</li>
+                        <li>Debugging & Data Pipeline Optimization</li>
+                        <li>Web Scraping & API Integration</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Computer Skills</h3>
+                    <ul>
+                        <li>Photoshop (Intermediate)</li>
+                        <li>Social Media Management</li>
                     </ul>
                 </div>
             </div>
@@ -332,10 +397,13 @@
                         <span>Madrid, Spain</span>
                     </div>
                 </div>
-                <form class="contact-form">
-                    <input type="text" placeholder="Name" required>
-                    <input type="email" placeholder="Email" required>
-                    <textarea placeholder="Message" required></textarea>
+                <form class="contact-form" action="https://formsubmit.co/damorasoler@gmail.com" method="POST">
+                    <input type="hidden" name="_next" value="https://dams2005.github.io/portfolio-website/thanks.html">
+                    <input type="hidden" name="_subject" value="New Portfolio Contact!">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="text" name="name" placeholder="Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <textarea name="message" placeholder="Message" required></textarea>
                     <button type="submit" class="primary-btn">Send Message</button>
                 </form>
             </div>

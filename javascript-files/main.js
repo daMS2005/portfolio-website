@@ -219,29 +219,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Remove auto-scroll project cards
 document.addEventListener('DOMContentLoaded', function() {
-    const projectCards = document.querySelectorAll('.project-card');
-    
-    projectCards.forEach(card => {
-        let autoScrollTimer;
-        let isHovered = false;
-
-        // Start auto-scroll after 3 seconds of hovering
-        card.addEventListener('mouseenter', () => {
-            isHovered = true;
-            autoScrollTimer = setTimeout(() => {
-                if (isHovered) {
-                    const cardInner = card.querySelector('.card-inner');
-                    cardInner.style.transform = 'rotateY(180deg)';
-                }
-            }, 2500);
-        });
-
-        // Clear timer and reset card when mouse leaves
-        card.addEventListener('mouseleave', () => {
-            isHovered = false;
-            clearTimeout(autoScrollTimer);
-            const cardInner = card.querySelector('.card-inner');
-            cardInner.style.transform = 'rotateY(0deg)';
-        });
-    });
+    // Remove all card flip JavaScript logic to let CSS handle it
 });

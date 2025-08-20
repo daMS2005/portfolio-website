@@ -526,6 +526,128 @@ h2 {
   background: rgba(255, 69, 0, 0.3);
 }
 
+/* Websites Section */
+.websites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.website-card {
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.8), rgba(50, 50, 50, 0.8));
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 69, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.website-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 69, 0, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.website-card:hover::before {
+  left: 100%;
+}
+
+.website-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(255, 69, 0, 0.2);
+  border-color: rgba(255, 69, 0, 0.3);
+}
+
+.website-content {
+  position: relative;
+  z-index: 1;
+}
+
+.website-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 69, 0, 0.2);
+}
+
+.website-header h3 {
+  color: #ff4500;
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.website-type {
+  background: rgba(255, 69, 0, 0.2);
+  color: #ff4500;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.website-card p {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.website-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.website-tech span {
+  background: rgba(255, 69, 0, 0.15);
+  color: #ff4500;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.website-tech span:hover {
+  background: rgba(255, 69, 0, 0.25);
+}
+
+.website-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.website-features span {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  transition: background-color 0.3s ease;
+}
+
+.website-features span:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 /* Skills Section */
 .skills-grid {
   display: grid;
@@ -718,6 +840,25 @@ footer {
   .about-image {
     height: 300px;
     margin-top: 2rem;
+  }
+  
+  .websites-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .website-card {
+    padding: 1.5rem;
+  }
+  
+  .website-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .website-tech,
+  .website-features {
+    justify-content: flex-start;
   }
 }
 

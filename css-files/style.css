@@ -1056,6 +1056,68 @@ footer {
     }
 }
 
+/* Legal / OAuth utility pages */
+.legal-doc {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 7rem 2rem 4rem;
+}
+
+.legal-doc h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.legal-doc h2 {
+    font-size: 1.35rem;
+    margin: 2.5rem 0 0.75rem;
+    text-align: left;
+    color: #ff8c42;
+}
+
+.legal-doc p,
+.legal-doc li {
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.legal-doc ul {
+    padding-left: 1.35rem;
+    margin: 0.75rem 0 1rem;
+}
+
+.legal-doc .last-updated {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 2rem;
+}
+
+.callback-card {
+    text-align: center;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.callback-card h1 {
+    text-align: center;
+}
+
+.footer-legal {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.footer-legal a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-legal a:hover {
+    color: #ff4500;
+}
+
 /* Remove flip button styles */
 .flip-btn {
     display: none;

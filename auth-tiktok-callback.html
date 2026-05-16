@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OAuth redirect URI for TikTok Login / TikTok APIs by Daniel Mora.">
+    <title>TikTok login · Redirect · Daniel Mora</title>
+    <link rel="stylesheet" href="/css-files/style.css">
+    <link rel="icon" href="/images/favicon.png" type="image/png">
+</head>
+<body>
+    <div class="lava-lamp">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo-section">
+                <a href="/" style="text-decoration: none;"><div class="logo">DM</div></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/privacy">Privacy</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="legal-doc callback-card">
+        <h1>TikTok OAuth redirect</h1>
+        <p>This URL (<code style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">https://daniel-mora.com/auth/tiktok/callback</code>) is a registered OAuth redirect URI for applications I develop that use TikTok’s developer platform (such as TikTok Login).</p>
+        <p>After authorization, TikTok redirects here with parameters documented in TikTok’s OAuth guide (for example <code style="background: rgba(255,255,255,0.1); padding: 0.15rem 0.4rem; border-radius: 4px;">code</code> or <code style="background: rgba(255,255,255,0.1); padding: 0.15rem 0.4rem; border-radius: 4px;">error</code>). The owning application completes token exchange securely on the server.</p>
+        <p>You can usually close this tab once authorization finishes in your app.</p>
+        <p style="margin-top: 2rem;"><a href="/" style="color: #ff8c42;">← Back to homepage</a> · <a href="/privacy" style="color: #ff8c42;">Privacy Policy</a></p>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-legal"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>
+                <p>&copy; Daniel Mora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

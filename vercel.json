@@ -23,9 +23,14 @@
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
+    { "src": "/privacy", "dest": "/privacy.html" },
+    { "src": "/privacy/", "dest": "/privacy.html" },
+    { "src": "/terms", "dest": "/terms.html" },
+    { "src": "/terms/", "dest": "/terms.html" },
+    { "src": "/auth/meta/callback", "dest": "/auth-meta-callback.html" },
+    { "src": "/auth/meta/callback/", "dest": "/auth-meta-callback.html" },
+    { "src": "/auth/tiktok/callback", "dest": "/auth-tiktok-callback.html" },
+    { "src": "/auth/tiktok/callback/", "dest": "/auth-tiktok-callback.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
-} 
+}

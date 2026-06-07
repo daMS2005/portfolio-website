@@ -22,10 +22,10 @@
             <div class="logo-section">
                 <div class="logo">DM</div>
                 <div class="social-nav">
-                    <a href="https://github.com/daMS2005" target="_blank" class="github-link">
+                    <a href="https://github.com/daMS2005" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub profile">
                         <img src="images/githubpfp.png" alt="GitHub Profile" class="github-profile-pic">
                     </a>
-                    <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" class="linkedin-nav">
+                    <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" rel="noopener noreferrer" class="linkedin-nav" aria-label="LinkedIn profile">
                         <i class="fab fa-linkedin"></i>
                     </a>
                 </div>
@@ -36,6 +36,7 @@
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#websites">Websites</a></li>
+                <li><a href="/notes.html">Notes</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </div>
@@ -46,7 +47,7 @@
         <div class="hero-content">
             <h1>Daniel Mora</h1>
             <h2>AI Engineer & Full-Stack Developer</h2>
-            <p class="tagline">Transforming ideas into intelligent solutions through AI and innovative technology</p>
+            <p class="tagline">I build AI products, full-stack systems, and practical tools that turn complex ideas into useful software.</p>
             <div class="cta-buttons">
                 <button id="learnMoreBtn" class="primary-btn">Learn More</button>
                 <button id="viewProjectsBtn" class="secondary-btn" aria-label="View my projects">View Projects</button>
@@ -61,7 +62,7 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>
-                        Hey, I'm Daniel! I'm a software engineer who loves building cool and useful tech. Whether it's AI-powered chatbots, recommendation systems, full-stack apps, or game development, I'm always working on something exciting. I enjoy tackling challenges, optimizing code, and finding creative ways to make things run smoother. I'm also into the mix of tech and business, looking for ways to build scalable and impactful solutions. Always learning, always building—let's create something awesome! 🚀
+                        Hey, I'm Daniel. I'm a software engineer focused on AI, automation, and full-stack products. I like building systems that are useful in the real world: chatbots, recommendation engines, cloud apps, data pipelines, client websites, and the occasional game when the creative itch wins.
                     </p>
                     <div class="about-details">
                         <div class="detail-item">
@@ -70,7 +71,7 @@
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-code"></i>
-                            <span>AI & ML Expert</span>
+                            <span>AI & ML Builder</span>
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-globe"></i>
@@ -90,9 +91,9 @@
     <section id="projects" class="section">
         <div class="container">
             <h2>Featured Projects</h2>
-            <p class="project-instruction" style="text-align: center; margin-bottom: 2rem; color: #666;">Click on any project to learn more and view details <i class="fas fa-hand-pointer"></i></p>
+            <p class="section-description">Click any project to view the repo or details <i class="fas fa-hand-pointer"></i></p>
             <div class="projects-grid">
-                <a href="https://github.com/daMS2005/alieninvasion" target="_blank" class="project-card">
+                <a href="https://github.com/daMS2005/alieninvasion" target="_blank" rel="noopener noreferrer" class="project-card">
                     <div class="card-inner">
                         <div class="card-front">
                             <h3>Alien Invasion</h3>
@@ -113,8 +114,8 @@
                                     <img src="alieninvasionpics/score.png" alt="Alien Invasion Scoring System">
                                 </div>
                                 <div class="screenshot-nav">
-                                    <button class="prev-btn">❮</button>
-                                    <button class="next-btn">❯</button>
+                                    <button class="prev-btn" type="button" aria-label="Previous screenshot">❮</button>
+                                    <button class="next-btn" type="button" aria-label="Next screenshot">❯</button>
                                 </div>
                             </div>
                             <h3>Game Features</h3>
@@ -135,7 +136,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="https://github.com/daMS2005/AI_BotAssistent_Personality" target="_blank" class="project-card">
+                <a href="https://github.com/daMS2005/AI_BotAssistent_Personality" target="_blank" rel="noopener noreferrer" class="project-card">
                     <div class="card-inner">
                         <div class="card-front">
                             <h3>AI Sales Chatbot</h3>
@@ -167,7 +168,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="https://github.com/IE-BestBank" target="_blank" class="project-card">
+                <a href="https://github.com/IE-BestBank" target="_blank" rel="noopener noreferrer" class="project-card">
                     <div class="card-inner">
                         <div class="card-front">
                             <h3>Cloud Banking Platform</h3>
@@ -199,7 +200,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="https://github.com/EduRecommender/LearnMate" target="_blank" class="project-card">
+                <a href="https://github.com/EduRecommender/LearnMate" target="_blank" rel="noopener noreferrer" class="project-card">
                     <div class="coming-soon-tag">In Development</div>
                     <div class="card-inner">
                         <div class="card-front">
@@ -233,7 +234,38 @@
                         </div>
                     </div>
                 </a>
-                <div class="project-card" onclick="showPrivateRepoPopup()">
+                <a href="https://github.com/daMS2005/triplet_sae_project" target="_blank" rel="noopener noreferrer" class="project-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>Triplet SAE Project</h3>
+                            <p>Research pipeline comparing sparse autoencoder feature steering with LoRA fine-tuning for factual subject-predicate-object triplet extraction.</p>
+                            <div class="project-tech">
+                                <span>Python</span>
+                                <span>Gemma 3</span>
+                                <span>SAE</span>
+                                <span>LoRA</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h3>Research Focus</h3>
+                            <ul class="feature-list">
+                                <li>Factual triplet extraction with qualifiers</li>
+                                <li>SAE activation analysis and feature ranking</li>
+                                <li>Ablation and steering experiments</li>
+                                <li>Gemma 3 4B instruction-tuning with LoRA</li>
+                                <li>Quantized model export for deployment</li>
+                            </ul>
+                            <h3>Technologies Used</h3>
+                            <ul class="tech-list">
+                                <li>Models: Gemma 3 4B IT, sparse autoencoders</li>
+                                <li>Training: Hugging Face, PEFT, Accelerate</li>
+                                <li>Evaluation: precision, recall, F1, entity overlap</li>
+                                <li>Deployment: LoRA adapter, GPTQ 4-bit and 8-bit exports</li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
+                <button class="project-card private-project" type="button" data-modal-trigger>
                     <div class="card-inner">
                         <div class="card-front">
                             <h3>Content Scraper & Analytics</h3>
@@ -241,7 +273,6 @@
                             <div class="project-tech">
                                 <span>Python</span>
                                 <span>TensorFlow</span>
-            
                                 <span>Flask</span>
                             </div>
                         </div>
@@ -265,7 +296,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </section>
@@ -273,7 +304,7 @@
     <!-- Popup Modal -->
     <div id="comingSoonModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal">&times;</span>
+            <button class="close-modal" type="button" aria-label="Close modal">&times;</button>
             <h3>Private Repository</h3>
             <p>This project is currently in a private repository. Please contact me for more information or to view the code.</p>
         </div>
@@ -385,9 +416,9 @@
     <section id="websites" class="section">
         <div class="container">
             <h2>Upon Request Websites</h2>
-            <p class="section-description" style="text-align: center; margin-bottom: 2rem; color: #666;">Custom websites developed for clients and businesses</p>
+            <p class="section-description">Custom websites developed for clients and businesses</p>
             <div class="websites-grid">
-                <a href="https://javis-jet.vercel.app" target="_blank" class="website-card">
+                <a href="https://javis-jet.vercel.app" target="_blank" rel="noopener noreferrer" class="website-card">
                     <div class="website-content">
                         <div class="website-header">
                             <h3>SΞNSΞ TRAVEL AGENCY</h3>
@@ -409,7 +440,7 @@
                     </div>
                 </a>
                 
-                <a href="https://reusa-mocha.vercel.app" target="_blank" class="website-card">
+                <a href="https://reusa-mocha.vercel.app" target="_blank" rel="noopener noreferrer" class="website-card">
                     <div class="website-content">
                         <div class="website-header">
                             <h3>Reusa</h3>
@@ -430,7 +461,7 @@
                     </div>
                 </a>
                 
-                <a href="https://www.draevangelinasoler.com" target="_blank" class="website-card">
+                <a href="https://www.draevangelinasoler.com" target="_blank" rel="noopener noreferrer" class="website-card">
                     <div class="website-content">
                         <div class="website-header">
                             <h3>Dr. Evangelina Soler</h3>
@@ -458,8 +489,8 @@
     <section id="contact" class="section">
         <div class="container">
             <h2>Get In Touch</h2>
-            <div class="contact-content" style="display: flex; justify-content: center;">
-                <div class="contact-info" style="text-align: center;">
+            <div class="contact-content contact-content-centered">
+                <div class="contact-info contact-info-centered">
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
                         <span>damorasoler@gmail.com</span>
@@ -483,11 +514,11 @@
         <div class="container">
             <div class="footer-content">
                 <div class="social-links">
-                    <a href="https://github.com/daMS2005" target="_blank" title="GitHub Profile"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" title="LinkedIn Profile"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/daMS2005" target="_blank" rel="noopener noreferrer" title="GitHub Profile" aria-label="GitHub profile"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" rel="noopener noreferrer" title="LinkedIn Profile" aria-label="LinkedIn profile"><i class="fab fa-linkedin"></i></a>
                 </div>
-                <p class="footer-legal"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>
-                <p>&copy; 2024 Daniel Mora. All rights reserved.</p>
+                <p class="footer-legal"><a href="/notes.html">Notes</a> · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>
+                <p>&copy; 2026 Daniel Mora. All rights reserved.</p>
             </div>
         </div>
     </footer>

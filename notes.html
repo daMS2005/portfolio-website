@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPU Notes · Daniel Mora</title>
+    <link rel="stylesheet" href="/css-files/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="/images/favicon.png" type="image/png">
+</head>
+<body>
+    <div class="lava-lamp">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo-section">
+                <a href="/" class="logo-link"><div class="logo">DM</div></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/#projects">Projects</a></li>
+                <li><a href="/notes.html">Notes</a></li>
+                <li><a href="/#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="notes-page">
+        <section class="notes-hero">
+            <p class="notes-kicker">GPU Mental Model</p>
+            <h1>How GPU Work Flows From Code To Cores</h1>
+            <p>
+                A conceptual map for remembering how a PyTorch operation becomes GPU work: CPU/board, PCIe, GPU command engine,
+                VRAM, caches, SMs, warp schedulers, warps, CUDA cores, and registers.
+            </p>
+        </section>
+
+        <section class="notes-section">
+            <div class="notes-section-heading">
+                <h2>The Big Route</h2>
+                <p>Information and instructions move inward from the host system toward the small registers where actual arithmetic happens.</p>
+            </div>
+
+            <div class="gpu-story-box" aria-label="Animated GPU information flow story">
+                <div class="story-box-header">
+                    <div>
+                        <span class="story-eyebrow">Animated Module</span>
+                        <h3>The GPU Company: Script, Memory, Dispatch, Workers</h3>
+                    </div>
+                    <div class="story-status">
+                        <span></span>
+                        Dispatching
+                    </div>
+                </div>
+
+                <div class="story-scene video-story cinematic-story" data-video-story>
+                    <section class="video-scene scene-board is-active" data-scene-label="Boardroom">
+                        <div class="scene-caption">
+                            <span>Scene 1</span>
+                            <h4>Boardroom: CPU Submits The Proposal</h4>
+                            <p>The CPU runs Python and calls PyTorch. PyTorch identifies the tensor operation and chooses a CUDA kernel or library routine. The CPU submits the job; it does not do the GPU math.</p>
+                        </div>
+                        <div class="cinematic-stage boardroom-stage">
+                            <div class="board-table">
+                                <div class="shareholder shareholder-one"><i class="fas fa-user"></i><span>CPU</span></div>
+                                <div class="shareholder shareholder-two"><i class="fas fa-user"></i><span>PyTorch</span></div>
+                                <div class="shareholder shareholder-three"><i class="fas fa-user"></i><span>CUDA</span></div>
+                                <div class="script-paper pinned-script">
+                                    <span>proposal.py</span>
+                                    <code>c = torch.relu(a @ b)</code>
+                                </div>
+                            </div>
+                            <p class="narration-chip">Action: CPU submits a launch request.</p>
+                        </div>
+                    </section>
+
+                    <section class="video-scene scene-translation" data-scene-label="Translator">
+                        <div class="scene-caption">
+                            <span>Scene 2</span>
+                            <h4>Translator Pipeline Approves The Work</h4>
+                            <p>The operation passes through the software stack: PyTorch op to CUDA kernel/library, then PTX, then SASS for the specific GPU. The CUDA driver/libcuda is the official channel into the GPU.</p>
+                        </div>
+                        <div class="cinematic-stage translation-stage">
+                            <div class="pipeline-step python-step">PyTorch op</div>
+                            <div class="pipeline-step cuda-step">CUDA kernel</div>
+                            <div class="pipeline-step ptx-step">PTX</div>
+                            <div class="pipeline-step sass-step">SASS</div>
+                            <div class="driver-gate">
+                                <i class="fas fa-id-card"></i>
+                                <span>libcuda / driver gate</span>
+                            </div>
+                            <div class="courier-file"><i class="fas fa-file-contract"></i><span>approved launch</span></div>
+                            <p class="narration-chip">Action: driver delivers the approved kernel launch.</p>
+                        </div>
+                    </section>
+
+                    <section class="video-scene scene-memory" data-scene-label="Memory">
+                        <div class="scene-caption">
+                            <span>Scene 3</span>
+                            <h4>Memory Warehouse Prepares Materials</h4>
+                            <p>Tensors live in VRAM. PyTorch's CUDA allocator reserves space, and kernels receive pointers to those buffers. Memory utilization is capacity pressure, not SM compute utilization.</p>
+                        </div>
+                        <div class="cinematic-stage memory-room">
+                            <div class="memory-shelves">
+                                <div class="tensor-box tensor-a">tensor A</div>
+                                <div class="tensor-box tensor-b">tensor B</div>
+                                <div class="tensor-box tensor-c">output C</div>
+                            </div>
+                            <div class="memory-meter">
+                                <div class="meter-label">
+                                    <span>VRAM utilization</span>
+                                    <strong>6.4 GB / 24 GB</strong>
+                                </div>
+                                <div class="meter-track">
+                                    <span></span>
+                                </div>
+                                <p>Allocated/reserved memory shows capacity pressure; it is not the same as SM compute utilization.</p>
+                            </div>
+                            <p class="narration-chip">Action: memory supplies tensor buffers and addresses.</p>
+                        </div>
+                    </section>
+
+                    <section class="video-scene scene-ceo" data-scene-label="CEO">
+                        <div class="scene-caption">
+                            <span>Scene 4</span>
+                            <h4>CEO Receives The Kernel Launch</h4>
+                            <p>The GPU front end receives the launch. The block scheduler assigns CTAs/thread blocks to available SMs. The CEO schedules blocks; it does not do arithmetic.</p>
+                        </div>
+                        <div class="cinematic-stage ceo-desk">
+                            <div class="person-avatar"><i class="fas fa-user-tie"></i></div>
+                            <div class="incoming-file"><i class="fas fa-file-alt"></i><span>kernel</span></div>
+                            <div class="desk-stack">
+                                <span>CTA 0</span>
+                                <span>CTA 1</span>
+                                <span>CTA 2</span>
+                            </div>
+                            <p class="narration-chip">Action: CEO schedules CTAs/thread blocks to SMs.</p>
+                        </div>
+                    </section>
+
+                    <section class="video-scene scene-vp" data-scene-label="VP / SM">
+                        <div class="scene-caption">
+                            <span>Scene 5</span>
+                            <h4>VP / SM Organizes The Block</h4>
+                            <p>An SM accepts a block, tracks registers and shared-memory limits, forms resident warps, and exposes ready warps to warp schedulers.</p>
+                        </div>
+                        <div class="cinematic-stage vp-room">
+                            <div class="person-avatar"><i class="fas fa-user-cog"></i></div>
+                            <div class="block-card">CTA / thread block</div>
+                            <div class="resource-board">
+                                <span>registers</span>
+                                <span>shared memory</span>
+                                <span>occupancy</span>
+                            </div>
+                            <div class="dispatch-stack">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <p class="narration-chip">Action: VP organizes resident warps.</p>
+                        </div>
+                    </section>
+
+                    <section class="video-scene scene-scheduler" data-scene-label="Schedulers">
+                        <div class="scene-caption">
+                            <span>Scene 6</span>
+                            <h4>Regional Managers Pick Ready Warps</h4>
+                            <p>Warp schedulers issue instructions for ready warps. If one warp waits on memory, another ready warp can run.</p>
+                        </div>
+                        <div class="cinematic-stage scheduler-room">
+                            <div class="scheduler-desk">
+                                <i class="fas fa-route"></i>
+                                <span>warp scheduler</span>
+                            </div>
+                            <div class="ready-queue">
+                                <span class="ready-warp">warp A ready</span>
+                                <span class="waiting-warp">warp B waiting on load</span>
+                                <span class="ready-warp">warp C ready</span>
+                            </div>
+                            <div class="instruction-ticket">same instruction, many lanes</div>
+                            <p class="narration-chip">Action: scheduler dispatches ready warps.</p>
+                        </div>
+                    </section>
+
+                    <section class="video-scene scene-workers" data-scene-label="Workers">
+                        <div class="scene-caption">
+                            <span>Scene 7</span>
+                            <h4>VP Sends Work To Multiple Warps</h4>
+                            <p>Warps execute the same instruction across lanes. Execution units operate on register values while loads/stores move through VRAM, L2, and SM-local paths.</p>
+                        </div>
+                        <div class="cinematic-stage worker-floor-stage">
+                            <div class="worker-grid video-worker-grid">
+                                <div class="worker-card worker-one">
+                                    <i class="fas fa-hard-hat"></i>
+                                    <span>Warp A</span>
+                                    <small>lanes 0-31</small>
+                                </div>
+                                <div class="worker-card worker-two">
+                                    <i class="fas fa-hard-hat"></i>
+                                    <span>Warp B</span>
+                                    <small>lanes 32-63</small>
+                                </div>
+                                <div class="worker-card worker-three">
+                                    <i class="fas fa-hard-hat"></i>
+                                    <span>Warp C</span>
+                                    <small>lanes 64-95</small>
+                                </div>
+                            </div>
+                            <div class="register-bench">
+                                <span>registers</span>
+                                <span>L1/shared</span>
+                                <span>L2</span>
+                                <span>VRAM</span>
+                            </div>
+                            <div class="split-job split-one">A</div>
+                            <div class="split-job split-two">B</div>
+                            <div class="split-job split-three">C</div>
+                            <p class="narration-chip">Action: workers compute using register materials.</p>
+                        </div>
+                    </section>
+
+                    <section class="video-scene scene-recap" data-scene-label="Recap">
+                        <div class="scene-caption">
+                            <span>Scene 8</span>
+                            <h4>Metaphor To Hardware Map</h4>
+                            <p>The story maps back to the real path: CPU/PyTorch/Driver submits, GPU scheduler assigns, SM schedules warps, execution units compute, memory supplies data.</p>
+                        </div>
+                        <div class="cinematic-stage recap-stage">
+                            <div class="recap-flow">
+                                <span>CPU / PyTorch / Driver</span>
+                                <i class="fas fa-arrow-right"></i>
+                                <span>GPU Scheduler</span>
+                                <i class="fas fa-arrow-right"></i>
+                                <span>SM</span>
+                                <i class="fas fa-arrow-right"></i>
+                                <span>Warp Scheduler</span>
+                                <i class="fas fa-arrow-right"></i>
+                                <span>Warps + Registers</span>
+                            </div>
+                            <div class="memory-feed">VRAM / L2 / L1 + shared memory feed the worker floor</div>
+                            <p class="narration-chip">Action: complete GPU workflow recap.</p>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="story-controls" aria-label="GPU story controls">
+                    <button type="button" class="story-control" data-story-prev aria-label="Previous scene"><i class="fas fa-step-backward"></i></button>
+                    <button type="button" class="story-control" data-story-toggle aria-label="Pause story"><i class="fas fa-pause"></i></button>
+                    <button type="button" class="story-control" data-story-next aria-label="Next scene"><i class="fas fa-step-forward"></i></button>
+                    <span class="story-scene-label" data-story-label>Boardroom</span>
+                </div>
+            </div>
+
+            <div class="gpu-flow" aria-label="GPU information flow">
+                <div class="flow-node board">
+                    <span>Board / CPU</span>
+                    <small>Launches work</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node pcie">
+                    <span>PCIe</span>
+                    <small>Host to device road</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node ceo">
+                    <span>CEO / GPU</span>
+                    <small>Command + scheduling</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node memory">
+                    <span>VRAM</span>
+                    <small>Global memory</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node cache">
+                    <span>L2</span>
+                    <small>Shared cache</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node sm">
+                    <span>SMs / VPs</span>
+                    <small>Block execution</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node scheduler">
+                    <span>Warp Schedulers</span>
+                    <small>Instruction issue</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node l1">
+                    <span>L1</span>
+                    <small>Local cache</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node warp">
+                    <span>Warps</span>
+                    <small>32-lane teams</small>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-node registers">
+                    <span>Registers</span>
+                    <small>Working materials</small>
+                </div>
+            </div>
+        </section>
+
+        <section class="notes-section mechanics-section">
+            <div class="notes-section-heading">
+                <h2>Under The Story</h2>
+                <p>The metaphor is useful, but these are the actual mechanics that matter when a tensor operation turns into GPU work.</p>
+            </div>
+
+            <div class="mechanics-grid">
+                <article class="mechanic-card wide-card">
+                    <h3>Kernel Launch Anatomy</h3>
+                    <p>A launch is mostly instructions plus a launch configuration and pointers to device memory. The CPU submits it; the GPU executes it asynchronously on a CUDA stream.</p>
+                    <pre class="mini-code"><code>kernel&lt;&lt;&lt;gridDim, blockDim, sharedMemBytes, stream&gt;&gt;&gt;(
+    A_ptr, B_ptr, C_ptr, N
+);</code></pre>
+                    <ul>
+                        <li><strong>gridDim:</strong> how many CTAs/thread blocks exist for the whole problem.</li>
+                        <li><strong>blockDim:</strong> how many logical threads are inside each block.</li>
+                        <li><strong>sharedMemBytes:</strong> dynamic shared memory requested per block.</li>
+                        <li><strong>stream:</strong> ordered queue where the launch is submitted.</li>
+                        <li><strong>A_ptr/B_ptr/C_ptr:</strong> addresses of tensor buffers already allocated in VRAM.</li>
+                    </ul>
+                </article>
+
+                <article class="mechanic-card">
+                    <h3>Grid, Block, Warp, Thread</h3>
+                    <div class="thread-diagram">
+                        <div><span>Grid</span><small>all blocks</small></div>
+                        <div><span>Block / CTA</span><small>assigned to one SM</small></div>
+                        <div><span>Warp</span><small>usually 32 lanes</small></div>
+                        <div><span>Thread</span><small>one logical lane</small></div>
+                    </div>
+                    <p>Hardware groups adjacent threads into warps. A warp runs one instruction stream across multiple lanes, each with its own register state and data address.</p>
+                </article>
+
+                <article class="mechanic-card">
+                    <h3>PyTorch Dispatch Path</h3>
+                    <ol class="compact-steps">
+                        <li>Python calls a PyTorch op.</li>
+                        <li>ATen/dispatcher selects backend implementation.</li>
+                        <li>CUDA backend calls a library kernel, generated kernel, or custom kernel.</li>
+                        <li>Launch is enqueued on a CUDA stream.</li>
+                        <li>CPU continues unless a synchronization point forces it to wait.</li>
+                    </ol>
+                </article>
+
+                <article class="mechanic-card wide-card">
+                    <h3>Memory Hierarchy</h3>
+                    <div class="memory-table">
+                        <div><strong>Registers</strong><span>Per-thread, tiny, fastest. Execution units read operands from here.</span></div>
+                        <div><strong>Shared memory / L1</strong><span>Per-SM, low latency. Shared memory is explicitly used by kernels; L1 caches local/global access patterns.</span></div>
+                        <div><strong>L2</strong><span>Shared across the GPU. A common cache before going to global memory.</span></div>
+                        <div><strong>VRAM / HBM / GDDR</strong><span>Large device memory. Tensors live here when they are on CUDA.</span></div>
+                        <div><strong>CPU RAM</strong><span>Host memory. Moving data from here crosses PCIe or NVLink.</span></div>
+                    </div>
+                </article>
+
+                <article class="mechanic-card">
+                    <h3>Warp Scheduling</h3>
+                    <p>Each SM has warp schedulers. They pick ready warps and issue instructions. If a warp stalls on memory, another ready warp can run, which hides latency.</p>
+                    <p>High occupancy can help hide latency, but occupancy is not the same as performance. A kernel can have high occupancy and still be memory-bound.</p>
+                </article>
+
+                <article class="mechanic-card">
+                    <h3>SIMT Details</h3>
+                    <ul>
+                        <li>One warp instruction applies across lanes.</li>
+                        <li>Each lane has different registers and usually different data addresses.</li>
+                        <li>Branch divergence can serialize paths inside a warp.</li>
+                        <li>Coalesced memory access makes global loads/stores more efficient.</li>
+                    </ul>
+                </article>
+
+                <article class="mechanic-card">
+                    <h3>PTX vs SASS</h3>
+                    <pre class="mini-code"><code>PyTorch: c = a + b
+CUDA:   C[i] = A[i] + B[i]
+PTX:    ld.global, add.f32, st.global
+SASS:   LDG, FADD, STG</code></pre>
+                    <p>This is conceptual. Exact SASS depends on the GPU architecture and compiler decisions.</p>
+                </article>
+
+                <article class="mechanic-card">
+                    <h3>Streams And Sync</h3>
+                    <p>CUDA launches are asynchronous. Operations in the same stream execute in order. Different streams can overlap copies and compute when dependencies and hardware resources allow.</p>
+                    <pre class="mini-code"><code>torch.cuda.synchronize()
+# CPU waits until queued GPU work finishes</code></pre>
+                </article>
+
+                <article class="mechanic-card wide-card">
+                    <h3>How To Observe It</h3>
+                    <div class="profiling-grid">
+                        <div><strong>nvidia-smi</strong><span>Broad GPU utilization, memory use, process list.</span></div>
+                        <div><strong>PyTorch memory APIs</strong><span>Allocated vs reserved memory inside the CUDA caching allocator.</span></div>
+                        <div><strong>Nsight Systems</strong><span>CPU/GPU timeline, stream overlap, launch gaps.</span></div>
+                        <div><strong>Nsight Compute</strong><span>Occupancy, warp stalls, memory throughput, tensor core use.</span></div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="notes-section split-notes">
+            <div>
+                <div class="notes-section-heading">
+                    <h2>Example Script</h2>
+                    <p>A tiny PyTorch operation that creates GPU work. PyTorch chooses kernels and thread blocks unless you write a custom CUDA/C++ kernel.</p>
+                </div>
+
+                <pre class="code-panel"><code>import torch
+
+device = "cuda"
+
+a = torch.randn((4096, 4096), device=device)
+b = torch.randn((4096, 4096), device=device)
+
+# PyTorch dispatches a GPU kernel.
+c = torch.relu(a @ b)
+
+torch.cuda.synchronize()
+print(c.shape)</code></pre>
+            </div>
+
+            <div class="concept-panel">
+                <h3>Code To Machine Path</h3>
+                <ol class="compiler-ladder">
+                    <li><strong>PyTorch</strong><span>High-level tensor operation: matrix multiply, ReLU, copy, reduction.</span></li>
+                    <li><strong>CUDA</strong><span>Runtime and libraries pick or launch GPU kernels.</span></li>
+                    <li><strong>PTX</strong><span>Portable NVIDIA assembly-like intermediate representation.</span></li>
+                    <li><strong>SASS</strong><span>Final GPU-dependent machine instructions for your specific architecture.</span></li>
+                    <li><strong>libcuda.so</strong><span>The driver-side bridge that talks to the GPU.</span></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="notes-section">
+            <div class="notes-section-heading">
+                <h2>The Organization Analogy</h2>
+                <p>The GPU feels easier when the hardware hierarchy is mapped to people assigning work.</p>
+            </div>
+
+            <div class="org-grid">
+                <article class="org-role">
+                    <i class="fas fa-chess-king"></i>
+                    <h3>CEO: GPU / GigaThread Engine</h3>
+                    <p>Receives launched kernels and assigns thread blocks to available SMs. The CEO does not do the arithmetic; it distributes the work.</p>
+                </article>
+                <article class="org-role">
+                    <i class="fas fa-building"></i>
+                    <h3>VP: Streaming Multiprocessor</h3>
+                    <p>Gets assigned thread blocks, owns local execution resources, and coordinates warps, L1/shared memory, registers, and load/store paths.</p>
+                </article>
+                <article class="org-role">
+                    <i class="fas fa-route"></i>
+                    <h3>Regional Manager: Warp Scheduler</h3>
+                    <p>Chooses ready warps and issues the same instruction across lanes while memory loads move through cache and into registers.</p>
+                </article>
+                <article class="org-role">
+                    <i class="fas fa-users"></i>
+                    <h3>Manager: Warp</h3>
+                    <p>A warp controls up to 32 threads. Each lane runs the same instruction, usually on different data addresses.</p>
+                </article>
+                <article class="org-role">
+                    <i class="fas fa-microchip"></i>
+                    <h3>Workers: CUDA / Tensor Cores</h3>
+                    <p>CUDA cores, tensor cores, and other execution units perform the low-level math once instructions and operands are ready.</p>
+                </article>
+                <article class="org-role">
+                    <i class="fas fa-box-open"></i>
+                    <h3>Materials: Registers</h3>
+                    <p>Registers hold the immediate values each lane works on. Arithmetic is fast because the operands are already right next to the workers.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="notes-section timeline-section">
+            <div class="notes-section-heading">
+                <h2>One Kernel Launch, Step By Step</h2>
+                <p>For the line <code>c = torch.relu(a @ b)</code>, the actual route is a chain of scheduling and data movement.</p>
+            </div>
+
+            <ol class="gpu-timeline">
+                <li>
+                    <span class="step-index">01</span>
+                    <div>
+                        <h3>CPU Creates The Job</h3>
+                        <p>Python calls PyTorch. PyTorch selects CUDA kernels or library routines such as cuBLAS for matrix multiplication.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-index">02</span>
+                    <div>
+                        <h3>Driver Hands It To The GPU</h3>
+                        <p>The CUDA runtime and driver prepare the launch. Instructions and metadata cross the CPU-board boundary through PCIe.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-index">03</span>
+                    <div>
+                        <h3>CEO Assigns Thread Blocks</h3>
+                        <p>The GPU scheduler distributes thread blocks across SMs. Each block is a chunk of the problem with threads and data pointers.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-index">04</span>
+                    <div>
+                        <h3>VP Splits Blocks Into Warps</h3>
+                        <p>An SM accepts blocks, forms warps, tracks resources, and prepares the load/store paths that bring data from VRAM through cache.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-index">05</span>
+                    <div>
+                        <h3>Regional Manager Issues Instructions</h3>
+                        <p>Warp schedulers pick ready warps. If data is waiting on memory, another ready warp can run while the first waits.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-index">06</span>
+                    <div>
+                        <h3>Workers Compute In Registers</h3>
+                        <p>CUDA cores and tensor cores operate on values in registers, then results flow back through cache to VRAM.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="notes-section">
+            <div class="notes-section-heading">
+                <h2>Key Notes</h2>
+            </div>
+
+            <div class="note-list">
+                <p><strong>Thread:</strong> a logical lane of execution with instructions and pointers to its data.</p>
+                <p><strong>Thread block:</strong> a group assigned to one SM. PyTorch or a CUDA/C++ kernel defines the block layout.</p>
+                <p><strong>Warp:</strong> usually 32 threads executing one instruction stream across different data lanes.</p>
+                <p><strong>VRAM is big but far:</strong> registers are tiny and close; L1/L2 sit in between to reduce expensive memory traffic.</p>
+                <p><strong>PTX is not the final instruction form:</strong> the final SASS depends on the actual GPU architecture.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-legal"><a href="/notes.html">Notes</a> · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>
+                <p>&copy; 2026 Daniel Mora. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/javascript-files/main.js"></script>
+</body>
+</html>

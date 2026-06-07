@@ -27,6 +27,8 @@
     { "src": "/privacy/", "dest": "/privacy.html" },
     { "src": "/terms", "dest": "/terms.html" },
     { "src": "/terms/", "dest": "/terms.html" },
+    { "src": "/notes", "dest": "/notes.html" },
+    { "src": "/notes/", "dest": "/notes.html" },
     { "src": "/auth/meta/callback", "dest": "/auth-meta-callback.html" },
     { "src": "/auth/meta/callback/", "dest": "/auth-meta-callback.html" },
     { "src": "/auth/tiktok/callback", "dest": "/auth-tiktok-callback.html" },

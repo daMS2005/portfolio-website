@@ -6,7 +6,9 @@
     <title>Daniel Mora - AI & Software Engineer</title>
     <link rel="stylesheet" href="css-files/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="icon" href="images/favicon.png?v=mob-20260621" type="image/png" sizes="32x32">
+    <link rel="shortcut icon" href="images/favicon.png?v=mob-20260621" type="image/png">
+    <link rel="apple-touch-icon" href="images/favicon-180.png?v=mob-20260621">
 </head>
 <body>
     <!-- Add blobs to simulate the lava lamp -->
@@ -23,10 +25,13 @@
                 <div class="logo">DM</div>
                 <div class="social-nav">
                     <a href="https://github.com/daMS2005" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub profile">
-                        <img src="images/githubpfp.png" alt="GitHub Profile" class="github-profile-pic">
+                        <img src="images/88565349.jpeg" alt="GitHub Profile" class="github-profile-pic">
                     </a>
                     <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" rel="noopener noreferrer" class="linkedin-nav" aria-label="LinkedIn profile">
                         <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://huggingface.co/dams2005" target="_blank" rel="noopener noreferrer" class="hf-nav" aria-label="Hugging Face profile">
+                        <img src="images/hugging-face-logo-primary.png" alt="" class="hf-logo">
                     </a>
                 </div>
             </div>
@@ -36,7 +41,6 @@
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#websites">Websites</a></li>
-                <li><a href="/notes.html">Notes</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </div>
@@ -91,7 +95,7 @@
     <section id="projects" class="section">
         <div class="container">
             <h2>Featured Projects</h2>
-            <p class="section-description">Click any project to view the repo or details <i class="fas fa-hand-pointer"></i></p>
+            <p class="section-description">Open the repos, model releases, and project details <i class="fas fa-hand-pointer"></i></p>
             <div class="projects-grid">
                 <a href="https://github.com/daMS2005/alieninvasion" target="_blank" rel="noopener noreferrer" class="project-card">
                     <div class="card-inner">
@@ -234,7 +238,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="https://github.com/daMS2005/triplet_sae_project" target="_blank" rel="noopener noreferrer" class="project-card">
+                <div class="project-card model-artifact-card">
                     <div class="card-inner">
                         <div class="card-front">
                             <h3>Triplet SAE Project</h3>
@@ -261,6 +265,76 @@
                                 <li>Training: Hugging Face, PEFT, Accelerate</li>
                                 <li>Evaluation: precision, recall, F1, entity overlap</li>
                                 <li>Deployment: LoRA adapter, GPTQ 4-bit and 8-bit exports</li>
+                            </ul>
+                            <div class="project-resource-links">
+                                <a href="https://github.com/daMS2005/triplet_sae_project" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+                                <a href="https://huggingface.co/dams2005/gemma-3-4b-it-triplet-extractor" target="_blank" rel="noopener noreferrer"><img src="images/hugging-face-logo-primary.png" alt="" class="hf-inline-logo"> Hugging Face</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card model-artifact-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>OLMo SAE Builder</h3>
+                            <p>Readable sparse autoencoder tooling for OLMo-3-7B-Think, built as a plain PyTorch single-GPU pipeline for activation collection and SAE training.</p>
+                            <div class="project-tech">
+                                <span>Python</span>
+                                <span>PyTorch</span>
+                                <span>OLMo</span>
+                                <span>SAE</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h3>Pipeline</h3>
+                            <ul class="feature-list">
+                                <li>Download OLMo-3-7B-Think locally</li>
+                                <li>Stream text and collect residual activations</li>
+                                <li>Compute pre-bias activation means</li>
+                                <li>Train TopK sparse autoencoders from saved chunks</li>
+                                <li>Single-GPU scripts designed for readability</li>
+                            </ul>
+                            <h3>Technologies Used</h3>
+                            <ul class="tech-list">
+                                <li>Model: allenai/Olmo-3-7B-Think</li>
+                                <li>Training: PyTorch, bfloat16, forward hooks</li>
+                                <li>SAE: tied decoder, TopK activation, reconstruction loss</li>
+                                <li>Data: Dolma and Dolci-Instruct-SFT activation streams</li>
+                            </ul>
+                            <div class="project-resource-links">
+                                <a href="https://github.com/daMS2005/olmo-sae-builder" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+                                <a href="https://huggingface.co/dams2005/olmo-3-7b-think-saes" target="_blank" rel="noopener noreferrer"><img src="images/hugging-face-logo-primary.png" alt="" class="hf-inline-logo"> Hugging Face</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://github.com/daMS2005/thesis_neuro" target="_blank" rel="noopener noreferrer" class="project-card thesis-project">
+                    <div class="coming-soon-tag paper-tag">Paper Coming Soon</div>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>Brain-LLM Feature Alignment</h3>
+                            <p>Bachelor thesis testing whether brains and language models use overlapping transcript-grounded SAE features during naturalistic story comprehension.</p>
+                            <div class="project-tech">
+                                <span>fMRI</span>
+                                <span>SAE</span>
+                                <span>Ridge</span>
+                                <span>RSA</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h3>Thesis Question</h3>
+                            <ul class="feature-list">
+                                <li>Do brains and language models rely on overlapping transcript-grounded features?</li>
+                                <li>Compare feature salience, predictive recoverability, and representational geometry</li>
+                                <li>Focus on Narratives stories: shapesphysical and shapessocial</li>
+                                <li>Finding: commonality appears stronger in which features matter than in shared geometry</li>
+                            </ul>
+                            <h3>Methodology</h3>
+                            <ul class="tech-list">
+                                <li>Models: Gemma 2 2B, Gemma 2 9B, Llama 3.1 8B</li>
+                                <li>Brain data: OpenNeuro Narratives, Schaefer-200 cortical parcels</li>
+                                <li>Pipeline: transcript SAE discovery, TR-grid alignment, ridge regression</li>
+                                <li>Evaluation: held-out fit, feature-importance agreement, weight similarity, RSA</li>
                             </ul>
                         </div>
                     </div>
@@ -516,8 +590,9 @@
                 <div class="social-links">
                     <a href="https://github.com/daMS2005" target="_blank" rel="noopener noreferrer" title="GitHub Profile" aria-label="GitHub profile"><i class="fab fa-github"></i></a>
                     <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" rel="noopener noreferrer" title="LinkedIn Profile" aria-label="LinkedIn profile"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://huggingface.co/dams2005" target="_blank" rel="noopener noreferrer" title="Hugging Face Profile" aria-label="Hugging Face profile"><img src="images/hugging-face-logo-primary.png" alt="" class="hf-footer-logo"></a>
                 </div>
-                <p class="footer-legal"><a href="/notes.html">Notes</a> · <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>
+                <p class="footer-legal"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>
                 <p>&copy; 2026 Daniel Mora. All rights reserved.</p>
             </div>
         </div>

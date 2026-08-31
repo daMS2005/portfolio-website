@@ -107,7 +107,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.22;
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x0a0b0b, 0.075);
@@ -408,7 +408,6 @@ const pointHeadMaterial = new THREE.ShaderMaterial({
   vertexShader: `
     attribute float aSize;
     attribute float aPhase;
-    attribute vec3 color;
     uniform float uPixelRatio;
     uniform float uTime;
     varying vec3 vColor;

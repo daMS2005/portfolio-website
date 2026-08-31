@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Two original cursor-following robot demos: a lightweight DOM build and a Blender-to-WebGL build."
+      content="Three cursor-following character studies: a lightweight DOM robot, a realistic Blender android, and a procedural 3D point-cloud head."
     />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Cursor Robot Motion Lab" />
     <meta
       property="og:description"
-      content="Compare a lightweight DOM robot with an original Blender-to-Three.js cursor-following rig."
+      content="Compare a DOM robot, a realistic Blender-to-Three.js android, and a procedural 3D point-cloud head."
     />
     <meta property="og:url" content="https://daniel-cursor-robot-lab.danielmora.chatgpt.site/" />
     <meta property="og:image" content="https://daniel-cursor-robot-lab.danielmora.chatgpt.site/og.png" />
@@ -19,7 +19,7 @@
     <meta name="twitter:title" content="Cursor Robot Motion Lab" />
     <meta
       name="twitter:description"
-      content="DOM + JavaScript / Blender + Three.js"
+      content="DOM + JavaScript / Blender + Three.js / 3D point cloud"
     />
     <meta name="twitter:image" content="https://daniel-cursor-robot-lab.danielmora.chatgpt.site/og.png" />
     <link rel="canonical" href="https://daniel-cursor-robot-lab.danielmora.chatgpt.site/" />
@@ -43,16 +43,16 @@
 
     <main>
       <section class="intro" aria-labelledby="pageTitle">
-        <div class="eyebrow"><span>Experiment 01</span><span>Pointer-driven character rigs</span></div>
-        <h1 id="pageTitle">Two ways to make<br />a robot <em>notice you.</em></h1>
+        <div class="eyebrow"><span>Experiment 02</span><span>Pointer-driven character rigs</span></div>
+        <h1 id="pageTitle">Three ways to make<br />a machine <em>notice you.</em></h1>
         <p>
-          Move your cursor across either stage. Both robots use the same tracking idea—normalized
-          pointer coordinates, rotation limits, and damping—but one is pure browser code and one is
-          an actual Blender model.
+          Move your cursor across each stage. All three studies use normalized pointer coordinates,
+          rotation limits, and damping—but the visual systems range from CSS shapes to a Blender
+          android and thousands of live 3D particles.
         </p>
       </section>
 
-      <section class="demo-grid" aria-label="Cursor-following robot demos">
+      <section class="demo-grid" aria-label="Cursor-following character demos">
         <article class="demo-card" data-demo="dom">
           <header class="demo-card__header">
             <div>
@@ -94,7 +94,7 @@
           <header class="demo-card__header">
             <div>
               <span class="demo-number">02</span>
-              <h2>Blender + Three.js</h2>
+              <h2>Realistic Blender Android</h2>
             </div>
             <span class="tech-pill tech-pill--accent">GLB · real-time WebGL</span>
           </header>
@@ -114,8 +114,34 @@
           </div>
 
           <footer class="demo-card__footer">
-            <p>The GLB contains separate head and upper-body pivots. Three.js rotates them every frame.</p>
+            <p>A layered Blender GLB uses separate head and upper-body pivots, articulated joints, and studio lighting.</p>
             <button class="reset-button" type="button" data-reset="three">Reset pose</button>
+          </footer>
+        </article>
+
+        <article class="demo-card demo-card--point" data-demo="point">
+          <header class="demo-card__header">
+            <div>
+              <span class="demo-number">03</span>
+              <h2>3D Point-Cloud Head</h2>
+            </div>
+            <span class="tech-pill tech-pill--acid">14,000 live particles</span>
+          </header>
+
+          <div class="demo-stage point-stage" id="pointStage" tabindex="0" aria-label="Interactive 3D point-cloud head. Move your pointer to make it follow you.">
+            <canvas id="pointCloudCanvas" aria-hidden="true"></canvas>
+            <div class="stage-reticle" aria-hidden="true"><span></span><span></span></div>
+            <div class="point-readout" aria-hidden="true">
+              <span>Subject DM–03</span>
+              <span>14k vertices</span>
+              <span>Live gaze vector</span>
+            </div>
+            <p class="stage-hint"><span></span> Move inside this frame</p>
+          </div>
+
+          <footer class="demo-card__footer">
+            <p>A parametric human head is sampled into particles, shaded by depth, and rotated as one floating 3D field.</p>
+            <button class="reset-button" type="button" data-reset="point">Reset pose</button>
           </footer>
         </article>
       </section>
@@ -123,8 +149,8 @@
       <section class="signal-panel" aria-label="Live motion settings">
         <div class="signal-panel__intro">
           <span class="eyebrow-label">Live controls</span>
-          <h2>The feel comes from two numbers.</h2>
-          <p>Rotation sets the range. Damping controls how much the robot trails behind your cursor.</p>
+          <h2>The feel still comes from two numbers.</h2>
+          <p>Rotation sets the range. Damping controls how much each character trails behind your cursor.</p>
         </div>
 
         <div class="control-grid">
@@ -141,7 +167,7 @@
 
       <section class="build-notes" aria-labelledby="buildTitle">
         <span class="eyebrow-label">What is happening</span>
-        <h2 id="buildTitle">Same behavior, different asset pipeline.</h2>
+        <h2 id="buildTitle">Same gaze system, three rendering strategies.</h2>
         <div class="build-notes__grid">
           <div>
             <span>01</span>

@@ -213,6 +213,11 @@ main {
   border-color: rgba(255, 107, 44, 0.24);
 }
 
+.demo-card--point {
+  grid-column: 1 / -1;
+  border-color: rgba(216, 255, 85, 0.2);
+}
+
 .demo-card__header,
 .demo-card__footer {
   display: flex;
@@ -255,6 +260,11 @@ main {
 .tech-pill--accent {
   border-color: rgba(255, 107, 44, 0.28);
   color: #db8b68;
+}
+
+.tech-pill--acid {
+  border-color: rgba(216, 255, 85, 0.28);
+  color: #c4df69;
 }
 
 .demo-stage {
@@ -563,13 +573,60 @@ main {
   right: 10px;
 }
 
-.three-stage canvas {
+.three-stage canvas,
+.point-stage canvas {
   position: absolute;
   inset: 0;
   z-index: 1;
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.point-stage {
+  min-height: clamp(520px, 51vw, 720px);
+  background:
+    linear-gradient(rgba(216, 255, 85, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(216, 255, 85, 0.026) 1px, transparent 1px),
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(216, 255, 85, 0.08), transparent 28%),
+    radial-gradient(circle at 50% 46%, rgba(255, 107, 44, 0.07), transparent 33%),
+    #080a09;
+  background-size: 38px 38px, 38px 38px, auto, auto, auto;
+}
+
+.point-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 4px,
+    rgba(216, 255, 85, 0.07) 5px
+  );
+  mix-blend-mode: screen;
+}
+
+.point-readout {
+  position: absolute;
+  z-index: 6;
+  top: 22px;
+  right: 22px;
+  display: grid;
+  justify-items: end;
+  gap: 7px;
+  color: rgba(216, 255, 85, 0.54);
+  font: 0.56rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.point-readout span:first-child {
+  color: rgba(244, 241, 233, 0.82);
 }
 
 .model-loader,
@@ -769,6 +826,10 @@ main {
   .demo-grid,
   .signal-panel {
     grid-template-columns: 1fr;
+  }
+
+  .demo-card--point {
+    grid-column: auto;
   }
 
   .demo-stage {

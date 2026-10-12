@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Three cursor-following character studies: a lightweight DOM robot, a realistic Blender android, and a procedural 3D point-cloud head."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Cursor Robot Motion Lab" />
+    <meta
+      property="og:description"
+      content="Compare a DOM robot, a realistic Blender-to-Three.js android, and a procedural 3D point-cloud head."
+    />
+    <meta property="og:url" content="https://daniel-cursor-robot-lab.danielmora.chatgpt.site/" />
+    <meta property="og:image" content="https://daniel-cursor-robot-lab.danielmora.chatgpt.site/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cursor Robot Motion Lab" />
+    <meta
+      name="twitter:description"
+      content="DOM + JavaScript / Blender + Three.js / 3D point cloud"
+    />
+    <meta name="twitter:image" content="https://daniel-cursor-robot-lab.danielmora.chatgpt.site/og.png" />
+    <link rel="canonical" href="https://daniel-cursor-robot-lab.danielmora.chatgpt.site/" />
+    <title>Cursor Robot Motion Lab</title>
+    <link rel="icon" href="images/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="css-files/robot-demos.css" />
+  </head>
+  <body>
+    <div class="ambient-grid" aria-hidden="true"></div>
+
+    <header class="lab-header">
+      <a class="lab-mark" href="index.html" aria-label="Return to Daniel Mora's portfolio">
+        <span class="lab-mark__monogram">DM</span>
+        <span class="lab-mark__label">Motion Lab</span>
+      </a>
+      <button class="motion-toggle" id="motionToggle" type="button" aria-pressed="false">
+        <span class="motion-toggle__light" aria-hidden="true"></span>
+        <span class="motion-toggle__label">Pause motion</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="pageTitle">
+        <div class="eyebrow"><span>Experiment 02</span><span>Pointer-driven character rigs</span></div>
+        <h1 id="pageTitle">Three ways to make<br />a machine <em>notice you.</em></h1>
+        <p>
+          Move your cursor across each stage. All three studies use normalized pointer coordinates,
+          rotation limits, and damping—but the visual systems range from CSS shapes to a Blender
+          android and thousands of live 3D particles.
+        </p>
+      </section>
+
+      <section class="demo-grid" aria-label="Cursor-following character demos">
+        <article class="demo-card" data-demo="dom">
+          <header class="demo-card__header">
+            <div>
+              <span class="demo-number">01</span>
+              <h2>DOM + JavaScript</h2>
+            </div>
+            <span class="tech-pill">No model · no 3D engine</span>
+          </header>
+
+          <div class="demo-stage dom-stage" id="domStage" tabindex="0" aria-label="Interactive CSS robot. Move your pointer to make it follow you.">
+            <div class="stage-reticle" aria-hidden="true"><span></span><span></span></div>
+            <div class="dom-robot" id="domRobot" aria-hidden="true">
+              <div class="dom-robot__shadow"></div>
+              <div class="dom-robot__antenna"><i></i></div>
+              <div class="dom-robot__head">
+                <div class="dom-robot__visor">
+                  <span class="dom-robot__eye dom-robot__eye--left"></span>
+                  <span class="dom-robot__eye dom-robot__eye--right"></span>
+                </div>
+              </div>
+              <div class="dom-robot__neck"></div>
+              <div class="dom-robot__upper">
+                <div class="dom-robot__arm dom-robot__arm--left"><i></i></div>
+                <div class="dom-robot__torso"><span class="dom-robot__core"></span></div>
+                <div class="dom-robot__arm dom-robot__arm--right"><i></i></div>
+              </div>
+              <div class="dom-robot__base"><i></i><i></i></div>
+            </div>
+            <p class="stage-hint"><span></span> Move inside this frame</p>
+          </div>
+
+          <footer class="demo-card__footer">
+            <p>CSS shapes are grouped into a head and torso. JavaScript only updates their rotations.</p>
+            <button class="reset-button" type="button" data-reset="dom">Reset pose</button>
+          </footer>
+        </article>
+
+        <article class="demo-card demo-card--accent" data-demo="three">
+          <header class="demo-card__header">
+            <div>
+              <span class="demo-number">02</span>
+              <h2>Realistic Blender Android</h2>
+            </div>
+            <span class="tech-pill tech-pill--accent">GLB · real-time WebGL</span>
+          </header>
+
+          <div class="demo-stage three-stage" id="threeStage" tabindex="0" aria-label="Interactive 3D Blender robot. Move your pointer to make it follow you.">
+            <canvas id="robotCanvas" aria-hidden="true"></canvas>
+            <div class="stage-reticle" aria-hidden="true"><span></span><span></span></div>
+            <div class="model-loader" id="modelLoader" role="status">
+              <span></span>
+              <p>Loading Blender rig</p>
+            </div>
+            <div class="model-error" id="modelError" hidden>
+              <p>The 3D model did not load.</p>
+              <button type="button" data-retry>Try again</button>
+            </div>
+            <p class="stage-hint"><span></span> Move inside this frame</p>
+          </div>
+
+          <footer class="demo-card__footer">
+            <p>A layered Blender GLB uses separate head and upper-body pivots, articulated joints, and studio lighting.</p>
+            <button class="reset-button" type="button" data-reset="three">Reset pose</button>
+          </footer>
+        </article>
+
+        <article class="demo-card demo-card--point" data-demo="point">
+          <header class="demo-card__header">
+            <div>
+              <span class="demo-number">03</span>
+              <h2>3D Point-Cloud Head</h2>
+            </div>
+            <span class="tech-pill tech-pill--acid">14,000 live particles</span>
+          </header>
+
+          <div class="demo-stage point-stage" id="pointStage" tabindex="0" aria-label="Interactive 3D point-cloud head. Move your pointer to make it follow you.">
+            <canvas id="pointCloudCanvas" aria-hidden="true"></canvas>
+            <div class="stage-reticle" aria-hidden="true"><span></span><span></span></div>
+            <div class="point-readout" aria-hidden="true">
+              <span>Subject DM–03</span>
+              <span>14k vertices</span>
+              <span>Live gaze vector</span>
+            </div>
+            <p class="stage-hint"><span></span> Move inside this frame</p>
+          </div>
+
+          <footer class="demo-card__footer">
+            <p>A parametric human head is sampled into particles, shaded by depth, and rotated as one floating 3D field.</p>
+            <button class="reset-button" type="button" data-reset="point">Reset pose</button>
+          </footer>
+        </article>
+      </section>
+
+      <section class="signal-panel" aria-label="Live motion settings">
+        <div class="signal-panel__intro">
+          <span class="eyebrow-label">Live controls</span>
+          <h2>The feel still comes from two numbers.</h2>
+          <p>Rotation sets the range. Damping controls how much each character trails behind your cursor.</p>
+        </div>
+
+        <div class="control-grid">
+          <label class="range-control">
+            <span><b>Rotation range</b><output id="rangeOutput">18°</output></span>
+            <input id="rangeControl" type="range" min="6" max="32" value="18" step="1" />
+          </label>
+          <label class="range-control">
+            <span><b>Damping</b><output id="dampingOutput">0.10</output></span>
+            <input id="dampingControl" type="range" min="4" max="24" value="10" step="1" />
+          </label>
+        </div>
+      </section>
+
+      <section class="build-notes" aria-labelledby="buildTitle">
+        <span class="eyebrow-label">What is happening</span>
+        <h2 id="buildTitle">Same gaze system, three rendering strategies.</h2>
+        <div class="build-notes__grid">
+          <div>
+            <span>01</span>
+            <h3>Read the pointer</h3>
+            <p>Convert the cursor into a clean −1 to +1 coordinate inside the robot’s own stage.</p>
+          </div>
+          <div>
+            <span>02</span>
+            <h3>Clamp the pose</h3>
+            <p>Map that coordinate to small yaw and pitch limits so the character never twists unnaturally.</p>
+          </div>
+          <div>
+            <span>03</span>
+            <h3>Damp each frame</h3>
+            <p>Ease the current rotation toward the target with frame-rate-independent exponential damping.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="lab-footer">
+      <span>Daniel Mora · Interactive motion study</span>
+      <a href="index.html">Back to portfolio</a>
+    </footer>
+
+    <script type="module" src="javascript-files/robot-demos.js"></script>
+  </body>
+</html>

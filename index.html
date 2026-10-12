@@ -97,6 +97,35 @@
             <h2>Featured Projects</h2>
             <p class="section-description">Open the repos, model releases, and project details <i class="fas fa-hand-pointer"></i></p>
             <div class="projects-grid">
+                <div class="project-card model-artifact-card">
+                    <div class="coming-soon-tag paper-tag">Flagship</div>
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>JEPA Transformer</h3>
+                            <p>Two-stage equity forecaster: ArgusJEPA, a self-supervised asset-day encoder, frozen and fed into CassaFormer, a causal RoPE + Mixture-of-Experts Transformer, with custom Triton kernels.</p>
+                            <div class="project-tech">
+                                <span>PyTorch</span>
+                                <span>JEPA</span>
+                                <span>MoE</span>
+                                <span>Triton</span>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h3>Architecture</h3>
+                            <ul class="feature-list">
+                                <li>ArgusJEPA: masked-feature JEPA, EMA teacher, frozen 256-d embeddings</li>
+                                <li>CassaFormer: QK-RMSNorm, RoPE, top-1 MoE, Student-t head</li>
+                                <li>Fused Triton MoE and JEPA kernels vs torch.compile</li>
+                            </ul>
+                            <div class="project-resource-links">
+                                <a href="/jepa-transformer.html"><i class="fas fa-diagram-project"></i> Architecture</a>
+                                <a href="https://github.com/daMS2005/jepa-transformer-model" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+                                <a href="https://huggingface.co/dams2005/ArgusJEPA" target="_blank" rel="noopener noreferrer"><img src="images/hugging-face-logo-primary.png" alt="" class="hf-inline-logo"> ArgusJEPA</a>
+                                <a href="https://huggingface.co/dams2005/CassaFormer" target="_blank" rel="noopener noreferrer"><img src="images/hugging-face-logo-primary.png" alt="" class="hf-inline-logo"> CassaFormer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <a href="https://github.com/daMS2005/alieninvasion" target="_blank" rel="noopener noreferrer" class="project-card">
                     <div class="card-inner">
                         <div class="card-front">

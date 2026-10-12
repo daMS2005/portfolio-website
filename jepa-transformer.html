@@ -10,8 +10,14 @@
     <link rel="icon" href="/images/favicon.png" type="image/png">
     <style>
         .jt { --cyan: #00d4ff; --orange: #ff6b35; --gold: #ffc857; --muted: rgba(255,255,255,0.72); --line: rgba(255,255,255,0.14); --panel: rgba(9,12,16,0.86); }
-        .jt .notes-hero { min-height: 62vh; }
-        .jt .notes-hero h1 { font-size: clamp(2.3rem, 6vw, 4rem); }
+        .jt-page { max-width: 1180px; margin: 0 auto; padding: 8rem 2rem 4rem; box-sizing: border-box; }
+        .jt-hero { min-height: 62vh; display: flex; flex-direction: column; justify-content: center; max-width: 860px; }
+        .jt-hero h1 { font-size: clamp(2.3rem, 6vw, 4rem); line-height: 1.05; margin: 0 0 1.5rem; }
+        .jt-kicker { color: var(--cyan); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; }
+        .jt-hero p, .jt-heading p { color: rgba(255,255,255,0.78); font-size: 1.1rem; line-height: 1.7; }
+        .jt-section { margin: 0 0 5rem; }
+        .jt-heading { max-width: 760px; margin-bottom: 2rem; }
+        .jt-heading h2 { text-align: left; margin-bottom: 0.75rem; }
         .jt-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
         .jt-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.2rem; border-radius: 999px; font-weight: 700; text-decoration: none; color: #fff; border: 1px solid rgba(0,212,255,0.35); background: rgba(0,212,255,0.12); transition: transform .2s, background .2s; }
         .jt-btn:hover { transform: translateY(-2px); background: rgba(255,69,0,0.22); border-color: rgba(255,69,0,0.4); }
@@ -58,7 +64,7 @@
         .jt-decision.k { border-left-color: var(--orange); }
         .jt code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88em; color: #dffbff; }
         @media (max-width: 768px) {
-            .jt.notes-page { padding: 7rem 16px 3rem; }
+            .jt-page { padding: 7rem 16px 3rem; }
             .jt-vector div { font-size: 0.65rem; }
             .jt-table td:last-child { white-space: normal; }
         }
@@ -97,7 +103,6 @@
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
                 <li><a href="/#projects">Projects</a></li>
-                <li><a href="/notes.html">Notes</a></li>
                 <li><a href="/#contact">Contact</a></li>
             </ul>
         </div>
@@ -112,9 +117,9 @@
         </defs>
     </svg>
 
-    <main class="notes-page jt">
-        <section class="notes-hero">
-            <p class="notes-kicker">Flagship project · Financial time series</p>
+    <main class="jt-page jt">
+        <section class="jt-hero">
+            <p class="jt-kicker">Flagship project · Financial time series</p>
             <h1>JEPA Transformer</h1>
             <p>
                 A two-stage forecasting model for US equities. <strong>Stage I, ArgusJEPA</strong>, is a self-supervised encoder that first learns
@@ -140,8 +145,8 @@
         </div>
 
         <!-- 01 DATA -->
-        <section class="notes-section">
-            <div class="notes-section-heading">
+        <section class="jt-section">
+            <div class="jt-heading">
                 <span class="jt-step">01 · Inputs</span>
                 <h2>Four sources, one vector per asset-day</h2>
                 <p>
@@ -172,8 +177,8 @@
         </section>
 
         <!-- 02 JEPA -->
-        <section class="notes-section">
-            <div class="notes-section-heading">
+        <section class="jt-section">
+            <div class="jt-heading">
                 <span class="jt-step">02 · Stage I — ArgusJEPA · self-supervised</span>
                 <h2>ArgusJEPA: predict the full view from a masked view</h2>
                 <p>
@@ -254,8 +259,8 @@
         </section>
 
         <!-- 03 FREEZE -->
-        <section class="notes-section">
-            <div class="notes-section-heading">
+        <section class="jt-section">
+            <div class="jt-heading">
                 <span class="jt-step">03 · Freeze &amp; hand-off</span>
                 <h2>ArgusJEPA embeddings become CassaFormer's input</h2>
                 <p>
@@ -272,8 +277,8 @@
         </section>
 
         <!-- 04 TRANSFORMER -->
-        <section class="notes-section">
-            <div class="notes-section-heading">
+        <section class="jt-section">
+            <div class="jt-heading">
                 <span class="jt-step">04 · Stage II — CassaFormer · supervised</span>
                 <h2>CassaFormer: causal Transformer over daily embeddings</h2>
                 <p>
@@ -431,8 +436,8 @@
         </section>
 
         <!-- 05 KERNELS -->
-        <section class="notes-section">
-            <div class="notes-section-heading">
+        <section class="jt-section">
+            <div class="jt-heading">
                 <span class="jt-step">05 · Custom kernels</span>
                 <h2>Triton only where it beats <code>torch.compile</code></h2>
                 <p>
@@ -493,8 +498,8 @@
         </section>
 
         <!-- 06 DECISIONS -->
-        <section class="notes-section">
-            <div class="notes-section-heading">
+        <section class="jt-section">
+            <div class="jt-heading">
                 <span class="jt-step">06 · Design decisions</span>
                 <h2>Why it is built this way</h2>
             </div>
@@ -512,7 +517,7 @@
             </div>
         </section>
 
-        <section class="notes-section" style="text-align:center">
+        <section class="jt-section" style="text-align:center">
             <h2>Code &amp; weights</h2>
             <p style="color:var(--muted)">Architecture, training loops, kernels, tests and benchmarks live in the public model repository; trained weights are on Hugging Face.</p>
             <div class="jt-actions" style="justify-content:center">

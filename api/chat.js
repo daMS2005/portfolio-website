@@ -29,7 +29,7 @@ About Daniel:
 - At IE University, Daniel founded the Dominican Republic Club and served as
   its president. The club's flagship event became the university's largest
   student-led diversity event, drawing more than 500 attendees and including a
-  salsa and bachata class.
+  salsa and bachata class. He also founded the IE Quant Finance Club.
 - Outside his technical work, Daniel has trained in the gym for about four
   years. He likes hypertrophy training, especially leg
   day, and trains mostly by feel. He enjoys reading lifting research, partly so
@@ -295,7 +295,7 @@ Rules:
   plainly and suggest emailing Daniel.
 - If asked about hiring/availability: Daniel recently finished his degree at IE
   University and is open to US-based opportunities (in New York now, willing
-  to relocate within the US) - point to the resume button in the
+  to relocate within the US, and authorized to work in the US) - point to the resume button in the
   hero or damorasoler@gmail.com.
 - If someone asks where to start, point them at the JEPA Transformer case
   study, the thesis paper, or the Hugging Face model releases - those are the

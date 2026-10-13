@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEPA Transformer · ArgusJEPA + CassaFormer · Daniel Mora</title>
+    <meta name="description" content="A two-stage equity forecaster: ArgusJEPA learns point-in-time asset-day embeddings, then a frozen hand-off feeds CassaFormer, a causal RoPE + Mixture-of-Experts Transformer, with custom Triton kernels.">
+    <meta name="theme-color" content="#050505">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="JEPA Transformer · Daniel Mora">
+    <meta property="og:description" content="ArgusJEPA pretraining, frozen embeddings, and the CassaFormer causal MoE Transformer, with custom Triton kernels.">
+    <link rel="stylesheet" href="css-files/style.css?v=access-v2">
+    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=jepa-v1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <style>
+        .jt { --cyan: var(--green); --gold: #e8b26a; }
+        .jt-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+        .jt-panel { border: 1px solid rgba(117,214,156,0.2); border-radius: 8px; background: radial-gradient(circle at 15% 10%, rgba(117,214,156,0.08), transparent 40%), var(--panel); padding: 1.25rem; }
+        .jt-diagram { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .jt-diagram svg { display: block; width: 100%; min-width: 760px; height: auto; font-family: inherit; }
+        .jt-legend { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-top: 1rem; color: var(--muted); font-size: 0.85rem; }
+        .jt-legend i { display: inline-block; width: 22px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 0.4rem; font-style: normal; }
+        .jt-sources { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; }
+        .jt-src { border: 1px solid var(--line); border-radius: 8px; padding: 1rem; background: rgba(255,255,255,0.03); }
+        .jt-src h4 { margin: 0 0 0.35rem; color: #fff; }
+        .jt-src p { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+        .jt-src small { display: block; margin-top: 0.5rem; color: var(--cyan); font-weight: 700; font-size: 0.78rem; }
+        .jt-join { text-align: center; color: var(--muted); font-size: 0.9rem; margin: 1rem 0 0.6rem; }
+        .jt-join b { color: #fff; }
+        .jt-vector { display: flex; gap: 3px; height: 46px; }
+        .jt-vector div { flex: var(--w); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; color: #061016; overflow: hidden; white-space: nowrap; }
+        .jt-vector .gap { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.15) 0 6px, transparent 6px 12px); color: #fff; }
+        .jt-flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.5rem; }
+        .jt-flow > div { flex: 1 1 170px; border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem; background: rgba(255,255,255,0.03); position: relative; }
+        .jt-flow > div b { display: block; margin-bottom: 0.3rem; }
+        .jt-flow > div span { color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
+        .jt-flow > div.frozen { border-style: dashed; border-color: rgba(138,150,163,0.7); }
+        .jt-flow > div.kern { border-color: rgba(255,92,42,0.55); background: rgba(255,92,42,0.07); }
+        .jt-flow-label { flex-basis: 100% !important; border: 0 !important; background: none !important; padding: 0.4rem 0 0 !important; color: var(--orange); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+        .jt-kernels { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+        .jt-kernels h3 { margin: 0 0 0.3rem; }
+        .jt-kernels p { color: var(--muted); line-height: 1.6; }
+        .jt-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+        .jt-table th, .jt-table td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+        .jt-table th { color: var(--cyan); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .jt-table td:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .jt-win { color: #75d69c; font-weight: 700; }
+        .jt-loss { color: #ff8f8f; font-weight: 700; }
+        .jt-decisions { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem; }
+        .jt-decision { border: 1px solid var(--line); border-left: 3px solid var(--cyan); border-radius: 8px; padding: 1rem 1.1rem; background: rgba(255,255,255,0.03); }
+        .jt-decision h4 { margin: 0 0 0.45rem; }
+        .jt-decision p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
+        .jt-decision.k { border-left-color: var(--orange); }
+        .jt code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88em; color: #f5f3ef; }
+        @media (max-width: 768px) {
+            .jt-vector div { font-size: 0.65rem; }
+            .jt-table td:last-child { white-space: normal; }
+        }
+
+        /* SVG diagram primitives */
+        .d text { fill: #f5f3ef; font-size: 14px; }
+        .d .t { font-weight: 700; font-size: 15px; fill: #fff; }
+        .d .s { font-size: 12.5px; fill: rgba(245,243,239,0.72); }
+        .d .k { font-size: 12px; fill: #ff9b78; font-weight: 700; }
+        .d .h { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; fill: #75d69c; }
+        .d rect { rx: 10px; stroke-width: 1.5; }
+        .d .n { fill: rgba(117,214,156,0.08); stroke: rgba(117,214,156,0.6); }
+        .d .nf { fill: rgba(138,150,163,0.08); stroke: #8a96a3; stroke-dasharray: 6 5; }
+        .d .nk { fill: rgba(255,92,42,0.12); stroke: #ff5c2a; }
+        .d .nl { fill: rgba(232,178,106,0.1); stroke: #e8b26a; }
+        .d .nm { fill: rgba(255,255,255,0.03); stroke: rgba(255,255,255,0.18); }
+        .d .pane { fill: rgba(255,255,255,0.02); stroke: rgba(255,255,255,0.12); }
+        .d .a { fill: none; stroke: #75d69c; stroke-width: 2; marker-end: url(#ac); }
+        .d .ag { fill: none; stroke: #8a96a3; stroke-width: 2; stroke-dasharray: 6 5; marker-end: url(#ag); }
+        .d .ay { fill: none; stroke: #e8b26a; stroke-width: 2; stroke-dasharray: 4 4; marker-end: url(#ay); }
+        .d .ao { fill: none; stroke: #ff5c2a; stroke-width: 2; marker-end: url(#ao); }
+            .jt-statlist { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.25rem; margin-top: 1.1rem; }
+        .jt-statlist b { display: block; color: var(--ink); font-size: 1.35rem; letter-spacing: -0.02em; }
+        .jt-statlist span { color: var(--muted); font-size: 0.8rem; line-height: 1.4; }
+    </style>
+</head>
+<body class="case-study-page">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="lava-lamp" aria-hidden="true"><div class="blob"></div><div class="blob"></div><div class="blob"></div></div>
+
+    <nav class="navbar" aria-label="Primary navigation">
+        <div class="nav-content">
+            <a class="logo logo-link" href="/">DM</a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open navigation">
+                <span>Menu</span><i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-links" id="primary-navigation">
+                <li><a href="/">Home</a></li>
+                <li><a href="/#research">Flagship work</a></li>
+                <li><a href="/#projects">Additional work</a></li>
+                <li><a href="/#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <marker id="ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#75d69c"/></marker>
+            <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a96a3"/></marker>
+            <marker id="ay" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#e8b26a"/></marker>
+            <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#ff5c2a"/></marker>
+        </defs>
+    </svg>
+
+    <main id="main-content" class="detail-main jt" tabindex="-1">
+        <header class="detail-hero">
+            <div>
+                <span class="detail-kicker">Financial time series · two-stage model</span>
+                <h1>JEPA Transformer</h1>
+                <p class="detail-lede"><strong>ArgusJEPA</strong> learns what a single asset-day looks like from a sparse, point-in-time feature vector. It is then frozen, and its daily embeddings become the input sequence of <strong>CassaFormer</strong>, a small causal Transformer (RoPE, QK-RMSNorm, Mixture-of-Experts) that forecasts the next day. Hot paths run on custom Triton kernels, kept only where they beat <code>torch.compile</code>.</p>
+            </div>
+            <aside class="detail-status-card">
+                <span class="status-live"><i></i> Trained · weights released</span>
+                <div class="jt-statlist">
+                    <div><b>256-d</b><span>embedding per asset-day, produced by the frozen encoder</span></div>
+                    <div><b>~2.05M</b><span>Transformer parameters: 6 blocks, width 128, 4 heads</span></div>
+                    <div><b>4 × top-1</b><span>MoE experts in the two middle blocks</span></div>
+                    <div><b>1.1–1.5×</b><span>full-model speedup over <code>torch.compile</code> from the MoE kernel (L4)</span></div>
+                </div>
+            </aside>
+        </header>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>01 · Inputs</span><h2>Four sources, one vector per asset-day</h2></div>
+            <p class="detail-intro">A separate data repo collects each source into PostgreSQL and publishes reviewed, point-in-time views. A value only enters a row once it was actually public on that trading day. The universe is the top 500 US common stocks by trailing 60-day median dollar volume, rebuilt every month from 2010 onward. Delisted names stay in, so the history is not limited to today's survivors.</p>
+
+            <div class="jt-panel">
+                <div class="jt-sources">
+                    <div class="jt-src"><h4>IBKR</h4><p>Completed daily <code>TRADES</code> bars, keyed by the stable contract ID rather than the ticker.</p><small>8 log channels: gap, intraday, high/low, VWAP, volume…</small></div>
+                    <div class="jt-src"><h4>SEC EDGAR</h4><p>CompanyFacts and filings. A value becomes visible on the first session strictly after the filing's acceptance timestamp.</p><small>Asset-scaled fundamentals + age/missing flags</small></div>
+                    <div class="jt-src"><h4>FRED / ALFRED</h4><p>~84 macro series aligned by vintage, i.e. the value as it was published then, not as revised later.</p><small>Joined by date as market context</small></div>
+                    <div class="jt-src"><h4>Alpha Vantage news</h4><p>Historical headlines scored locally: FinBERT sentiment and GTE-ModernBERT text embeddings, aggregated per day.</p><small>Sentiment, counts, event flags</small></div>
+                </div>
+                <p class="jt-join">↓ point-in-time join on <b>(contract, trading day)</b> → concatenated into <b>x ∈ ℝ<sup>F</sup></b> ↓</p>
+                <div class="jt-vector" aria-label="Concatenated feature vector">
+                    <div style="--w:3;background:#75d69c">market</div>
+                    <div style="--w:4;background:#75d69c">fundamentals</div>
+                    <div class="gap" style="--w:1">NaN</div>
+                    <div style="--w:3;background:#e8b26a">macro</div>
+                    <div style="--w:3;background:#ff9b78">news & events</div>
+                    <div class="gap" style="--w:1">NaN</div>
+                </div>
+                <p class="jt-join" style="margin-bottom:0">Missing values stay <b>NaN</b>. An <b>availability mask</b> (finite ∧ public by then) goes with the vector instead of imputed values.</p>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>02 · Stage I — ArgusJEPA · self-supervised</span><h2>ArgusJEPA: predict the full view from a masked view</h2></div>
+            <p class="detail-intro">Each asset-day is an independent sample; this stage models no time. Half of the available features are hidden. From what is left, the context encoder and predictor must reproduce the <em>latent</em> that an EMA teacher computes from the full view. The loss is in embedding space, so the model learns how features relate to each other rather than reconstructing raw numbers.</p>
+
+            <div class="jt-panel">
+                <div class="jt-diagram">
+                    <svg class="d" viewBox="0 0 1000 430" role="img" aria-label="JEPA pretraining diagram">
+                        <!-- input -->
+                        <rect class="n" x="15" y="165" width="160" height="100"/>
+                        <text class="t" x="30" y="195">Asset-day vector</text>
+                        <text class="s" x="30" y="218">x ∈ ℝᶠ · NaN = missing</text>
+                        <text class="s" x="30" y="238">avail = finite ∧ public</text>
+
+                        <!-- mask -->
+                        <path class="a" d="M175 195 C 195 195, 195 88, 213 88"/>
+                        <rect class="n" x="215" y="38" width="175" height="100"/>
+                        <text class="t" x="230" y="66">Feature mask m</text>
+                        <text class="s" x="230" y="88">50% of available features</text>
+                        <text class="s" x="230" y="107">≥ 1 visible, ≥ 1 hidden</text>
+                        <text class="s" x="230" y="126">rows with &lt; 2 obs. skipped</text>
+
+                        <!-- context encoder -->
+                        <path class="a" d="M390 88 L423 88"/>
+                        <rect class="n" x="425" y="18" width="215" height="140"/>
+                        <text class="t" x="440" y="44">Context encoder f<tspan baseline-shift="sub" font-size="11">θ</tspan></text>
+                        <rect class="nk" x="437" y="55" width="191" height="42"/>
+                        <text class="s" x="448" y="73" style="fill:#fff">masked proj → GELU → LN</text>
+                        <text class="k" x="448" y="90">fused Triton kernel · FP32</text>
+                        <text class="s" x="440" y="120">+2 × [Linear 512 · GELU · LN]</text>
+                        <text class="s" x="440" y="141">Linear 512 → 256 · LN</text>
+
+                        <!-- predictor -->
+                        <path class="a" d="M640 88 L673 88"/>
+                        <rect class="n" x="675" y="38" width="155" height="100"/>
+                        <text class="t" x="690" y="66">Predictor g<tspan baseline-shift="sub" font-size="11">φ</tspan></text>
+                        <text class="s" x="690" y="88">MLP 256 → 512 → 256</text>
+                        <text class="s" x="690" y="107">GELU · Dropout</text>
+                        <text class="s" x="690" y="126">outputs ẑ</text>
+
+                        <!-- target lane -->
+                        <path class="ag" d="M175 240 C 300 240, 300 350, 423 350"/>
+                        <text class="s" x="190" y="345">full view (no mask)</text>
+                        <rect class="nf" x="425" y="290" width="215" height="120"/>
+                        <text class="t" x="440" y="318">Target encoder f<tspan baseline-shift="sub" font-size="11">θ̄</tspan></text>
+                        <text class="s" x="440" y="341">same architecture, EMA weights</text>
+                        <text class="s" x="440" y="361">no gradients · eval mode</text>
+                        <text class="s" x="440" y="381">outputs z (256-d)</text>
+
+                        <!-- EMA -->
+                        <path class="ay" d="M532 160 L532 286"/>
+                        <text class="s" x="545" y="212" style="fill:#e8b26a">EMA after every Adam step</text>
+                        <text class="s" x="545" y="232" style="fill:#e8b26a">θ̄ ← 0.99·θ̄ + 0.01·θ</text>
+
+                        <!-- loss -->
+                        <path class="a" d="M830 88 C 905 88, 925 115, 925 152"/>
+                        <path class="ag" d="M640 350 C 905 350, 925 320, 925 283"/>
+                        <text class="s" x="700" y="340">z, stop-gradient</text>
+                        <rect class="nl" x="855" y="155" width="135" height="125"/>
+                        <text class="t" x="868" y="183">L1 latent loss</text>
+                        <text class="s" x="868" y="206">mean |ẑ − sg(z)|</text>
+                        <text class="s" x="868" y="226">valid rows only</text>
+                        <text class="s" x="868" y="246">Adam on θ, φ</text>
+                        <text class="s" x="868" y="266">cosine LR / epoch</text>
+                    </svg>
+                </div>
+                <div class="jt-legend">
+                    <span><i style="border-color:#75d69c"></i>trainable path (gradients)</span>
+                    <span><i style="border-color:#8a96a3;border-top-style:dashed"></i>no-grad teacher path</span>
+                    <span><i style="border-color:#e8b26a;border-top-style:dashed"></i>EMA weight copy</span>
+                    <span><i style="border-color:#ff5c2a"></i>custom Triton kernel</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>03 · Freeze &amp; hand-off</span><h2>ArgusJEPA embeddings become CassaFormer's input</h2></div>
+            <p class="detail-intro">JEPA is trained only on the training period, then frozen. The two models never share gradients and have separate optimizers, schedules and checkpoints. The Transformer checkpoint just records which JEPA checkpoint produced its inputs.</p>
+
+            <div class="jt-flow">
+                <div class="frozen"><b>❄ Frozen encoder</b><span><code>JEPA.encode(x)</code> runs the context encoder on the full view, with no mask and no dropout</span></div>
+                <div><b>z<sub>a,t</sub> ∈ ℝ<sup>256</sup></b><span>one embedding per asset <em>a</em> and day <em>t</em></span></div>
+                <div><b>Group &amp; window</b><span>chronological, one asset, one continuity segment; never across a split or an identity break</span></div>
+                <div><b>[B, T, 256], detached</b><span>dense, unpadded windows; labels are already shifted to the <em>next</em> day</span></div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>04 · Stage II — CassaFormer · supervised</span><h2>CassaFormer: causal Transformer over daily embeddings</h2></div>
+            <p class="detail-intro">A decoder-only stack in which each position <em>t</em> forecasts that day's next-day target. It has no tokenizer and no learned positional table: a bias-free linear layer maps the 256-d JEPA vector into the 128-d residual stream, and RoPE supplies order.</p>
+
+            <div class="jt-panel">
+                <div class="jt-diagram">
+                    <svg class="d" viewBox="0 0 1000 790" role="img" aria-label="Causal Transformer architecture diagram">
+                        <!-- left column: macro flow -->
+                        <rect class="n" x="20" y="10" width="310" height="56"/>
+                        <text class="t" x="35" y="34">JEPA windows [B, T, 256]</text>
+                        <text class="s" x="35" y="54">frozen inputs, no gradient into JEPA</text>
+                        <path class="a" d="M175 66 L175 88"/>
+                        <rect class="n" x="20" y="90" width="310" height="56"/>
+                        <text class="t" x="35" y="114">Embedder: Linear 256 → 128</text>
+                        <text class="s" x="35" y="134">no bias · no tokenizer · no pos. table</text>
+                        <path class="a" d="M175 146 L175 164"/>
+
+                        <rect class="nm" x="20" y="166" width="310" height="42"/>
+                        <text class="t" x="35" y="192">Block 0</text><text class="s" x="200" y="192">dense SwiGLU</text>
+                        <rect class="nm" x="20" y="218" width="310" height="42"/>
+                        <text class="t" x="35" y="244">Block 1</text><text class="s" x="200" y="244">dense SwiGLU</text>
+                        <rect class="nk" x="20" y="270" width="310" height="42"/>
+                        <text class="t" x="35" y="296">Block 2</text><text class="k" x="200" y="296">MoE 4 × top-1</text>
+                        <rect class="nk" x="20" y="322" width="310" height="42"/>
+                        <text class="t" x="35" y="348">Block 3</text><text class="k" x="200" y="348">MoE 4 × top-1</text>
+                        <rect class="nm" x="20" y="374" width="310" height="42"/>
+                        <text class="t" x="35" y="400">Block 4</text><text class="s" x="200" y="400">dense SwiGLU</text>
+                        <rect class="nm" x="20" y="426" width="310" height="42"/>
+                        <text class="t" x="35" y="452">Block 5</text><text class="s" x="200" y="452">dense SwiGLU</text>
+
+                        <path class="a" d="M175 468 L175 488"/>
+                        <rect class="n" x="20" y="490" width="310" height="42"/>
+                        <text class="t" x="35" y="516">Final RMSNorm</text>
+                        <path class="a" d="M110 532 L110 560"/>
+                        <path class="a" d="M245 532 L245 560"/>
+                        <rect class="n" x="20" y="562" width="150" height="78"/>
+                        <text class="t" x="32" y="586">Linear head</text>
+                        <text class="s" x="32" y="607">point forecast ŷ</text>
+                        <text class="s" x="32" y="627">→ MSE</text>
+                        <rect class="n" x="180" y="562" width="150" height="78"/>
+                        <text class="t" x="192" y="586">Student-t head</text>
+                        <text class="s" x="192" y="607">μ, σ = softplus + ε</text>
+                        <text class="s" x="192" y="627">ν = 2 + softplus → NLL</text>
+                        <path class="a" d="M95 640 L95 668"/>
+                        <path class="a" d="M255 640 L255 668"/>
+                        <rect class="nl" x="20" y="670" width="310" height="110"/>
+                        <text class="t" x="35" y="696">Training objective</text>
+                        <text class="s" x="35" y="718">forecast loss vs. next-day target</text>
+                        <text class="s" x="35" y="737">at every labelled t (valid_mask)</text>
+                        <text class="s" x="35" y="756">+ 0.01 × MoE balance loss</text>
+                        <text class="s" x="35" y="775">AdamW · cosine LR · grad clip</text>
+
+                        <!-- zoom connector -->
+                        <path class="ag" d="M330 187 L360 187 L360 175 L378 175" style="marker-end:none"/>
+                        <path class="ag" d="M330 317 L360 317 L360 560 L378 560" style="marker-end:none"/>
+                        <text class="s" x="338" y="250" transform="rotate(90 348 250)">every block</text>
+
+                        <!-- attention pane -->
+                        <rect class="pane" x="380" y="10" width="605" height="330"/>
+                        <text class="h" x="400" y="38">ATTENTION SUB-LAYER · ALL 6 BLOCKS</text>
+                        <rect class="nm" x="400" y="58" width="130" height="80"/>
+                        <text class="t" x="412" y="84">RMSNorm</text>
+                        <text class="s" x="412" y="106">pre-norm (ln1)</text>
+                        <path class="a" d="M530 98 L546 98"/>
+                        <rect class="n" x="548" y="58" width="130" height="80"/>
+                        <text class="t" x="560" y="84">Q, K, V proj</text>
+                        <text class="s" x="560" y="106">4 heads × 32</text>
+                        <text class="s" x="560" y="125">full MHA, no GQA</text>
+                        <path class="a" d="M678 98 L694 98"/>
+                        <rect class="n" x="696" y="58" width="130" height="80"/>
+                        <text class="t" x="708" y="84">QK-RMSNorm</text>
+                        <text class="s" x="708" y="106">per head, Q and K</text>
+                        <text class="s" x="708" y="125">tames logit scale</text>
+                        <path class="a" d="M826 98 L842 98"/>
+                        <rect class="n" x="844" y="58" width="128" height="80"/>
+                        <text class="t" x="856" y="84">RoPE</text>
+                        <text class="s" x="856" y="106">base 10⁴, pairs</text>
+                        <text class="s" x="856" y="125">offset = cache len</text>
+                        <path class="a" d="M908 138 L908 166"/>
+                        <rect class="n" x="844" y="168" width="128" height="80"/>
+                        <text class="t" x="856" y="194">Causal SDPA</text>
+                        <text class="s" x="856" y="216">FlashAttention</text>
+                        <text class="s" x="856" y="235">on sm80+</text>
+                        <path class="a" d="M844 208 L828 208"/>
+                        <rect class="n" x="696" y="168" width="130" height="80"/>
+                        <text class="t" x="708" y="194">Output proj</text>
+                        <text class="s" x="708" y="216">128 → 128</text>
+                        <path class="a" d="M696 208 L680 208"/>
+                        <rect class="nm" x="548" y="168" width="130" height="80"/>
+                        <text class="t" x="560" y="194">⊕ residual</text>
+                        <text class="s" x="560" y="216">x + attn(ln1 x)</text>
+                        <text class="s" x="400" y="280">Inference: the KV cache appends already-rotated K and V, so cached positions keep</text>
+                        <text class="s" x="400" y="300">their original RoPE angles. Going past max_seq = 512 raises an error instead of</text>
+                        <text class="s" x="400" y="320">silently trimming or re-indexing positions.</text>
+
+                        <!-- ffn pane -->
+                        <rect class="pane" x="380" y="355" width="605" height="425"/>
+                        <text class="h" x="400" y="383">FEED-FORWARD SUB-LAYER · AFTER RMSNorm (ln2)</text>
+                        <rect class="nm" x="400" y="400" width="175" height="100"/>
+                        <text class="t" x="412" y="424">Blocks 0, 1, 4, 5</text>
+                        <text class="s" x="412" y="446">Dense SwiGLU</text>
+                        <text class="s" x="412" y="466">W↓(SiLU(W_g h) ⊙ W↑ h)</text>
+                        <text class="s" x="412" y="486">hidden 352</text>
+
+                        <text class="k" x="600" y="414">BLOCKS 2, 3 · MIXTURE OF EXPERTS</text>
+                        <rect class="n" x="600" y="424" width="175" height="76"/>
+                        <text class="t" x="612" y="448">Router</text>
+                        <text class="s" x="612" y="469">Linear 128 → 4</text>
+                        <text class="s" x="612" y="488">softmax over all (fp32)</text>
+                        <path class="a" d="M775 462 L793 462"/>
+                        <rect class="n" x="795" y="424" width="177" height="76"/>
+                        <text class="t" x="807" y="448">Top-1 gate p</text>
+                        <text class="s" x="807" y="469">not renormalized →</text>
+                        <text class="s" x="807" y="488">router keeps a gradient</text>
+
+                        <rect class="nm" x="600" y="530" width="82" height="56"/>
+                        <text class="t" x="615" y="555">E1</text><text class="s" x="615" y="574">SwiGLU</text>
+                        <rect class="nk" x="692" y="530" width="82" height="56"/>
+                        <text class="t" x="707" y="555">E2</text><text class="s" x="707" y="574">SwiGLU</text>
+                        <rect class="nm" x="784" y="530" width="82" height="56"/>
+                        <text class="t" x="799" y="555">E3</text><text class="s" x="799" y="574">SwiGLU</text>
+                        <rect class="nm" x="876" y="530" width="96" height="56"/>
+                        <text class="t" x="891" y="555">E4</text><text class="s" x="891" y="574">SwiGLU</text>
+                        <path class="ao" d="M883 500 C 883 518, 733 510, 733 528"/>
+                        <text class="s" x="604" y="520">token → its expert</text>
+
+                        <path class="ao" d="M733 586 L733 612"/>
+                        <rect class="nk" x="600" y="614" width="372" height="70"/>
+                        <text class="t" x="612" y="638">y = p · E<tspan baseline-shift="sub" font-size="11">k</tspan>(h)</text>
+                        <text class="s" x="760" y="638">dropless · no capacity limit</text>
+                        <text class="k" x="612" y="664">Triton: sorted tiles, fused up/gate/SiLU/down</text>
+
+                        <rect class="nl" x="400" y="530" width="175" height="154"/>
+                        <text class="t" x="412" y="554">Balance loss</text>
+                        <text class="s" x="412" y="577">4 · Σ load · mean(p)</text>
+                        <text class="s" x="412" y="597">load is detached</text>
+                        <text class="s" x="412" y="617">(Switch-style, top-k)</text>
+                        <text class="s" x="412" y="637">averaged over the</text>
+                        <text class="s" x="412" y="657">MoE blocks, × 0.01</text>
+
+                        <rect class="nm" x="400" y="704" width="572" height="56"/>
+                        <text class="t" x="412" y="730">⊕ residual</text>
+                        <text class="s" x="530" y="730">x + ffn(ln2 x) → next block. First and last blocks are always dense.</text>
+                    </svg>
+                </div>
+                <div class="jt-legend">
+                    <span><i style="border-color:#75d69c"></i>data flow</span>
+                    <span><i style="border-color:#ff5c2a"></i>MoE / Triton path</span>
+                    <span><i style="border-color:#e8b26a"></i>loss terms</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>05 · Custom kernels</span><h2>Triton only where it beats <code>torch.compile</code></h2></div>
+            <p class="detail-intro">Every candidate kernel was A/B-tested on an NVIDIA L4 against the strongest off-the-shelf baseline: <code>torch.compile</code>, cuBLAS, or SDPA/FlashAttention. Parity was checked before timing, and warm-up included compilation. Two kernels survived. The backend is an explicit <code>torch</code> / <code>triton</code> / <code>auto</code> switch with identical state dicts, and each kernel is <code>torch.compiler.disable</code>d so a compiled model graph-breaks cleanly around it.</p>
+
+            <div class="jt-kernels">
+                <div class="jt-panel">
+                    <h3>MoE expert MLP</h3>
+                    <p>The forward pass never writes the up/gate/activation tensors to memory, and the host never waits on token counts.</p>
+                    <div class="jt-flow">
+                        <div><b>1 · Route</b><span>top-k slots sorted by expert <em>on the GPU</em></span></div>
+                        <div><b>2 · Tile</b><span>each expert padded to 64-row tiles, with no host sync</span></div>
+                        <div class="kern"><b>3 · Fused tile</b><span>load tokens once; stream hidden dim through up, gate, SiLU⊙, down in registers</span></div>
+                        <div class="kern"><b>4 · Epilogue</b><span>multiply by router weight, write output</span></div>
+                        <div class="jt-flow-label">Backward &amp; precision</div>
+                        <div><b>Recompute</b><span>backward recomputes up/gate (FP16/BF16) instead of storing them</span></div>
+                        <div><b>Deterministic</b><span>expert-weight grads use split, non-atomic reductions</span></div>
+                        <div><b>FP32 path</b><span>grouped GEMMs that keep up/gate; autotunes IEEE vs 3×TF32</span></div>
+                    </div>
+                    <p style="margin-bottom:0">Tile shapes are autotuned per GPU, keyed by model shape and a power-of-two token bucket that is a runtime argument, so a new batch size never recompiles.</p>
+                </div>
+                <div class="jt-panel">
+                    <h3>JEPA fused first block</h3>
+                    <p><code>LayerNorm(GELU(masked_linear(x)))</code> fused FlashAttention-style. The mask is control information only: hidden features can be NaN, and each feature keeps its own weight column.</p>
+                    <div class="jt-flow">
+                        <div class="kern"><b>1 · Load</b><span>zero masked features while each input tile loads</span></div>
+                        <div class="kern"><b>2 · On-chip row</b><span>projection + bias → exact GELU → LayerNorm without leaving SRAM</span></div>
+                        <div><b>3 · Store little</b><span>normalized output, per-row stats, padded masked-input copy</span></div>
+                        <div class="jt-flow-label">Backward</div>
+                        <div><b>Recompute</b><span>projection rebuilt from the saved copy; pre-activation grad written once</span></div>
+                        <div><b>1 GEMM</b><span>weight gradient as a single cuBLAS call; bias/LN grads non-atomic</span></div>
+                    </div>
+                    <p style="margin-bottom:0">It runs only for strict FP32. Under FP16/BF16 autocast the encoder dispatches to PyTorch automatically, because that is faster there. The EMA teacher and <code>encode()</code> always use PyTorch.</p>
+                </div>
+            </div>
+            <div class="jt-panel" style="margin-top:1rem">
+                <h3 style="margin-top:0">Measured on an L4, against <code>torch.compile</code></h3>
+                <div class="jt-diagram">
+                    <table class="jt-table">
+                        <thead><tr><th>Operation</th><th>Shipped implementation</th><th>Custom vs compile</th></tr></thead>
+                        <tbody>
+                            <tr><td>MoE experts (per layer)</td><td>Triton, fused</td><td class="jt-win">1.2 – 4.1×</td></tr>
+                            <tr><td>Full Transformer step</td><td>Triton MoE + compiled rest</td><td class="jt-win">1.1 – 1.5×</td></tr>
+                            <tr><td>JEPA first block, FP32</td><td>Triton, fused</td><td class="jt-win">1.01 – 1.12×</td></tr>
+                            <tr><td>JEPA first block, FP16/BF16</td><td>PyTorch (auto-dispatched)</td><td class="jt-loss">0.75 – 1.01×</td></tr>
+                            <tr><td>JEPA bare masked projection</td><td>PyTorch (one cuBLAS GEMM)</td><td class="jt-loss">0.58 – 0.84×</td></tr>
+                            <tr><td>RMSNorm, QK-norm + RoPE, SwiGLU</td><td>PyTorch</td><td class="jt-loss">tied or lost, removed</td></tr>
+                            <tr><td>Attention</td><td>SDPA / FlashAttention</td><td>baseline</td></tr>
+                            <tr><td>Early sparse-gather JEPA kernel</td><td>discarded</td><td class="jt-loss">30 – 100× slower</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>06 · Design decisions</span><h2>Why it is built this way</h2></div>
+
+            <div class="jt-decisions">
+                <div class="jt-decision"><h4>Two stages, never joint</h4><p>The forecasting loss cannot reshape the representation, and JEPA is fit on the training period only. That keeps leakage boundaries simple to audit, and either model can be retrained on its own.</p></div>
+                <div class="jt-decision"><h4>Per-day JEPA, temporal Transformer</h4><p>JEPA learns cross-sectional structure within a single day. All multi-day dynamics belong to the Transformer, which is why the inputs carry no rolling-window statistics.</p></div>
+                <div class="jt-decision"><h4>Mask by zeroing, not compaction</h4><p>Hidden and missing features are zeroed inside the projection, so every feature keeps its own weight column and NaNs never reach the arithmetic. Missingness becomes something the model sees, not an imputation.</p></div>
+                <div class="jt-decision"><h4>Latent L1 + EMA teacher</h4><p>Predicting the teacher's embedding rather than raw values avoids fitting noise in heavy-tailed inputs. The EMA target (0.99) plus a predictor head prevents collapse without contrastive negatives.</p></div>
+                <div class="jt-decision"><h4>RoPE, no learned positions</h4><p>Relative position comes from rotations, so cached inference stays exact: cached keys keep their original angles. No position table has to be learned from limited financial data.</p></div>
+                <div class="jt-decision"><h4>QK-RMSNorm before RoPE</h4><p>Normalizing Q and K per head bounds attention-logit growth, which keeps training stable at a small width. Attention is full MHA (4 × 32), since GQA saves little at this scale.</p></div>
+                <div class="jt-decision k"><h4>MoE only in the middle</h4><p>Blocks 2 and 3 route each day to one of 4 experts, letting different market regimes use different MLPs. The first and last blocks stay dense, so input embedding and output readout are shared.</p></div>
+                <div class="jt-decision k"><h4>Top-1 without renormalizing</h4><p>Renormalizing a single selected gate would always give 1.0 and cut the router off from the forecast loss. Keeping the raw softmax probability preserves that gradient. Routing is dropless, with no capacity limit.</p></div>
+                <div class="jt-decision"><h4>Student-t head option</h4><p>Returns are heavy-tailed. The distributional head learns location, a softplus scale and degrees of freedom held above 2, so the predicted variance stays finite. It trains on NLL, while the point head uses MSE.</p></div>
+                <div class="jt-decision"><h4>Leakage-safe supervision</h4><p>Labels are shifted to the next day before batching. A boolean <code>valid_mask</code> selects the labelled positions, and windows never cross assets, continuity breaks or split boundaries.</p></div>
+            </div>
+        </section>
+
+        <div class="detail-links">
+            <a href="https://github.com/daMS2005/jepa-transformer-model" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> Model repository</a>
+            <a href="https://huggingface.co/dams2005/ArgusJEPA" target="_blank" rel="noopener noreferrer"><img src="images/hf-logo-small.png" alt="" width="18" height="18"> ArgusJEPA weights</a>
+            <a href="https://huggingface.co/dams2005/CassaFormer" target="_blank" rel="noopener noreferrer"><img src="images/hf-logo-small.png" alt="" width="18" height="18"> CassaFormer weights</a>
+            <a href="/#research"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to flagship work</a>
+        </div>
+    </main>
+
+    <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
+    <script src="javascript-files/main.js?v=access-v2"></script>
+</body>
+</html>

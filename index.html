@@ -127,9 +127,41 @@
             </div>
 
             <div class="flagship-list">
+                <article class="flagship-card flagship-jepa">
+                    <div class="flagship-copy">
+                        <div class="flagship-meta"><span>01</span><span>Model &middot; weights released</span></div>
+                        <h3>JEPA Transformer</h3>
+                        <p class="flagship-lede">A two-stage equity forecaster. ArgusJEPA learns point-in-time asset-day embeddings; frozen, they become the sequence input to CassaFormer, a causal RoPE + Mixture-of-Experts Transformer with custom Triton kernels.</p>
+                        <dl class="flagship-facts">
+                            <div><dt>256-d</dt><dd>daily embedding</dd></div>
+                            <div><dt>4&times;1</dt><dd>MoE experts</dd></div>
+                            <div><dt>1.5&times;</dt><dd>vs torch.compile</dd></div>
+                        </dl>
+                        <div class="project-actions flagship-actions" aria-label="JEPA Transformer links">
+                            <a class="project-action project-action-primary" href="/jepa-transformer.html">Architecture case study <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                            <a class="project-action" href="https://huggingface.co/dams2005/ArgusJEPA" target="_blank" rel="noopener noreferrer">ArgusJEPA</a>
+                            <a class="project-action" href="https://huggingface.co/dams2005/CassaFormer" target="_blank" rel="noopener noreferrer">CassaFormer</a>
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/jepa-transformer-model" target="_blank" rel="noopener noreferrer" aria-label="Open the model repository on GitHub" title="Model repository on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="flagship-visual thesis-visual" aria-label="Diagram of the two-stage JEPA Transformer">
+                        <span class="visual-label">Pretrain, freeze, forecast</span>
+                        <div class="thesis-flow">
+                            <div class="flow-node">Asset-day features<small>prices, filings, macro, news</small></div>
+                            <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+                            <div class="flow-node flow-node-accent">ArgusJEPA<small>frozen 256-d embedding</small></div>
+                            <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+                            <div class="flow-split">
+                                <span>CassaFormer</span>
+                                <span>next-day forecast</span>
+                            </div>
+                        </div>
+                        <p>Self-supervised representation first. Supervised forecasting second.</p>
+                    </div>
+                </article>
                 <article class="flagship-card flagship-thesis">
                     <div class="flagship-copy">
-                        <div class="flagship-meta"><span>01</span><span>Thesis &middot; paper draft</span></div>
+                        <div class="flagship-meta"><span>02</span><span>Thesis &middot; paper draft</span></div>
                         <h3>Brain&ndash;LLM Feature Correspondence</h3>
                         <p class="flagship-lede">A cross-description test of whether sparse language-model features and human brain responses depend on the same representational structure.</p>
                         <dl class="flagship-facts">
@@ -162,7 +194,7 @@
 
                 <article class="flagship-card flagship-tcacc">
                     <div class="flagship-copy">
-                        <div class="flagship-meta"><span>02</span><span>Autonomous media system</span></div>
+                        <div class="flagship-meta"><span>03</span><span>Autonomous media system</span></div>
                         <h3>TC_ACC Documentary Studio</h3>
                         <p class="flagship-lede">A multi-stage production system that turns a case reference into a researched, narrated, rendered documentary episode.</p>
                         <dl class="flagship-facts">
@@ -183,29 +215,6 @@
                     </div>
                 </article>
 
-                <article class="flagship-card flagship-npc">
-                    <div class="flagship-copy">
-                        <div class="flagship-meta"><span>03</span><span class="status-live"><i></i> Active development</span></div>
-                        <h3>NPC Transformer</h3>
-                        <p class="flagship-lede">A transformer-based model for NPC behavior. The core is implemented; training and evaluation are still ahead, so this is a development marker rather than a finished claim.</p>
-                        <dl class="flagship-facts">
-                            <div><dt>Core</dt><dd>implemented</dd></div>
-                            <div><dt>Next</dt><dd>training</dd></div>
-                            <div><dt>Then</dt><dd>evaluation</dd></div>
-                        </dl>
-                        <div class="project-actions flagship-actions" aria-label="NPC Transformer links">
-                            <a class="project-action project-action-primary" href="/npc-transformer.html">Development page <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                        </div>
-                    </div>
-                    <div class="flagship-visual npc-visual" aria-label="Placeholder architecture for the NPC Transformer project">
-                        <div class="npc-grid" aria-hidden="true">
-                            <span></span><span></span><span></span><span></span>
-                            <span></span><span></span><span></span><span></span>
-                            <span></span><span></span><span></span><span></span>
-                        </div>
-                        <div class="npc-core">Transformer core<small>training pending</small></div>
-                    </div>
-                </article>
             </div>
         </div>
     </section>

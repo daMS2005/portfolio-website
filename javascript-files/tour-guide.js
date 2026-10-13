@@ -59,7 +59,7 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
     'Hello there.',
     'Got a question? Open the chat and ask me anything about Daniel.',
     'The flagship section is the good stuff, in my opinion.',
-    'NPC Transformer is still training-room material. No fake benchmarks here.',
+    'The JEPA Transformer pretrains ArgusJEPA, freezes it, then forecasts with CassaFormer.',
     'I am rendered in three.js, in case you were wondering.',
     'The resume button is up in the hero, if you need it.',
   ];

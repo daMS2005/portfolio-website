@@ -120,12 +120,12 @@
       "dest": "/thesis.html"
     },
     {
-      "src": "/npc-transformer",
-      "dest": "/npc-transformer.html"
+      "src": "/jepa-transformer",
+      "dest": "/jepa-transformer.html"
     },
     {
-      "src": "/npc-transformer/",
-      "dest": "/npc-transformer.html"
+      "src": "/jepa-transformer/",
+      "dest": "/jepa-transformer.html"
     },
     {
       "src": "/personal",

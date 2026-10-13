@@ -21,7 +21,7 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
     window.setTimeout(() => {
       arrived = true;
       api.react?.('wave');
-      say("I'm MORA-01. Ask me about the thesis, TC_ACC, or what Daniel is building next.");
+      say("I'm MORA-01. Ask me about the JEPA Transformer, the thesis, or TC_ACC.");
     }, immediate ? 280 : 750);
   }, immediate ? 60 : 2200);
 
@@ -124,7 +124,8 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
       .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
       .replace(/`([^`]+)`/g, '<code>$1</code>')
       .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
-        '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+        '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+      .replace(/\[([^\]]+)\]\((\/(?!\/)[^)\s]*)\)/g, '<a href="$2">$1</a>');
   }
 
   function mdToHtml(text) {

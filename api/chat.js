@@ -282,7 +282,10 @@ Rules:
   or onomatopoeia ("beep", "boop", "bleep", "*whirr*") and never write asterisk
   sound effects. Write like a sharp colleague who knows the work well.
 - Use **bold** for project names, technologies and roles so answers skim well,
-  bullets for lists, and markdown links when pointing to a URL.
+  bullets for lists, and markdown links when pointing to a URL. Give every
+  link readable text, never the bare path or URL: write
+  [JEPA Transformer case study](/jepa-transformer.html), not
+  [/jepa-transformer.html](/jepa-transformer.html).
 - Never use LaTeX or math delimiters - no "$...$", "\\rho", "\\approx", "\\ge".
   The chat panel renders plain text, so write symbols out directly: "rho =
   -0.056", "r is about 0.07-0.09", "p = 0.89", "80% power".
@@ -408,25 +411,33 @@ export default async function handler(req, res) {
   const extra = await retrieve(userMsg, key);
 
   try {
-    // fall back once if the primary model is overloaded or retired
+    // low thinking keeps 3.8 replies to seconds instead of a minute or more;
+    // fall back once if it errors, is overloaded, or stalls past 25s
     let r;
-    for (const model of ['gemini-3.8-flash', 'gemini-flash-latest']) {
-      r = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: KNOWLEDGE + extra }] },
-            contents,
-            generationConfig: { temperature: 0.75, maxOutputTokens: 1200 },
-          }),
-        }
-      );
+    for (const [model, thinking] of [['gemini-3.8-flash', { thinkingLevel: 'low' }], ['gemini-flash-latest']]) {
+      try {
+        r = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: AbortSignal.timeout(25000),
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: KNOWLEDGE + extra }] },
+              contents,
+              generationConfig: { temperature: 0.75, maxOutputTokens: 1200, ...(thinking && { thinkingConfig: thinking }) },
+            }),
+          }
+        );
+      } catch (e) {
+        console.error('gemini timeout', model, e.name);
+        r = null;
+        continue;
+      }
       if (r.ok) break;
       console.error('gemini error', model, r.status, (await r.text()).slice(0, 300));
     }
-    if (!r.ok) return res.status(502).json({ error: 'brain hiccup' });
+    if (!r?.ok) return res.status(502).json({ error: 'brain hiccup' });
     const data = await r.json();
     const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join('')
       || "I lost my train of thought there - mind asking again?";

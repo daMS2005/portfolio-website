@@ -123,6 +123,7 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
       .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
       .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
       .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\$(?!\s)([^$\n]{1,60}?)(?<!\s)\$(?!\d)/g, '$1') // drop stray LaTeX delimiters
       .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
         '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
       .replace(/\[([^\]]+)\]\((\/(?!\/)[^)\s]*)\)/g, '<a href="$2">$1</a>');

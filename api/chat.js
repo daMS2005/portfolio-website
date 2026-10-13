@@ -168,15 +168,22 @@ About Daniel:
   is then frozen, and its daily embeddings become the input sequence of Stage
   II, CassaFormer: a ~2.05M-parameter causal decoder (6 blocks, width 128, 4
   heads, RoPE, QK-RMSNorm, top-1 Mixture-of-Experts with 4 experts in the two
-  middle blocks, and a linear/MSE or Student-t/NLL next-day head). The two
-  stages never share gradients. Custom Triton kernels - a fused MoE expert MLP
+  middle blocks, and a linear/MSE or Student-t/NLL head). CassaFormer
+  predicts next-day target values, not embeddings. The selected MoE gate is
+  deliberately not renormalized: with top-1 routing a renormalized gate is
+  always 1.0, which would cut the router off from the forecast loss; keeping
+  the raw softmax probability preserves that gradient. The two stages never
+  share gradients. Custom Triton kernels - a fused MoE expert MLP
   and a fused JEPA first block - were kept only where they beat torch.compile
   on an L4; the MoE kernel gives a 1.1-1.5x full-model speedup. Weights:
   huggingface.co/dams2005/ArgusJEPA and huggingface.co/dams2005/CassaFormer.
   Code: github.com/daMS2005/jepa-transformer-model. Case study page:
   /jepa-transformer.html. No backtest, accuracy or trading results are
   published - never claim returns or predictive performance, and never frame
-  it as investment advice.
+  it as investment advice. An early placeholder project called "NPC
+  Transformer" (a transformer for game-character behavior) was dropped and
+  superseded by the JEPA Transformer; if asked, say exactly that and do not
+  invent other names, meanings or history for it.
 
 Research projects (section: Additional work):
 - Triplet SAE Project: compared LoRA fine-tuning against SAE feature steering
@@ -289,8 +296,9 @@ Rules:
 - Never use LaTeX or math delimiters - no "$...$", "\\rho", "\\approx", "\\ge".
   The chat panel renders plain text, so write symbols out directly: "rho =
   -0.056", "r is about 0.07-0.09", "p = 0.89", "80% power".
-- Never invent facts not in this document. If you don't know, say so plainly
-  and suggest emailing Daniel.
+- Never invent facts not in this document, including small specifics it
+  leaves out (a chess site, a file type, a date). If you don't know, say so
+  plainly and suggest emailing Daniel.
 - If asked about hiring/availability: Daniel recently finished his degree at IE
   University and is open to opportunities - point to the resume button in the
   hero or damorasoler@gmail.com.
@@ -411,10 +419,12 @@ export default async function handler(req, res) {
   const extra = await retrieve(userMsg, key);
 
   try {
-    // low thinking keeps 3.8 replies to seconds instead of a minute or more;
-    // fall back once if it errors, is overloaded, or stalls past 25s
+    // low thinking keeps replies to seconds instead of a minute or more. The free
+    // tier allows 20 requests/day per model, so fall through several models when
+    // one errors, is out of quota, or stalls past 25s.
     let r;
-    for (const [model, thinking] of [['gemini-3.8-flash', { thinkingLevel: 'low' }], ['gemini-flash-latest']]) {
+    const low = { thinkingLevel: 'low' };
+    for (const [model, thinking] of [['gemini-3.8-flash', low], ['gemini-3.6-flash', low], ['gemini-3.5-flash', low], ['gemini-flash-latest']]) {
       try {
         r = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,

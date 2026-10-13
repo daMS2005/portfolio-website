@@ -30,12 +30,14 @@ About Daniel:
   student-led diversity event, drawing more than 500 attendees and including a
   salsa and bachata class.
 - Outside his technical work, Daniel has trained in the gym for about four
-  years. He started around 130 lb and, while growing from roughly 6 ft 2 in to
-  6 ft 4 in, built toward 200 lb. He likes hypertrophy training, especially leg
+  years. He likes hypertrophy training, especially leg
   day, and trains mostly by feel. He enjoys reading lifting research, partly so
   he knows what he is choosing to ignore; do not portray his own gym routine as
-  rigidly scientific or evidence optimized. Do not discuss injuries or private
-  health details.
+  rigidly scientific or evidence optimized. The Outside work page has his
+  playful exercise tier list: S+ is incline dumbbell press, leg extension,
+  cable lateral raise and incline dumbbell curl; conventional deadlift, lying
+  leg curl and walking lunges sit in F ("I am not walking around the gym").
+  Do not discuss body weight, injuries or private health details.
 - Daniel has played chess since childhood, plays ten-minute games only, is
   around 1400 currently and peaked around 1700. As White he usually plays the
   Spanish or Italian; as Black he chooses by feel. He deliberately avoids heavy
@@ -44,17 +46,8 @@ About Daniel:
 - Daniel actively follows and invests in stocks, especially technology, with
   some cryptocurrency. He enjoys forming an investment thesis, applying light
   statistical validation, and defining a stop-loss; he does not trade options.
-  "Wall Street Bets protege" and "gaslighting himself into gambling" are
-  self-aware jokes, not investing claims. Never give financial advice or reveal private holdings,
+  Never give financial advice or reveal private holdings,
   returns or account details on his behalf.
-- Daniel watches anime but does not want it treated as his whole personality.
-  His top tier includes Mob Psycho 100, pre-Wano One Piece and Attack on Titan;
-  Vinland Saga is also a favorite. Favorite characters include Mob and Rock
-  Lee, and he watches subbed. He strongly dislikes One Piece from Wano onward.
-  His Marvel opinion is that the MCU peaked at Civil War: "Two goofballs in
-  leotards aren't beating a dude in a mech suit."
-- Daniel likes indie music. His 2025 Spotify Wrapped top track was "Cigarette" by
-  Alfie Jukes, which he listened to 587 times.
 - Contact: damorasoler@gmail.com (mailto link in the Contact section) and
   LinkedIn. GitHub: daMS2005. Hugging Face: dams2005.
 - Bachelor thesis, supervised by Dr. Luciano Dyballa, now written up as a

@@ -442,7 +442,9 @@
 }
 
 .personal-card h2,
-.personal-card h3 {
+.personal-card h3,
+.exercise-board h2,
+.exercise-board h3 {
   margin: 0;
   color: var(--ink);
   font-size: clamp(1.35rem, 2.6vw, 1.9rem);
@@ -473,6 +475,121 @@
   font-size: 1.4rem;
   letter-spacing: -0.02em;
 }
+
+.exercise-board {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #080808;
+}
+
+.exercise-board-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.35rem, 3vw, 2rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.exercise-board-heading > p {
+  max-width: 34ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  text-align: right;
+}
+
+.tier-list {
+  display: grid;
+}
+
+.tier-row {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  min-height: 82px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tier-row:last-child {
+  border-bottom: 0;
+}
+
+.tier-rank {
+  display: grid;
+  place-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  color: #080808;
+  font-size: 1.5rem;
+  font-weight: 850;
+}
+
+.tier-s .tier-rank { background: #ff7552; }
+.tier-s-plus .tier-rank { background: #ff5c2a; }
+.tier-a .tier-rank { background: #ffad58; }
+.tier-b .tier-rank { background: #e0c766; }
+.tier-c .tier-rank { background: #87b78f; }
+.tier-d .tier-rank { background: #6c9cab; }
+.tier-f .tier-rank { background: #8c789f; }
+
+.tier-items {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.tier-items span {
+  padding: 0.48rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #d9d6d0;
+  font-size: 0.76rem;
+  line-height: 1;
+}
+
+.tier-details {
+  border-top: 1px solid var(--line);
+}
+
+.tier-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 0.8rem 1.15rem;
+  color: #bbb7b0;
+  font-size: 0.76rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.tier-details summary::-webkit-details-marker { display: none; }
+.tier-details summary i { transition: transform .2s ease; }
+.tier-details[open] summary i { transform: rotate(180deg); }
+.tier-details[open] summary { border-bottom: 1px solid var(--line); }
+
+.tier-commentary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  border-top: 1px solid var(--line);
+  background: var(--line);
+}
+
+.tier-commentary p {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  background: #0a0a0a;
+  color: #97938d;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.tier-commentary strong { color: #d5d1ca; }
 
 .personal-manual-grid .principle-card { min-height: 220px; }
 
@@ -1916,6 +2033,23 @@ body.guide-hidden .guide-entry { display: inline-flex; }
 
   .principle-card {
     min-height: 0;
+  }
+
+  .exercise-board-heading {
+    display: block;
+  }
+
+  .exercise-board-heading > p {
+    margin-top: 0.8rem;
+    text-align: left;
+  }
+
+  .tier-row {
+    grid-template-columns: 56px 1fr;
+  }
+
+  .tier-commentary {
+    grid-template-columns: 1fr;
   }
 
   .flagship-card,

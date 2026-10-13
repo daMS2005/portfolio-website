@@ -18,9 +18,9 @@
     <nav class="navbar">
         <div class="nav-content">
             <div class="logo-section">
-                <a href="/" style="text-decoration: none;"><div class="logo">DM</div></a>
+                <a href="/" class="logo-link"><div class="logo">DM</div></a>
             </div>
-            <ul class="nav-links">
+            <ul class="nav-links legal-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/terms">Terms</a></li>
             </ul>
@@ -29,7 +29,7 @@
 
     <main class="legal-doc">
         <h1>Privacy Policy</h1>
-        <p class="last-updated">Last updated: September 3, 2026</p>
+        <p class="last-updated">Last updated: October 13, 2026</p>
 
         <p>This Privacy Policy describes how Daniel Mora (“we”, “me”, or “I”) collects, uses, and shares information when you use <a href="/" style="color: #ff8c42;">daniel-mora.com</a> and related applications or integrations that rely on Meta (Facebook) Platform APIs or TikTok developer APIs.</p>
 
@@ -39,7 +39,9 @@
         <h2>Information we may collect</h2>
         <ul>
             <li><strong>Website usage.</strong> Standard server or hosting logs may include IP address, approximate location, browser type, referring URLs, and timestamps.</li>
-            <li><strong>Communications.</strong> If you contact me by email or submit the TC_ACC case-request form, I process the contents of your message and your contact details to respond.</li>
+            <li><strong>Site analytics.</strong> A cookieless script records which pages you view, which sections you scroll to, which links and buttons you click, how long you stay, and the referring site, along with your approximate city and country (derived from your IP address by the host), browser, operating system, screen size, language, and time zone. A random visit ID lives only in the open page and is never stored on your device. Aggregate counts and the most recent 100 visits are kept.</li>
+                <li><strong>Chat assistant (MORA-01).</strong> If you use the on-site chat, your messages are sent to Google's Gemini API to generate replies. The text of your questions, with your approximate country and city, is logged (the most recent 200) to improve the site. Please do not enter personal or sensitive information in the chat.</li>
+                <li><strong>Communications.</strong> If you contact me by email or submit the TC_ACC case-request form, I process the contents of your message and your contact details to respond.</li>
             <li><strong>Data from Meta or TikTok.</strong> When you authorize an app that uses Meta or TikTok OAuth, Meta or TikTok may share identifiers and permitted profile or content-related data according to your permissions and their policies. I only request data needed for stated app features.</li>
         </ul>
 
@@ -59,7 +61,9 @@
             <li><strong>Meta Platforms, Inc.</strong> and affiliated companies, when your use involves Meta APIs—subject to Meta’s Terms and Policies.</li>
             <li><strong>TikTok</strong> and its service providers when your use involves TikTok APIs—subject to TikTok’s developer and user policies.</li>
             <li><strong>Infrastructure providers</strong> (for example hosting on Vercel or similar), solely to operate the site and services.</li>
-            <li><strong>Email delivery providers</strong> (currently Resend), solely to deliver messages submitted through the TC_ACC request form.</li>
+            <li><strong>Google (Gemini API)</strong>, solely to generate chat assistant replies.</li>
+                <li><strong>Upstash</strong>, the database that stores analytics counts, recent visits, and recent chat questions.</li>
+                <li><strong>Email delivery providers</strong> (currently Resend), solely to deliver messages submitted through the TC_ACC request form.</li>
         </ul>
 
         <h2>Retention</h2>
@@ -75,7 +79,7 @@
         <h2>Cookies</h2>
         <p>This site is lightweight and may use only essential cookies or similar technologies required for hosting or security. Third-party integrations you load in your browser may set their own cookies according to their policies.</p>
 
-                <p>This site also collects anonymous, cookieless usage statistics (pages viewed, buttons clicked, approximate region derived server-side). No personal data is stored, no identifiers are placed on your device, and nothing is shared with advertisers.</p>
+                <p>This site does not set analytics cookies or place identifiers on your device. The usage statistics described above are not shared with advertisers.</p>
 <h2>Children</h2>
         <p>My services are not directed at children under 16 (or the minimum age required in your jurisdiction). I do not knowingly collect personal data from children.</p>
 

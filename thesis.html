@@ -133,7 +133,7 @@
                     <div><h3>Ablate, compare, and calibrate</h3><p>Each feature—or correlated feature group—is removed only in held-out data to measure the loss in predictive performance. Brain and model reliance rankings are compared in both transfer directions, against fully retuned temporal nulls, identity nulls, robustness sweeps, and a semi-synthetic power analysis.</p></div>
                 </li>
             </ol>
-            <img class="research-figure" src="images/thesis-method.png" alt="Five-step research design: pair two descriptions, select a source-only SAE basis, predict participant BOLD and language-model hidden states, compare removal-based feature profiles, and test against structured nulls" width="844" height="1357">
+            <a href="images/thesis-method.png" target="_blank" rel="noopener"><img class="research-figure research-figure-tall" src="images/thesis-method.png" alt="Five-step research design: pair two descriptions, select a source-only SAE basis, predict participant BOLD and language-model hidden states, compare removal-based feature profiles, and test against structured nulls" width="870" height="1355"></a>
         </section>
 
         <section class="detail-section">
@@ -141,11 +141,11 @@
             <p class="detail-intro">The analysis does not treat “the brain” as one score. It begins with quality-controlled time series, preserves the full story timeline through censoring, and models responses across a 200-parcel cortical atlas.</p>
             <div class="brain-data-grid">
                 <figure class="brain-data-figure brain-data-figure-wide">
-                    <img src="images/thesis-brain-data.webp" alt="Three-part fMRI data figure showing head-motion censoring for one run, a cleaned standardized BOLD response matrix across 200 cortical parcels, and cortical maps of leave-one-participant-out inter-subject correlation" width="1113" height="667" loading="lazy">
+                    <a href="images/thesis-brain-data.webp" target="_blank" rel="noopener"><img src="images/thesis-brain-data.webp" alt="Three-part fMRI data figure showing head-motion censoring for one run, a cleaned standardized BOLD response matrix across 200 cortical parcels, and cortical maps of leave-one-participant-out inter-subject correlation" width="1113" height="667" loading="lazy"></a>
                     <figcaption><strong>From raw movement to usable signal.</strong> The top panels show motion-based quality control and the cleaned parcel-by-time BOLD matrix. The cortical views show where participants share a reliable stimulus-locked response, with the strongest consistency around superior temporal regions.</figcaption>
                 </figure>
                 <figure class="brain-data-figure">
-                    <img src="images/thesis-brain-encoding.webp" alt="Cortical maps and histogram showing held-out cross-description prediction correlation across 200 brain parcels" width="1067" height="513" loading="lazy">
+                    <a href="images/thesis-brain-encoding.webp" target="_blank" rel="noopener"><img src="images/thesis-brain-encoding.webp" alt="Cortical maps and histogram showing held-out cross-description prediction correlation across 200 brain parcels" width="1067" height="513" loading="lazy"></a>
                     <figcaption><strong>Where the transferred feature bank predicts.</strong> Held-out prediction is weak overall but not spatially uniform. The cortical maps and parcel distribution show where the source-selected sparse basis carries predictive signal on the second description.</figcaption>
                 </figure>
                 <aside class="brain-data-note">
@@ -169,7 +169,7 @@
                 <div class="result-card"><strong>r ≈ .07–.09</strong><p class="detail-copy">The frozen feature basis weakly predicts held-out BOLD responses.</p></div>
                 <div class="result-card"><strong>ρ = −.056</strong><p class="detail-copy">The observed BOLD–model feature-profile agreement is no better than the retuned temporal null (p = .89).</p></div>
             </div>
-            <img class="research-figure" src="images/thesis-results.png" alt="Result plots comparing observed correspondence with temporal nulls, estimates across model and direction, and correspondence across feature-bank sizes" width="1253" height="447" loading="lazy" style="margin-top:1rem">
+            <a href="images/thesis-results.png" target="_blank" rel="noopener"><img class="research-figure" src="images/thesis-results.png" alt="Result plots comparing observed correspondence with temporal nulls, estimates across model and direction, and correspondence across feature-bank sizes" width="1253" height="447" loading="lazy" style="margin-top:1rem"></a>
         </section>
 
         <section class="detail-section">
@@ -190,5 +190,6 @@
 
     <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
     <script src="javascript-files/main.js?v=access-v2"></script>
+    <script src="javascript-files/analytics.js" defer></script>
 </body>
 </html>

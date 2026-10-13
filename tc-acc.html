@@ -23,14 +23,14 @@
       .case-page h1 { font-size: clamp(1.9rem, 4vw, 2.9rem); line-height: 1.12; margin-bottom: 0.9rem; }
       .case-lede { font-size: 1.05rem; line-height: 1.65; color: #cfcfcf; max-width: 68ch; }
       .case-page h2 {
-        font-size: 1.25rem; margin: 3.2rem 0 1rem;
+        font-size: 1.25rem; margin: 3.2rem 0 1rem; text-align: left; text-wrap: balance;
         padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);
       }
       .case-page h3 { font-size: 0.95rem; color: #ffb08f; margin: 1.6rem 0 0.5rem; }
       .case-page p { line-height: 1.65; color: #c8c8c8; max-width: 72ch; margin-bottom: 0.9rem; }
 
       .stat-row {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
         gap: 0.8rem; margin: 2rem 0 0;
       }
       .stat {
@@ -111,7 +111,9 @@
         background: rgba(255,69,0,0.06); border: 1px solid rgba(255,92,31,0.28);
         border-radius: 14px; padding: 1.1rem 1.2rem; margin-top: 1.4rem;
       }
+      .disclosure p:first-child { margin-top: 0; }
       .disclosure p:last-child { margin-bottom: 0; }
+      .case-page .request-note a { color: #ffb08f; }
       .case-links { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.6rem; }
       .case-links a {
         display: inline-flex; align-items: center; gap: 0.45rem;
@@ -180,7 +182,7 @@
         <div class="episodes">
             <article class="episode">
                 <div class="episode-media">
-                    <video controls playsinline preload="none" poster="/images/tcacc-animation-only.jpg" data-src="/videos/tcacc-animation-only.mp4" aria-label="Animation-only TC_ACC render">
+                    <video playsinline preload="none" poster="/images/tcacc-animation-only.jpg" data-src="/videos/tcacc-animation-only.mp4" aria-label="Animation-only TC_ACC render">
                         Your browser does not support embedded video.
                     </video>
                     <button class="episode-load" type="button" aria-label="Load and play the animation-only TC_ACC render"><i class="fas fa-play" aria-hidden="true"></i></button>
@@ -194,7 +196,7 @@
             </article>
             <article class="episode">
                 <div class="episode-media">
-                    <video controls playsinline preload="none" poster="/images/tcacc-full-july.jpg" data-src="/videos/tcacc-full-july.mp4" aria-label="First full TC_ACC production pass">
+                    <video playsinline preload="none" poster="/images/tcacc-full-july.jpg" data-src="/videos/tcacc-full-july.mp4" aria-label="First full TC_ACC production pass">
                         Your browser does not support embedded video.
                     </video>
                     <button class="episode-load" type="button" aria-label="Load and play the first full TC_ACC production pass"><i class="fas fa-play" aria-hidden="true"></i></button>
@@ -208,7 +210,7 @@
             </article>
             <article class="episode">
                 <div class="episode-media">
-                    <video controls playsinline preload="none" poster="/images/tcacc-full-august.jpg" data-src="/videos/tcacc-full-august.mp4" aria-label="Refined TC_ACC production pass">
+                    <video playsinline preload="none" poster="/images/tcacc-full-august.jpg" data-src="/videos/tcacc-full-august.mp4" aria-label="Refined TC_ACC production pass">
                         Your browser does not support embedded video.
                     </video>
                     <button class="episode-load" type="button" aria-label="Load and play the refined TC_ACC production pass"><i class="fas fa-play" aria-hidden="true"></i></button>
@@ -222,7 +224,7 @@
             </article>
             <article class="episode">
                 <div class="episode-media">
-                    <video controls playsinline preload="none" poster="/images/tcacc-recent-episode.jpg" data-src="/videos/tcacc-recent-episode.mp4" aria-label="Recent TC_ACC episode render">
+                    <video playsinline preload="none" poster="/images/tcacc-recent-episode.jpg" data-src="/videos/tcacc-recent-episode.mp4" aria-label="Recent TC_ACC episode render">
                         Your browser does not support embedded video.
                     </video>
                     <button class="episode-load" type="button" aria-label="Load and play the recent TC_ACC episode render"><i class="fas fa-play" aria-hidden="true"></i></button>
@@ -280,7 +282,7 @@
                 <div class="what">Voice and sound production</div>
             </div>
             <div class="gate">
-                <i class="fas fa-shield-halved"></i>
+                <i class="fas fa-shield-alt"></i>
                 <span><strong>Independent review gate</strong></span>
             </div>
             <div class="dept">
@@ -288,7 +290,7 @@
                 <div class="what">Editorial assembly and motion</div>
             </div>
             <div class="gate">
-                <i class="fas fa-shield-halved"></i>
+                <i class="fas fa-shield-alt"></i>
                 <span><strong>Independent review gate</strong></span>
             </div>
             <div class="dept">
@@ -342,12 +344,15 @@
         </div>
     </main>
 
+    <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
+
     <script>
       document.querySelectorAll('.episode-load').forEach((button) => {
         button.addEventListener('click', () => {
           const video = button.parentElement.querySelector('video');
           if (!video || !video.dataset.src) return;
           video.src = video.dataset.src;
+          video.controls = true;
           button.remove();
           video.play().catch(() => {});
           window.track && window.track('tcacc-video-play', video.dataset.src.split('/').pop());

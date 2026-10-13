@@ -394,7 +394,7 @@ export default async function handler(req, res) {
   // anonymous question log (visible in Vercel function logs)
   const geo = {
     country: req.headers['x-vercel-ip-country'] || null,
-    city: req.headers['x-vercel-ip-city'] || null,
+    city: (() => { try { return decodeURIComponent(req.headers['x-vercel-ip-city'] || '') || null; } catch { return null; } })(),
   };
   console.log('[chat]', JSON.stringify({ q: userMsg.slice(0, 120), ...geo }));
   const { url: rurl, token: rtok } = redisCreds();

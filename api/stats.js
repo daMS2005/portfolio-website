@@ -10,13 +10,21 @@ function redisCreds() {
   };
 }
 
+const failures = globalThis.__mora_stats_fails || (globalThis.__mora_stats_fails = new Map());
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
   const expected = (process.env.STATS_PASSWORD || '').trim();
   if (!expected) {
-    return res.status(503).json({ error: 'STATS_PASSWORD is not set in this deployment' });
+    return res.status(503).json({ error: 'Stats are not available' });
   }
+
+  // at most 8 wrong guesses per IP per 15 minutes (per warm instance)
+  const ip = String(req.headers['x-forwarded-for'] || 'unknown').split(',')[0].trim();
+  const now = Date.now();
+  const fails = (failures.get(ip) || []).filter((t) => now - t < 15 * 60_000);
+  if (fails.length >= 8) return res.status(429).json({ error: 'Too many attempts - try again later' });
 
   const given = String((req.body && req.body.password) || '').trim();
   // constant-ish time compare
@@ -24,7 +32,10 @@ export default async function handler(req, res) {
   for (let i = 0; i < expected.length; i++) {
     ok = (given.charCodeAt(i) === expected.charCodeAt(i)) && ok;
   }
-  if (!ok) return res.status(401).json({ error: 'wrong password' });
+  if (!ok) {
+    failures.set(ip, [...fails, now]);
+    return res.status(401).json({ error: 'wrong password' });
+  }
 
   const { url: rurl, token: rtok } = redisCreds();
   // password was correct - if storage isn't wired yet, show an empty dashboard
@@ -63,7 +74,7 @@ export default async function handler(req, res) {
       'ev:total', 'geo:total', 'city:total', 'src:total', 'browser:total',
       'os:total', 'device:total', 'lang:total', 'scroll:total',
       'section:views', 'section:seconds', 'time:total', 'visits:day',
-      'campaign:total',
+      'campaign:total', 'pages:total', 'clicks:total',
     ];
     const cmds = [
       ...KEYS.map((k) => ['HGETALL', k]),
@@ -105,6 +116,8 @@ export default async function handler(req, res) {
       devices: data.device_total,
       languages: data.lang_total,
       campaigns: data.campaign_total,
+      pages: data.pages_total,
+      clicks: data.clicks_total,
       scroll: data.scroll_total,
       sectionViews: data.section_views,
       sectionSeconds: data.section_seconds,

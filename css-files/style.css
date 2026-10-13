@@ -90,6 +90,7 @@ html {
 
 .nav-links a {
   color: #fff;
+  white-space: nowrap;
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -238,7 +239,7 @@ h2 {
 
 .detail-item {
   text-align: center;
-  padding: 1.5rem;
+  padding: 1.25rem 1rem;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   transition: transform 0.3s ease;
@@ -249,9 +250,10 @@ h2 {
 }
 
 .detail-item i {
+  display: block;
   font-size: 2rem;
   color: #ff4500;
-  margin-bottom: 1rem;
+  margin: 0 auto 0.75rem;
 }
 
 .about-image {
@@ -993,6 +995,11 @@ footer {
 }
 
 .social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   color: #fff;
   font-size: 1.5rem;
   transition: color 0.3s ease;
@@ -1018,7 +1025,7 @@ footer {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .navbar {
     padding: 0.65rem 0;
   }
@@ -1059,7 +1066,14 @@ footer {
   .nav-links a:focus-visible {
     background: rgba(255, 255, 255, 0.07);
   }
-  
+
+  /* opaque so page text never shows through the open menu */
+  .navbar:has(.nav-links.is-open) {
+    background: #0a0a0a !important;
+  }
+}
+
+@media (max-width: 768px) {
   .hero h1 {
     font-size: 2.5rem;
   }
@@ -1078,7 +1092,7 @@ footer {
   }
   
   .skills-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
   }
   
   .skill-category {
@@ -1421,6 +1435,7 @@ footer {
 
 .legal-doc p,
 .legal-doc li {
+    font-size: 1rem;
     line-height: 1.7;
     color: rgba(255, 255, 255, 0.92);
 }
@@ -1462,6 +1477,9 @@ footer {
 }
 
 .logo-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: inherit;
     text-decoration: none;
 }
@@ -1541,6 +1559,7 @@ a.secondary-btn {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
 }
 
@@ -1581,6 +1600,9 @@ a.secondary-btn {
 }
 
 .contact-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   text-decoration: none;
   color: inherit;
   transition: color 0.2s ease;
@@ -1827,7 +1849,7 @@ a.secondary-btn {
   max-height: 340px;
   display: none;
   flex-direction: column;
-  background: rgba(12, 12, 14, 0.97);
+  background: #0c0c0e;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 16px;
   box-shadow: 0 14px 44px rgba(0, 0, 0, 0.6);
@@ -2113,3 +2135,10 @@ body.guide-hidden .guide-restore-btn { display: flex; align-items: center; justi
   max-width: 100%;
   object-fit: contain;
 }
+
+/* legal pages have two nav links; keep them visible instead of a menu */
+@media (max-width: 1000px) {
+  .nav-links.legal-nav { display: flex; flex-direction: row; width: auto; gap: 1.25rem; padding: 0; border: 0; }
+}
+
+.footer-credit { display: block; margin-top: 0.35rem; }

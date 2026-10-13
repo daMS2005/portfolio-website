@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://danielmora.dev/</loc>
+    <loc>https://daniel-mora.com/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://danielmora.dev/privacy</loc>
+    <loc>https://daniel-mora.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://danielmora.dev/terms</loc>
+    <loc>https://daniel-mora.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-  <url><loc>https://danielmora.dev/tc-acc</loc></url>
-  <url><loc>https://danielmora.dev/thesis</loc></url>
-  <url><loc>https://danielmora.dev/jepa-transformer</loc></url>
-  <url><loc>https://danielmora.dev/personal</loc></url>
+  <url><loc>https://daniel-mora.com/tc-acc</loc></url>
+  <url><loc>https://daniel-mora.com/thesis</loc></url>
+  <url><loc>https://daniel-mora.com/jepa-transformer</loc></url>
+  <url><loc>https://daniel-mora.com/personal</loc></url>
 </urlset>

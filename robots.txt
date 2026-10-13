@@ -8,4 +8,4 @@ Disallow: /stats.html
 Disallow: /api/
 Disallow: /auth/
 
-Sitemap: https://danielmora.dev/sitemap.xml
+Sitemap: https://daniel-mora.com/sitemap.xml

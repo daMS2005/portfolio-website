@@ -38,7 +38,7 @@
         .jt-flow > div.frozen { border-style: dashed; border-color: rgba(138,150,163,0.7); }
         .jt-flow > div.kern { border-color: rgba(255,92,42,0.55); background: rgba(255,92,42,0.07); }
         .jt-flow-label { flex-basis: 100% !important; border: 0 !important; background: none !important; padding: 0.4rem 0 0 !important; color: var(--orange); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
-        .jt-kernels { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+        .jt-kernels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 1rem; }
         .jt-kernels h3 { margin: 0 0 0.3rem; }
         .jt-kernels p { color: var(--muted); line-height: 1.6; }
         .jt-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
@@ -47,15 +47,26 @@
         .jt-table td:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; }
         .jt-win { color: #75d69c; font-weight: 700; }
         .jt-loss { color: #ff8f8f; font-weight: 700; }
-        .jt-decisions { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem; }
+        .jt-decisions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
         .jt-decision { border: 1px solid var(--line); border-left: 3px solid var(--cyan); border-radius: 8px; padding: 1rem 1.1rem; background: rgba(255,255,255,0.03); }
         .jt-decision h4 { margin: 0 0 0.45rem; }
         .jt-decision p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
         .jt-decision.k { border-left-color: var(--orange); }
         .jt code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88em; color: #f5f3ef; }
+        .jt-swipe { display: none; margin: 0 0 0.6rem; color: var(--muted); font-size: 0.8rem; }
+        @media (max-width: 1000px) { .jt-swipe { display: block; } }
+        @media (max-width: 767px) { .jt-diagram svg { min-width: 900px; } }
+        @media (max-width: 640px) {
+            .jt-decisions { grid-template-columns: 1fr; }
+            .jt-vector { height: auto; flex-wrap: wrap; }
+            .jt-vector div { flex: 1 1 auto; padding: 0.55rem 0.5rem; }
+            .jt-table thead { display: none; }
+            .jt-table tr { display: grid; grid-template-columns: 1fr auto; padding: 0.6rem 0; border-bottom: 1px solid var(--line); }
+            .jt-table td { border: 0; padding: 0.1rem 0; }
+            .jt-table td:nth-child(2) { grid-column: 1 / -1; grid-row: 2; color: var(--muted); font-size: 0.85rem; }
+        }
         @media (max-width: 768px) {
-            .jt-vector div { font-size: 0.65rem; }
-            .jt-table td:last-child { white-space: normal; }
+            .jt-vector div { font-size: 0.72rem; }
         }
 
         /* SVG diagram primitives */
@@ -127,7 +138,7 @@
         </header>
 
         <section class="detail-section">
-            <div class="detail-section-header"><span>01 · Inputs</span><h2>Four sources, one vector per asset-day</h2></div>
+            <div class="detail-section-header"><span>01 · Inputs</span><h2>Four sources, one vector per asset‑day</h2></div>
             <p class="detail-intro">A separate data repo collects each source into PostgreSQL and publishes reviewed, point-in-time views. A value only enters a row once it was actually public on that trading day. The universe is the top 500 US common stocks by trailing 60-day median dollar volume, rebuilt every month from 2010 onward. Delisted names stay in, so the history is not limited to today's survivors.</p>
 
             <div class="jt-panel">
@@ -151,10 +162,11 @@
         </section>
 
         <section class="detail-section">
-            <div class="detail-section-header"><span>02 · Stage I — ArgusJEPA · self-supervised</span><h2>ArgusJEPA: predict the full view from a masked view</h2></div>
+            <div class="detail-section-header"><span>02 · Stage I · self-supervised</span><h2>ArgusJEPA: predict the full view from a masked view</h2></div>
             <p class="detail-intro">Each asset-day is an independent sample; this stage models no time. Half of the available features are hidden. From what is left, the context encoder and predictor must reproduce the <em>latent</em> that an EMA teacher computes from the full view. The loss is in embedding space, so the model learns how features relate to each other rather than reconstructing raw numbers.</p>
 
             <div class="jt-panel">
+                <p class="jt-swipe">Swipe sideways to see the whole diagram →</p>
                 <div class="jt-diagram">
                     <svg class="d" viewBox="0 0 1000 430" role="img" aria-label="JEPA pretraining diagram">
                         <!-- input -->
@@ -237,10 +249,11 @@
         </section>
 
         <section class="detail-section">
-            <div class="detail-section-header"><span>04 · Stage II — CassaFormer · supervised</span><h2>CassaFormer: causal Transformer over daily embeddings</h2></div>
+            <div class="detail-section-header"><span>04 · Stage II · supervised</span><h2>CassaFormer: causal Transformer over daily embeddings</h2></div>
             <p class="detail-intro">A decoder-only stack in which each position <em>t</em> forecasts that day's next-day target. It has no tokenizer and no learned positional table: a bias-free linear layer maps the 256-d JEPA vector into the 128-d residual stream, and RoPE supplies order.</p>
 
             <div class="jt-panel">
+                <p class="jt-swipe">Swipe sideways to see the whole diagram →</p>
                 <div class="jt-diagram">
                     <svg class="d" viewBox="0 0 1000 790" role="img" aria-label="Causal Transformer architecture diagram">
                         <!-- left column: macro flow -->
@@ -470,5 +483,6 @@
 
     <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
     <script src="javascript-files/main.js?v=access-v2"></script>
+    <script src="javascript-files/analytics.js" defer></script>
 </body>
 </html>

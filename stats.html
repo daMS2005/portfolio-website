@@ -8,7 +8,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; }
         body { background: #0a0a0c; color: #e8e8e8; font-family: -apple-system, "SF Pro Text", "Segoe UI", sans-serif; min-height: 100vh; padding: 2.5rem 1.5rem 4rem; }
-        .wrap { max-width: 1080px; margin: 0 auto; }
+        .wrap { max-width: 1400px; margin: 0 auto; }
         h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
         .sub { color: #8a8a8a; font-size: 0.88rem; margin-bottom: 1.8rem; }
         .gate { max-width: 360px; margin: 18vh auto 0; text-align: center; }
@@ -17,26 +17,30 @@
         .gate button { width: 100%; padding: 0.8rem; border-radius: 12px; border: none; background: #ff4500; color: #fff; font-size: 1rem; cursor: pointer; }
         .gate .err { color: #ff7a5c; font-size: 0.85rem; margin-top: 0.7rem; min-height: 1.2em; }
 
-        .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; margin-bottom: 1.2rem; }
+        .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr)); gap: 0.8rem; margin-bottom: 1.2rem; }
         .kpi { background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 0.9rem 1rem; }
         .kpi .v { font-size: 1.7rem; font-variant-numeric: tabular-nums; color: #ff8a50; line-height: 1.1; }
         .kpi .l { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: #8a8a8a; margin-top: 0.25rem; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .grid .panel { margin-bottom: 0; }
         .panel { background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
         .panel h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #9a9a9a; margin-bottom: 0.85rem; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; table-layout: fixed; }
+        td, .q { overflow-wrap: anywhere; }
         td { padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; }
-        td.num { text-align: right; font-variant-numeric: tabular-nums; color: #ffb08f; white-space: nowrap; padding-left: 0.6rem; }
+        td.num { text-align: right; font-variant-numeric: tabular-nums; color: #ffb08f; white-space: nowrap; padding-left: 0.6rem; width: 4.5em; }
         .bar { height: 5px; background: linear-gradient(90deg, #ff4500, #ff8a50); border-radius: 3px; margin-top: 3px; }
         .q { padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.84rem; }
-        .q .meta { color: #7a7a7a; font-size: 0.7rem; margin-top: 2px; }
+        .q .meta { color: #7a7a7a; font-size: 0.75rem; margin-top: 2px; }
         .days { display: flex; align-items: flex-end; gap: 4px; height: 100px; margin-bottom: 20px; }
         .day { flex: 1; background: linear-gradient(180deg, #ff8a50, #ff4500); border-radius: 3px 3px 0 0; min-height: 2px; position: relative; }
-        .day span { position: absolute; bottom: -17px; left: 50%; transform: translateX(-50%); font-size: 0.55rem; color: #777; }
+        .day span { position: absolute; bottom: -17px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; color: #777; }
         .funnel td:first-child { color: #cfcfcf; }
         #dash { display: none; }
-        .refresh { float: right; background: none; border: 1px solid rgba(255,255,255,0.2); color: #bbb; border-radius: 8px; padding: 0.25rem 0.7rem; font-size: 0.75rem; cursor: pointer; }
+        .refresh { float: right; background: none; border: 1px solid rgba(255,255,255,0.2); color: #bbb; border-radius: 8px; padding: 0.5rem 0.9rem; min-height: 36px; font-size: 0.8rem; cursor: pointer; }
+        .dash-err { color: #ff7a5c; font-size: 0.85rem; margin: -1rem 0 1.2rem; min-height: 0; }
+        button:disabled { opacity: 0.6; cursor: wait; }
     </style>
 </head>
 <body>
@@ -44,15 +48,18 @@
         <div class="gate" id="gate">
             <h1>Site Stats</h1>
             <p class="sub">Private dashboard</p>
-            <input type="password" id="pw" placeholder="Password" aria-label="Password">
-            <button id="go">Enter</button>
-            <p class="err" id="err"></p>
+            <form id="login">
+                <input type="password" id="pw" placeholder="Password" aria-label="Password" autocomplete="current-password" required>
+                <button id="go" type="submit">Enter</button>
+            </form>
+            <p class="err" id="err" aria-live="polite"></p>
         </div>
 
         <div id="dash">
             <button class="refresh" id="refresh">Refresh</button>
             <h1>Site Stats</h1>
             <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; last 14 days</p>
+            <p class="dash-err" id="dashErr" aria-live="polite"></p>
 
             <div class="kpis" id="kpis"></div>
 
@@ -62,6 +69,7 @@
             </div>
 
             <div class="grid">
+                <div class="panel"><h2>Pages</h2><table id="pages"></table></div>
                 <div class="panel"><h2>Traffic sources</h2><table id="sources"></table></div>
                 <div class="panel"><h2>Countries</h2><table id="countries"></table></div>
                 <div class="panel"><h2>Cities</h2><table id="cities"></table></div>
@@ -76,6 +84,10 @@
                 <div class="panel"><h2>Campaigns (utm)</h2><table id="campaigns"></table></div>
             </div>
 
+            <div class="panel">
+                <h2>What people click (page · element)</h2>
+                <table id="clicks"></table>
+            </div>
             <div class="panel">
                 <h2>Recent visits</h2>
                 <div id="visits"></div>
@@ -103,10 +115,10 @@
             return data;
         }
 
-        function fillTable(id, obj, fmt) {
+        function fillTable(id, obj, fmt, limit = 12) {
             const el = document.getElementById(id);
             if (!el) return;
-            const entries = Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).slice(0, 12);
+            const entries = Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).slice(0, limit);
             const max = entries.length ? entries[0][1] : 1;
             el.innerHTML = entries.map(([k, v]) =>
                 `<tr><td>${esc(k)}<div class="bar" style="width:${Math.max(4, (v / max) * 100)}%"></div></td>
@@ -129,6 +141,8 @@
                 ['Chat messages', s.chatMessages || 0],
             ].map(([l, v]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('');
 
+            fillTable('pages', d.pages);
+            fillTable('clicks', d.clicks, null, 40);
             fillTable('sources', d.sources);
             fillTable('countries', d.countries);
             fillTable('cities', d.cities);
@@ -158,26 +172,34 @@
             ).join('');
 
             document.getElementById('visits').innerHTML = (d.recentVisits || []).map((v) =>
-                `<div class="q">${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')} &middot; via ${esc(v.source)} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)}
+                `<div class="q">${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')} &middot; via ${esc(v.source)}${v.page ? ' &rarr; ' + esc(v.page) : ''} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)}
                  <div class="meta">${esc(v.vw)}&times;${esc(v.vh)} &middot; ${esc(v.lang || '')} &middot; ${esc(v.tz || '')} &middot; ${new Date(v.t).toLocaleString()}</div></div>`
             ).join('') || '<p class="sub">No visits recorded yet.</p>';
 
             document.getElementById('questions').innerHTML = (d.recentQuestions || []).map((q) =>
-                `<div class="q">${esc(q.q)}<div class="meta">${esc(q.country || '?')}${q.city ? ' · ' + esc(decodeURIComponent(q.city)) : ''} · ${new Date(q.t).toLocaleString()}</div></div>`
+                `<div class="q">${esc(q.q)}<div class="meta">${esc(q.country || '?')}${q.city ? ' · ' + esc(safeDecode(q.city)) : ''} · ${new Date(q.t).toLocaleString()}</div></div>`
             ).join('') || '<p class="sub">No questions yet.</p>';
         }
 
+        const safeDecode = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
+
         async function attempt() {
-            err.textContent = '';
+            const inDash = dash.style.display === 'block';
+            const out = inDash ? document.getElementById('dashErr') : err;
+            const btn = document.getElementById(inDash ? 'refresh' : 'go');
+            const label = btn.textContent;
+            out.textContent = '';
+            btn.disabled = true;
+            btn.textContent = inDash ? 'Refreshing…' : 'Checking…';
             try {
                 const pw = document.getElementById('pw').value;
                 const data = await load(pw);
                 sessionStorage.setItem('statsPw', pw);
                 render(data);
-            } catch (e) { err.textContent = e.message; }
+            } catch (e) { out.textContent = e.message; }
+            finally { btn.disabled = false; btn.textContent = label; }
         }
-        document.getElementById('go').addEventListener('click', attempt);
-        document.getElementById('pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') attempt(); });
+        document.getElementById('login').addEventListener('submit', (e) => { e.preventDefault(); attempt(); });
         document.getElementById('refresh').addEventListener('click', attempt);
 
         const saved = sessionStorage.getItem('statsPw');

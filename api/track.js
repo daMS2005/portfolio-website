@@ -69,8 +69,8 @@ export default async function handler(req, res) {
 
   const ev = e.slice(0, 48);
   const country = req.headers['x-vercel-ip-country'] || 'unknown';
-  const city = req.headers['x-vercel-ip-city']
-    ? decodeURIComponent(req.headers['x-vercel-ip-city']) : null;
+  let city = null;
+  try { city = req.headers['x-vercel-ip-city'] ? decodeURIComponent(req.headers['x-vercel-ip-city']) : null; } catch { /* malformed header */ }
   const day = new Date().toISOString().slice(0, 10);
   const device = b.touch ? (Number(b.vw) < 768 ? 'mobile' : 'tablet') : 'desktop';
 
@@ -102,12 +102,17 @@ export default async function handler(req, res) {
       ['LPUSH', 'visits:recent', JSON.stringify({
         t: now, sid, country, city, source,
         browser: ua.browser, os: ua.os, device,
-        vw: b.vw, vh: b.vh, lang: b.lang, tz: b.tz,
+        page: String(m || '').slice(0, 60), vw: b.vw, vh: b.vh, lang: b.lang, tz: b.tz,
       })],
       ['LTRIM', 'visits:recent', '0', '99'],
     );
   }
 
+  if (ev === 'pageview' && m) cmds.push(['HINCRBY', 'pages:total', String(m).slice(0, 60), '1']);
+  if (typeof b.label === 'string' && b.label) {
+    const target = `${String(b.page || '').slice(0, 40)} · ${b.label.slice(0, 50)}`;
+    cmds.push(['HINCRBY', 'clicks:total', target, '1']);
+  }
   if (ev === 'scroll' && m) cmds.push(['HINCRBY', 'scroll:total', String(m), '1']);
   if (ev === 'section' && m) cmds.push(['HINCRBY', 'section:views', String(m).slice(0, 24), '1']);
 

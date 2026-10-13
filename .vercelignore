@@ -1,0 +1,11 @@
+# personal face-scan data and local-only dev pages: never deploy
+scan/
+assets/face-cloud*
+face-demo.html
+mora-face.html
+robot-demo.html
+robot-compare.html
+# build inputs that the site does not serve
+blender/
+content/
+scripts/

@@ -68,7 +68,7 @@ document.addEventListener('keydown', event => {
     }
 });
 
-window.matchMedia('(min-width: 769px)').addEventListener('change', event => {
+window.matchMedia('(min-width: 1001px)').addEventListener('change', event => {
     if (event.matches) setNavigationOpen(false);
 });
 

@@ -15,6 +15,7 @@
 
 .editorial-heading h2 {
   margin: 0.35rem 0 0.8rem;
+  text-wrap: balance;
   text-align: left;
   font-size: clamp(2.2rem, 5vw, 4.4rem);
   line-height: 0.98;
@@ -144,7 +145,7 @@
   display: block;
   margin-bottom: 1.9rem;
   color: var(--orange);
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0.12em;
 }
@@ -201,7 +202,7 @@
 .dr-club-stats dt {
   margin-bottom: 0.55rem;
   color: var(--orange);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -288,7 +289,7 @@
   gap: 0.7rem;
   margin-bottom: 2.5rem;
   color: var(--orange);
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -324,7 +325,7 @@
 
 .interest-card dt {
   color: #77736e;
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 720;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -367,7 +368,7 @@
   display: block;
   margin-bottom: 2.5rem;
   color: var(--orange);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0.14em;
 }
@@ -435,7 +436,7 @@
 .personal-label {
   margin: 0 0 0.45rem;
   color: var(--orange);
-  font-size: 0.67rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -644,6 +645,7 @@
   margin: 2rem 0 1rem;
   max-width: 12ch;
   color: var(--ink);
+  text-wrap: balance;
   font-size: clamp(2rem, 4vw, 3.6rem);
   line-height: 0.98;
   letter-spacing: -0.045em;
@@ -779,7 +781,7 @@
 .npc-core small {
   margin-top: 0.45rem;
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 500;
 }
 
@@ -846,7 +848,7 @@
 .pipeline-strip span {
   flex: 1;
   color: #e8e5df;
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 740;
   letter-spacing: 0.08em;
   text-align: center;
@@ -951,7 +953,7 @@
 
 .work-type {
   color: var(--orange);
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -1161,7 +1163,7 @@
   gap: 1rem;
   min-height: 44px;
   color: #aaa7a1;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1221,7 +1223,7 @@
   display: block;
   margin-bottom: 0.22rem;
   color: #f0ede7;
-  font-size: 0.61rem;
+  font-size: 0.72rem;
   font-weight: 780;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -1265,7 +1267,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   color: #b8b5af;
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   font-weight: 680;
   letter-spacing: 0.025em;
 }
@@ -1283,9 +1285,10 @@
 .project-record-with-media > img {
   width: 100%;
   height: auto;
+  max-height: 420px;
   min-height: 0;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
   filter: saturate(0.7) contrast(1.05) brightness(0.72);
 }
 
@@ -1295,14 +1298,16 @@
 
 /* Turn the skills area into an evidence-based capability map. */
 #skills .skills-grid {
-  gap: 1px;
-  border: 1px solid var(--line);
-  background: var(--line);
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
 }
 
 #skills .skill-category {
   padding: 1.65rem;
   border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   border-radius: 0;
   background: #090909;
   box-shadow: none;
@@ -1336,7 +1341,7 @@
 }
 
 #skills .skill-category li::before {
-  top: 0.62em;
+  top: 0.5rem;
   width: 4px;
   height: 4px;
   border-radius: 50%;
@@ -1406,7 +1411,7 @@
   border-radius: 0;
   background: transparent;
   color: var(--orange);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0.12em;
 }
@@ -1429,7 +1434,7 @@
   border-radius: 4px;
   background: transparent;
   color: #b8b5af;
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   font-weight: 680;
 }
 
@@ -1457,14 +1462,14 @@
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
   gap: 4rem;
   align-items: end;
-  min-height: 62vh;
+  min-height: min(62vh, 640px);
   padding-bottom: 4rem;
   border-bottom: 1px solid var(--line);
 }
 
 .detail-kicker {
   color: var(--orange);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 760;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1472,9 +1477,10 @@
 
 .detail-hero h1 {
   margin: 1.2rem 0 1.5rem;
-  font-size: clamp(3rem, 7vw, 6.8rem);
+  font-size: clamp(2.5rem, 7vw, 5.75rem);
   line-height: 0.9;
   letter-spacing: -0.065em;
+  text-wrap: balance;
 }
 
 .detail-hero .detail-lede {
@@ -1512,7 +1518,7 @@
 
 .detail-section-header span {
   color: var(--orange);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -1524,6 +1530,7 @@
   font-size: clamp(2rem, 4vw, 3.5rem);
   line-height: 1;
   letter-spacing: -0.04em;
+  text-wrap: balance;
 }
 
 .detail-grid {
@@ -1584,7 +1591,7 @@
 
 .artifact-label {
   color: var(--orange);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 760;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1617,7 +1624,7 @@
 .artifact-result span,
 .result-evolution span {
   color: var(--orange);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   font-weight: 780;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1671,7 +1678,7 @@
 .pipeline-number {
   padding-top: 0.18rem;
   color: var(--orange);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.12em;
 }
@@ -1711,7 +1718,7 @@
   display: block;
   width: 100%;
   height: auto;
-  background: #fff;
+  background: #1a1a1a;
 }
 
 .brain-data-figure figcaption {
@@ -1737,7 +1744,7 @@
 
 .brain-data-note span {
   color: var(--orange);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 760;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1750,7 +1757,13 @@
   line-height: 1.65;
 }
 
+.research-figure-tall {
+  max-width: min(100%, 680px);
+  margin-inline: auto;
+}
+
 .research-figure {
+  box-sizing: border-box;
   width: 100%;
   height: auto;
   display: block;
@@ -1853,6 +1866,7 @@
 }
 
 .detail-links a {
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -1863,6 +1877,10 @@
   color: var(--ink);
   font-weight: 700;
   text-decoration: none;
+}
+
+.detail-links a img {
+  transform: scale(2.3); /* the HF glyph fills under half of its PNG canvas */
 }
 
 .detail-links a:hover {
@@ -2024,14 +2042,15 @@ body.guide-hidden .guide-entry { display: inline-flex; }
   }
 
   .interest-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   }
 
   .personal-manifesto {
     gap: 1.5rem;
   }
 
-  .principle-card {
+  .principle-card,
+  .personal-manual-grid .principle-card {
     min-height: 0;
   }
 
@@ -2040,8 +2059,13 @@ body.guide-hidden .guide-entry { display: inline-flex; }
   }
 
   .exercise-board-heading > p {
+    max-width: 60ch;
     margin-top: 0.8rem;
     text-align: left;
+  }
+
+  .flagship-copy h3 {
+    max-width: none;
   }
 
   .tier-row {
@@ -2096,7 +2120,7 @@ body.guide-hidden .guide-entry { display: inline-flex; }
   }
 
   .detail-hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2rem;
     min-height: auto;
     padding-top: 4rem;
@@ -2151,15 +2175,17 @@ body.guide-hidden .guide-entry { display: inline-flex; }
   }
 
   body.guide-ready:not(.guide-hidden) .guide-bubble {
-    right: 126px;
+    right: 142px;
     bottom: 28px;
-    max-width: min(210px, calc(100vw - 156px));
+    max-width: min(210px, calc(100vw - 172px));
   }
 
   body.guide-ready:not(.guide-hidden) .guide-restore-btn { display: none !important; }
 }
 
 @media (max-width: 640px) {
+  .detail-links a { flex: 1 1 100%; }
+
   .personal-hero-expanded h1 {
     font-size: clamp(2.8rem, 15vw, 4.5rem);
   }
@@ -2248,4 +2274,36 @@ body.guide-hidden .guide-entry { display: inline-flex; }
 @media (prefers-reduced-motion: reduce) {
   .npc-grid span,
   .placeholder-surface::before { animation: none; }
+}
+
+/* Responsive sweep (Oct 2026) */
+@media (min-width: 900px) {
+  /* the club stats sit in a narrow column: stack them */
+  .dr-club-stats { grid-template-columns: 1fr; }
+  .dr-club-stats div { border-right: 0; border-bottom: 1px solid var(--line); }
+  .dr-club-stats div:last-child { border-bottom: 0; }
+}
+
+@media (min-width: 900px) and (max-width: 1100px) {
+  .thesis-visual { padding: 1.5rem; }
+}
+
+.personal-section-intro h2,
+.personal-manifesto h2,
+.personal-label { text-wrap: balance; }
+.tier-commentary p { text-wrap: pretty; }
+
+@media (max-width: 768px) {
+  .hero .cta-buttons { align-items: center; }
+  .hero .cta-buttons > * { width: min(100%, 320px); min-height: 48px; justify-content: center; }
+  footer { padding-bottom: calc(2rem + 64px); }
+  .guide-chat-form input { font-size: 16px; }
+  .guide-suggestions button,
+  .guide-chat-close { min-height: 32px; min-width: 32px; }
+}
+
+@media (max-width: 640px) {
+  .tier-row { grid-template-columns: 44px 1fr; }
+  .tier-items { gap: 0.4rem; }
+  .tier-items span { padding: 0.4rem 0.55rem; }
 }

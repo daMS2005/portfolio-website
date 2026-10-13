@@ -71,38 +71,32 @@
     sections.forEach((s) => io.observe(s));
   }
 
-  // ---- clicks ----
+  // ---- clicks: a category for the summary, plus exactly what was clicked and where ----
   document.addEventListener('click', (ev) => {
-    const el = ev.target.closest('a, button, .project-card');
+    const el = ev.target.closest('a, button, summary, .project-card');
     if (!el) return;
+    const href = (el.getAttribute && el.getAttribute('href')) || '';
+    const heading = el.matches('.website-card, .project-card') && el.querySelector('h3');
+    const label = ((heading && heading.textContent) || el.getAttribute('aria-label') || el.textContent || el.getAttribute('title') || href)
+      .replace(/\s+/g, ' ').trim().slice(0, 50);
 
-    if (el.classList.contains('resume-btn')) return send('resume-download');
-    if (el.id === 'learnMoreBtn') return send('cta-learn-more');
-    if (el.classList.contains('guide-chat-btn')) return send('chat-open');
-    if (el.closest('#droid-guide')) return send('droid-click');
+    let e = 'click';
+    if (el.classList.contains('resume-btn')) e = 'resume-download';
+    else if (el.id === 'learnMoreBtn') e = 'cta-learn-more';
+    else if (el.classList.contains('guide-chat-btn')) e = 'chat-open';
+    else if (el.closest('#droid-guide')) e = 'droid-click';
+    else if (href.includes('huggingface.co')) e = 'outbound-hf';
+    else if (href.includes('anonymous.4open.science')) e = 'outbound-paper';
+    else if (href.includes('github.com')) e = 'outbound-github';
+    else if (href.includes('linkedin.com')) e = 'outbound-linkedin';
+    else if (href.includes('instagram.com')) e = 'outbound-instagram';
+    else if (/thesis\.pdf$/.test(href)) e = 'thesis-download';
+    else if (href.startsWith('mailto:')) e = 'contact-email';
+    else if (href.startsWith('#')) e = 'nav';
+    else if (el.classList.contains('website-card')) e = 'website-card';
+    else if (el.closest('.project-card')) e = 'project-card';
 
-    const href = el.getAttribute && el.getAttribute('href');
-    if (href) {
-      if (href.includes('huggingface.co')) return send('outbound-hf', href.slice(0, 80));
-      if (href.includes('anonymous.4open.science')) return send('outbound-paper', href.slice(0, 80));
-      if (href.includes('github.com')) return send('outbound-github', href.slice(0, 80));
-      if (href.includes('linkedin.com')) return send('outbound-linkedin');
-      if (href.includes('instagram.com')) return send('outbound-instagram');
-      if (href.includes('streamlit.app')) return send('outbound-learnmate');
-      if (href === 'thesis.pdf') return send('thesis-download');
-      if (href.startsWith('mailto:')) return send('contact-email');
-      if (href.startsWith('#')) return send('nav', href);
-      if (el.classList.contains('website-card')) {
-        const h = el.querySelector('h3');
-        return send('website-card', h ? h.textContent.slice(0, 40) : href.slice(0, 60));
-      }
-    }
-
-    const card = el.closest && el.closest('.project-card');
-    if (card) {
-      const h = card.querySelector('h3');
-      return send('project-card', h ? h.textContent.slice(0, 40) : 'unknown');
-    }
+    send(e, href.slice(0, 80), { label, page: location.pathname });
   }, { capture: true, passive: true });
 
   // ---- end of visit: total time + per-section dwell ----

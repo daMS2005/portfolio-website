@@ -98,7 +98,7 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
     <div class="guide-chat-log" aria-live="polite"></div>
     <div class="guide-suggestions">
       <button type="button">What is the paper about?</button>
-      <button type="button">What has he shipped?</button>
+      <button type="button">What is the JEPA Transformer?</button>
       <button type="button">Is he open to work?</button>
     </div>
     <form class="guide-chat-form">

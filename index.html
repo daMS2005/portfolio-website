@@ -567,7 +567,7 @@
             try {
                 const [{ DroidGuide }, { initTourGuide }] = await Promise.all([
                 import('./javascript-files/droid.js?v=10'),
-                import('./javascript-files/tour-guide.js?v=9'),
+                import('./javascript-files/tour-guide.js?v=10'),
                 ]);
                 try { sessionStorage.setItem('guideHidden', '0'); } catch (error) { /* optional preference */ }
                 guideApi = DroidGuide.mount(container, { modelUrl: 'assets/droid.glb?v=2' });

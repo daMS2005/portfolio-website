@@ -153,11 +153,32 @@ About Daniel:
   contribution "a test and a bound rather than a discovery": prediction alone
   does not establish feature correspondence. Treat that honesty, the structured
   nulls and the measured resolution as the headline strength, not a weakness.
-  The full PDF is linked from the Research section as thesis.pdf.
+  The full PDF is linked from the Flagship work section as thesis.pdf.
   Anonymous paper release: https://anonymous.4open.science/r/A-Cross-Description-Test-of-Sparse-Feature-Correspondence-Between-Language-Models-and-fMRI-Responses-512A/README.md
   Original thesis repo: https://github.com/daMS2005/thesis_neuro
 
-Research projects (section: Research):
+- JEPA Transformer - Daniel's flagship model and the first project in the
+  Flagship work section. A two-stage forecaster for US equities. Stage I,
+  ArgusJEPA, is a self-supervised JEPA encoder: each asset-day is one
+  point-in-time feature vector built from IBKR daily prices, SEC filings
+  (visible only after acceptance), FRED/ALFRED macro vintages and locally
+  scored news (FinBERT sentiment, GTE embeddings). Half the available features
+  are masked; a context encoder plus predictor must match an EMA teacher's
+  256-d embedding of the full view, with an L1 loss in latent space. ArgusJEPA
+  is then frozen, and its daily embeddings become the input sequence of Stage
+  II, CassaFormer: a ~2.05M-parameter causal decoder (6 blocks, width 128, 4
+  heads, RoPE, QK-RMSNorm, top-1 Mixture-of-Experts with 4 experts in the two
+  middle blocks, and a linear/MSE or Student-t/NLL next-day head). The two
+  stages never share gradients. Custom Triton kernels - a fused MoE expert MLP
+  and a fused JEPA first block - were kept only where they beat torch.compile
+  on an L4; the MoE kernel gives a 1.1-1.5x full-model speedup. Weights:
+  huggingface.co/dams2005/ArgusJEPA and huggingface.co/dams2005/CassaFormer.
+  Code: github.com/daMS2005/jepa-transformer-model. Case study page:
+  /jepa-transformer.html. No backtest, accuracy or trading results are
+  published - never claim returns or predictive performance, and never frame
+  it as investment advice.
+
+Research projects (section: Additional work):
 - Triplet SAE Project: compared LoRA fine-tuning against SAE feature steering
   to determine which technique performed better at factual (subject,
   predicate, object) extraction for Graph-RAG navigation; shipped a
@@ -175,7 +196,7 @@ Research projects (section: Research):
   validation, and release. Code: github.com/daMS2005/olmo-sae-builder. SAEs:
   huggingface.co/dams2005/olmo-3-7b-think-saes.
 
-Products & systems (section: Projects):
+Products & systems (section: Additional work):
 - Dual-Agent AI Chatbot: CrewAI persuasion experiment - a helpful electric-car
   guide vs a relentless Dacia Duster salesman. Daniel was architect and PM,
   owning experiment design and the research write-up; two teammates built the
@@ -233,8 +254,10 @@ and checkpoint workflows; Flask, FastAPI, SQLAlchemy, PostgreSQL, Redis,
 Azure + Bicep IaC, Cloud Run, Docker, GitHub Actions; Vue.js, Streamlit,
 React/Next.js for client work, three.js.
 
-Site sections in order: Home, About, Research, Projects, Skills, Websites,
-Contact. There is a resume download button in the hero.
+Site sections in order: Home, About, Flagship work, Additional work, Skills,
+Websites, Contact. Flagship work holds the JEPA Transformer, the thesis and
+TC_ACC; each has its own case study page (/jepa-transformer.html,
+/thesis.html, /tc-acc.html). There is a resume download button in the hero.
 
 Rules:
 - Your job is to help visitors actually understand Daniel's work. Answer
@@ -268,8 +291,9 @@ Rules:
 - If asked about hiring/availability: Daniel recently finished his degree at IE
   University and is open to opportunities - point to the resume button in the
   hero or damorasoler@gmail.com.
-- If someone asks where to start, point them at the thesis paper in Research or
-  the Hugging Face model releases - those are the strongest signals.
+- If someone asks where to start, point them at the JEPA Transformer case
+  study, the thesis paper, or the Hugging Face model releases - those are the
+  strongest signals.
 `;
 
 // Vercel's marketplace integrations inject Redis credentials under several
@@ -384,23 +408,25 @@ export default async function handler(req, res) {
   const extra = await retrieve(userMsg, key);
 
   try {
-    const r = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.7-flash:generateContent?key=${key}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: KNOWLEDGE + extra }] },
-          contents,
-          generationConfig: { temperature: 0.75, maxOutputTokens: 1200 },
-        }),
-      }
-    );
-    if (!r.ok) {
-      const detail = await r.text();
-      console.error('gemini error', r.status, detail.slice(0, 300));
-      return res.status(502).json({ error: 'brain hiccup' });
+    // fall back once if the primary model is overloaded or retired
+    let r;
+    for (const model of ['gemini-3.8-flash', 'gemini-flash-latest']) {
+      r = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: KNOWLEDGE + extra }] },
+            contents,
+            generationConfig: { temperature: 0.75, maxOutputTokens: 1200 },
+          }),
+        }
+      );
+      if (r.ok) break;
+      console.error('gemini error', model, r.status, (await r.text()).slice(0, 300));
     }
+    if (!r.ok) return res.status(502).json({ error: 'brain hiccup' });
     const data = await r.json();
     const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join('')
       || "I lost my train of thought there - mind asking again?";

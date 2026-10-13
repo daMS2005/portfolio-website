@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain–LLM Feature Correspondence · Daniel Mora</title>
+    <meta name="description" content="A research case study on cross-description sparse-feature correspondence between language models and fMRI responses.">
+    <meta name="theme-color" content="#050505">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Brain–LLM Feature Correspondence · Daniel Mora">
+    <meta property="og:description" content="The design, transfer test, results, and limits of Daniel Mora's thesis research.">
+    <meta property="og:image" content="/images/thesis-method.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="css-files/style.css?v=access-v2">
+    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=thesis-v5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+</head>
+<body class="case-study-page">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="lava-lamp" aria-hidden="true"><div class="blob"></div><div class="blob"></div><div class="blob"></div></div>
+
+    <nav class="navbar" aria-label="Primary navigation">
+        <div class="nav-content">
+            <a class="logo logo-link" href="/">DM</a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open navigation">
+                <span>Menu</span><i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-links" id="primary-navigation">
+                <li><a href="/">Home</a></li>
+                <li><a href="/#research">Flagship work</a></li>
+                <li><a href="/#projects">Additional work</a></li>
+                <li><a href="/#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="detail-main" tabindex="-1">
+        <header class="detail-hero">
+            <div>
+                <span class="detail-kicker">Bachelor thesis · anonymous manuscript</span>
+                <h1>Brain–LLM feature correspondence</h1>
+                <p class="detail-lede">Language-model features can predict both held-out model activity and human fMRI responses. This project asks the harder question: do those targets rely on the same features in the same way?</p>
+            </div>
+            <aside class="detail-status-card">
+                <span class="status-live"><i></i> Current status</span>
+                <p>The bachelor thesis is complete. A more focused, publication-ready manuscript develops the same central idea with a tighter claim, stronger controls, and a deliberately conservative conclusion.</p>
+            </aside>
+        </header>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>01 · Evolution</span><h2>One research idea, developed in two forms.</h2></div>
+            <p class="detail-intro">The thesis and the anonymous manuscript belong to the same research program: testing whether sparse language-model features provide a meaningful bridge between model activity and human responses to spoken stories. They differ in scope and purpose.</p>
+            <div class="artifact-comparison">
+                <article class="artifact-card">
+                    <span class="artifact-label">Bachelor thesis · broad and exploratory</span>
+                    <h3>Build the research system and investigate the space.</h3>
+                    <p>The thesis was the more open-ended version of the work. It included dataset and stimulus selection, exploratory fMRI analysis, transcript and timing infrastructure, SAE feature discovery, qualitative inspection, and focused feature probing.</p>
+                    <ul>
+                        <li>Compared candidate naturalistic fMRI datasets before selecting the paired <em>Shapes</em> stories.</li>
+                        <li>Built auditable feature evidence from transcript activations, Dolma contexts, judge summaries, and local alignment records.</li>
+                        <li>Tested individual feature hypotheses with synthetic probes, counterfactual edits, and optional steering interventions.</li>
+                        <li>Explored complementary model-side, sensitivity, and behavioral-benchmark analyses.</li>
+                    </ul>
+                    <div class="artifact-result">
+                        <span>What the thesis found</span>
+                        <p>In the cleaned 48-run <em>shapesphysical</em> analysis, the three completed model analyses converged at about <strong>r = .17</strong> on the brain side with a small positive <strong>R² ≈ .034</strong>. Feature-importance correlations looked high (<strong>.909–.961</strong>), but sample-level RSA remained low (<strong>.019–.067</strong>). The exploratory result suggested overlap in feature salience, not matching moment-by-moment representational geometry.</p>
+                    </div>
+                </article>
+                <article class="artifact-card artifact-card-polished">
+                    <span class="artifact-label">Anonymous manuscript · focused and polished</span>
+                    <h3>Turn the strongest idea into one defensible test.</h3>
+                    <p>The manuscript trims the exploratory branches and centers the cleanest question: after a sparse feature bank transfers to a second description, do the brain and the model depend on those coordinates in the same order?</p>
+                    <ul>
+                        <li>Freezes feature selection on the source description before either target or the held-out description is examined.</li>
+                        <li>Measures reliance through held-out conditional and grouped ablation, not coefficient magnitude.</li>
+                        <li>Tests correspondence against temporal and feature-identity nulls.</li>
+                        <li>Uses semi-synthetic calibration to state exactly how strong a negative conclusion the experiment can support.</li>
+                    </ul>
+                    <div class="artifact-result">
+                        <span>What the manuscript found</span>
+                        <p>The source-selected basis still transferred, although BOLD prediction was weak (<strong>r = .068–.092</strong>). But the held-out reliance rankings did not agree: at 256 features, the mean across twelve model-direction conditions was <strong>ρ = −.056</strong> and no better than the fully retuned temporal null (<strong>p = .890</strong>). This weighs against strong correspondence while leaving moderate correspondence unresolved.</p>
+                    </div>
+                </article>
+            </div>
+            <div class="result-evolution">
+                <span>Why the result changed</span>
+                <p>The thesis result came from an exploratory, cleaned single-story comparison of fitted feature importance. The manuscript raises the bar: features are selected on one description, transferred unchanged to the other, and judged by the loss caused by removing them in held-out data. It also controls for shared story timing and correlated features. Under that stricter test, the earlier apparent salience agreement does not generalize. That difference is the intellectual progression of the project, not an attempt to hide the first result.</p>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>02 · Question</span><h2>Prediction is not the same as correspondence.</h2></div>
+            <div class="detail-grid">
+                <div class="detail-panel"><h3>The tempting claim</h3><p>If one sparse feature bank predicts activity in a language model and in the brain, it is tempting to call that shared representation.</p></div>
+                <div class="detail-panel"><h3>The actual test</h3><p>Freeze the features selected on one spoken description, transfer them unchanged to a second description of the same events, and compare which features each target truly depends on.</p></div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>03 · Pipeline</span><h2>From spoken stories to a calibrated correspondence test.</h2></div>
+            <ol class="research-pipeline">
+                <li>
+                    <span class="pipeline-number">01</span>
+                    <div><h3>Select a defensible paired stimulus</h3><p>Exploratory analysis compared candidate naturalistic fMRI datasets and their timing quality. The final design uses <em>shapesphysical</em> and <em>shapessocial</em>: different spoken descriptions of the same animation, heard by the same 59 participants.</p></div>
+                </li>
+                <li>
+                    <span class="pipeline-number">02</span>
+                    <div><h3>Build a shared time axis</h3><p>Audio and transcripts are normalized, long recordings are chunked for Whisper word timing, and Gentle/Kaldi forced alignment refines word and phoneme boundaries. Words and model-specific tokens are then mapped to the scanner's 1.5-second TR grid.</p></div>
+                </li>
+                <li>
+                    <span class="pipeline-number">03</span>
+                    <div><h3>Construct clean brain targets</h3><p>fMRIPrep outputs are summarized into 200 Schaefer cortical parcels. Motion and physiological nuisance terms are regressed out; high-motion, high-DVARS, and non-steady-state response rows are censored while the complete timing grid remains intact.</p></div>
+                </li>
+                <li>
+                    <span class="pipeline-number">04</span>
+                    <div><h3>Extract model states and sparse features</h3><p>Each timed transcript is processed in causal context windows. Hidden states and residual-stream SAE activations are retained across six depth-spaced layers, then aggregated from tokens to TRs alongside the model's final hidden-state target.</p></div>
+                </li>
+                <li>
+                    <span class="pipeline-number">05</span>
+                    <div><h3>Discover, inspect, and probe features</h3><p>The thesis ranks transcript-relevant features by temporal activity and preserves their strongest tokens, spans, sentences, corpus contexts, and judge summaries. Selected features can then be tested with synthetic examples, counterfactual edits, and steering as an auditable interpretability track.</p></div>
+                </li>
+                <li>
+                    <span class="pipeline-number">06</span>
+                    <div><h3>Freeze the source-only feature bank</h3><p>For the manuscript's decisive test, feature identities are chosen from one description without looking at BOLD, model targets, or the second description. Nested banks from 64 to 1,024 features are carried unchanged into the paired telling.</p></div>
+                </li>
+                <li>
+                    <span class="pipeline-number">07</span>
+                    <div><h3>Fit matched ridge models</h3><p>The same sparse coordinates predict two different outcomes: lagged cortical BOLD and the model's unlagged final hidden state. Contiguous temporal folds, nested penalty selection, training-only scaling, and a purge around BOLD test blocks reduce leakage.</p></div>
+                </li>
+                <li>
+                    <span class="pipeline-number">08</span>
+                    <div><h3>Ablate, compare, and calibrate</h3><p>Each feature—or correlated feature group—is removed only in held-out data to measure the loss in predictive performance. Brain and model reliance rankings are compared in both transfer directions, against fully retuned temporal nulls, identity nulls, robustness sweeps, and a semi-synthetic power analysis.</p></div>
+                </li>
+            </ol>
+            <img class="research-figure" src="images/thesis-method.png" alt="Five-step research design: pair two descriptions, select a source-only SAE basis, predict participant BOLD and language-model hidden states, compare removal-based feature profiles, and test against structured nulls" width="844" height="1357">
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>04 · Brain data</span><h2>What the fMRI signal actually looks like.</h2></div>
+            <p class="detail-intro">The analysis does not treat “the brain” as one score. It begins with quality-controlled time series, preserves the full story timeline through censoring, and models responses across a 200-parcel cortical atlas.</p>
+            <div class="brain-data-grid">
+                <figure class="brain-data-figure brain-data-figure-wide">
+                    <img src="images/thesis-brain-data.webp" alt="Three-part fMRI data figure showing head-motion censoring for one run, a cleaned standardized BOLD response matrix across 200 cortical parcels, and cortical maps of leave-one-participant-out inter-subject correlation" width="1113" height="667" loading="lazy">
+                    <figcaption><strong>From raw movement to usable signal.</strong> The top panels show motion-based quality control and the cleaned parcel-by-time BOLD matrix. The cortical views show where participants share a reliable stimulus-locked response, with the strongest consistency around superior temporal regions.</figcaption>
+                </figure>
+                <figure class="brain-data-figure">
+                    <img src="images/thesis-brain-encoding.webp" alt="Cortical maps and histogram showing held-out cross-description prediction correlation across 200 brain parcels" width="1067" height="513" loading="lazy">
+                    <figcaption><strong>Where the transferred feature bank predicts.</strong> Held-out prediction is weak overall but not spatially uniform. The cortical maps and parcel distribution show where the source-selected sparse basis carries predictive signal on the second description.</figcaption>
+                </figure>
+                <aside class="brain-data-note">
+                    <span>How to read this</span>
+                    <p>The colorful cortex is not a claim that an SAE feature is a biological mechanism. These maps establish the measured BOLD target, its reliability, and the anatomical distribution of held-out prediction. The correspondence question is tested separately through feature-removal profiles.</p>
+                </aside>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>05 · Scale</span><h2>Enough variation to test the idea across systems.</h2></div>
+            <div class="detail-grid">
+                <div class="detail-panel"><h3>Data</h3><ul><li>59 participants from Narratives fMRI</li><li>200 Schaefer cortical parcels</li><li>Two spoken descriptions of the same animation</li></ul></div>
+                <div class="detail-panel"><h3>Models and controls</h3><ul><li>Six SAE systems across three model families</li><li>Model sizes from 1B to 12B parameters</li><li>Temporal and feature-identity nulls</li></ul></div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>06 · Result</span><h2>Transfer survives; importance structure does not.</h2></div>
+            <div class="result-band">
+                <div class="result-card"><strong>r ≈ .07–.09</strong><p class="detail-copy">The frozen feature basis weakly predicts held-out BOLD responses.</p></div>
+                <div class="result-card"><strong>ρ = −.056</strong><p class="detail-copy">The observed BOLD–model feature-profile agreement is no better than the retuned temporal null (p = .89).</p></div>
+            </div>
+            <img class="research-figure" src="images/thesis-results.png" alt="Result plots comparing observed correspondence with temporal nulls, estimates across model and direction, and correspondence across feature-bank sizes" width="1253" height="447" loading="lazy" style="margin-top:1rem">
+        </section>
+
+        <section class="detail-section">
+            <div class="detail-section-header"><span>07 · Interpretation</span><h2>A narrower, more defensible conclusion.</h2></div>
+            <div class="detail-grid">
+                <div class="detail-panel"><h3>What the work supports</h3><p>A feature basis selected from one description contains signal that transfers to another description for both targets.</p></div>
+                <div class="detail-panel"><h3>What it does not establish</h3><p>The evidence does not support a strong claim that brain responses and model hidden states organize their reliance on those features similarly. Power analysis bounds strong correspondence without claiming total absence.</p></div>
+            </div>
+        </section>
+
+        <div class="detail-links">
+            <a href="thesis.pdf" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-pdf" aria-hidden="true"></i> Read the manuscript PDF</a>
+            <a href="https://anonymous.4open.science/r/A-Cross-Description-Test-of-Sparse-Feature-Correspondence-Between-Language-Models-and-fMRI-Responses-512A/README.md" target="_blank" rel="noopener noreferrer"><i class="fas fa-code-branch" aria-hidden="true"></i> Anonymous paper repository</a>
+            <a href="https://github.com/daMS2005/thesis_neuro" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> Research repository</a>
+            <a href="/#research"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to flagship work</a>
+        </div>
+    </main>
+
+    <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
+    <script src="javascript-files/main.js?v=access-v2"></script>
+</body>
+</html>

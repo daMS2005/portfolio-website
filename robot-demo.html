@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robot Demo</title>
+  <style>
+    body { margin: 0; background: radial-gradient(ellipse at 30% 20%, #1a1a1e 0%, #050506 65%); height: 100vh; overflow: hidden; display: flex; }
+    #robot-container { position: fixed; right: 0; top: 0; width: 55vw; height: 100vh; }
+    .copy { color: #e8e8e8; font-family: ui-monospace, monospace; padding: 12vh 6vw; max-width: 34vw; }
+    .copy h1 { font-size: 3.2rem; margin: 0 0 1rem; }
+    .copy p { color: #9a9a9a; line-height: 1.6; }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="copy">
+    <h1>Robot demo</h1>
+    <p>Move the cursor around — the head tracks fast, the torso follows lazily. Asset built procedurally in Blender.</p>
+  </div>
+  <div id="robot-container"></div>
+  <script type="module">
+    import { RobotHero } from './javascript-files/robot.js?v=4';
+    RobotHero.mount(document.getElementById('robot-container'));
+  </script>
+</body>
+</html>

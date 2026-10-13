@@ -20,17 +20,124 @@
     {
       "src": "images/*",
       "use": "@vercel/static"
+    },
+    {
+      "src": "videos/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "assets/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.pdf",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "robots.txt",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "sitemap.xml",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
-    { "src": "/privacy", "dest": "/privacy.html" },
-    { "src": "/privacy/", "dest": "/privacy.html" },
-    { "src": "/terms", "dest": "/terms.html" },
-    { "src": "/terms/", "dest": "/terms.html" },
-    { "src": "/auth/meta/callback", "dest": "/auth-meta-callback.html" },
-    { "src": "/auth/meta/callback/", "dest": "/auth-meta-callback.html" },
-    { "src": "/auth/tiktok/callback", "dest": "/auth-tiktok-callback.html" },
-    { "src": "/auth/tiktok/callback/", "dest": "/auth-tiktok-callback.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+    {
+      "src": "/stats/",
+      "dest": "/stats.html"
+    },
+    {
+      "src": "/stats",
+      "dest": "/stats.html"
+    },
+    {
+      "src": "/api/stats",
+      "dest": "/api/stats.js"
+    },
+    {
+      "src": "/api/track",
+      "dest": "/api/track.js"
+    },
+    {
+      "src": "/api/chat",
+      "dest": "/api/chat.js"
+    },
+    {
+      "src": "/api/video-request",
+      "dest": "/api/video-request.js"
+    },
+    {
+      "src": "/privacy",
+      "dest": "/privacy.html"
+    },
+    {
+      "src": "/privacy/",
+      "dest": "/privacy.html"
+    },
+    {
+      "src": "/terms",
+      "dest": "/terms.html"
+    },
+    {
+      "src": "/terms/",
+      "dest": "/terms.html"
+    },
+    {
+      "src": "/auth/meta/callback",
+      "dest": "/auth-meta-callback.html"
+    },
+    {
+      "src": "/auth/meta/callback/",
+      "dest": "/auth-meta-callback.html"
+    },
+    {
+      "src": "/auth/tiktok/callback",
+      "dest": "/auth-tiktok-callback.html"
+    },
+    {
+      "src": "/auth/tiktok/callback/",
+      "dest": "/auth-tiktok-callback.html"
+    },
+    {
+      "src": "/tc-acc",
+      "dest": "/tc-acc.html"
+    },
+    {
+      "src": "/tc-acc/",
+      "dest": "/tc-acc.html"
+    },
+    {
+      "src": "/thesis",
+      "dest": "/thesis.html"
+    },
+    {
+      "src": "/thesis/",
+      "dest": "/thesis.html"
+    },
+    {
+      "src": "/npc-transformer",
+      "dest": "/npc-transformer.html"
+    },
+    {
+      "src": "/npc-transformer/",
+      "dest": "/npc-transformer.html"
+    },
+    {
+      "src": "/personal",
+      "dest": "/personal.html"
+    },
+    {
+      "src": "/personal/",
+      "dest": "/personal.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }

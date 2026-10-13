@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TC_ACC · Autonomous Documentary Studio · Daniel Mora</title>
+    <meta name="description" content="An agentic harness that turns one case reference into a finished ten-minute documentary: 29 stages, 6 departments, 2 review gates, no human in the loop.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="TC_ACC · Autonomous Documentary Studio · Daniel Mora">
+    <meta property="og:description" content="A public overview of a 29-stage autonomous documentary studio and its deliberately limited code excerpt.">
+    <meta property="og:image" content="/images/tcacc-episode-stills.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="/css-files/style.css?v=access-v2">
+    <link rel="stylesheet" href="/css-files/portfolio-refresh.css?v=flagship-v2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="/images/favicon.png" type="image/png">
+    <style>
+      .case-page { max-width: 1000px; margin: 0 auto; padding: 7rem 1.5rem 5rem; }
+      .case-kicker {
+        text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.72rem;
+        color: #ff8a50; margin-bottom: 0.6rem;
+      }
+      .case-page h1 { font-size: clamp(1.9rem, 4vw, 2.9rem); line-height: 1.12; margin-bottom: 0.9rem; }
+      .case-lede { font-size: 1.05rem; line-height: 1.65; color: #cfcfcf; max-width: 68ch; }
+      .case-page h2 {
+        font-size: 1.25rem; margin: 3.2rem 0 1rem;
+        padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      .case-page h3 { font-size: 0.95rem; color: #ffb08f; margin: 1.6rem 0 0.5rem; }
+      .case-page p { line-height: 1.65; color: #c8c8c8; max-width: 72ch; margin-bottom: 0.9rem; }
+
+      .stat-row {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 0.8rem; margin: 2rem 0 0;
+      }
+      .stat {
+        background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 14px; padding: 0.9rem 1rem;
+      }
+      .stat .v { font-size: 1.5rem; color: #ff8a50; font-variant-numeric: tabular-nums; line-height: 1.1; }
+      .stat .l { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a8a; margin-top: 0.25rem; }
+
+      /* ---- episode archive ---- */
+      .episodes { display: grid; gap: 1.4rem; margin-top: 1.4rem; }
+      @media (min-width: 760px) { .episodes { grid-template-columns: 1fr 1fr; } }
+      .episode {
+        background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+      }
+      .episode-media {
+        position: relative; aspect-ratio: 16 / 9; background: #111;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .episode-media img, .episode-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .episode-load {
+        position: absolute; inset: 0; display: grid; place-items: center; width: 100%;
+        border: 0; background: rgba(0, 0, 0, 0.18); color: #fff; cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      .episode-load:hover, .episode-load:focus-visible { background: rgba(0, 0, 0, 0.05); }
+      .episode-load i {
+        display: grid; place-items: center; width: 58px; height: 58px; padding-left: 3px;
+        border-radius: 50%; background: rgba(255, 69, 0, 0.94); box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      }
+      .episode-body { padding: 0.9rem 1.1rem 1.1rem; }
+      .episode-body h3 { margin: 0 0 0.3rem; color: #fff; font-size: 1rem; }
+      .episode-tag {
+        display: inline-block; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.07em;
+        color: #ff8a50; border: 1px solid rgba(255,138,80,0.4); border-radius: 999px;
+        padding: 0.12rem 0.55rem; margin-bottom: 0.5rem;
+      }
+      .episode-body p { font-size: 0.86rem; color: #a8a8a8; margin: 0; line-height: 1.55; }
+      .episode-meta { margin-top: 0.6rem; color: #73706b; font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+      .runtime-note {
+        margin: 1.2rem 0 0; padding: 1rem 1.1rem; border-left: 3px solid #ff5c1f;
+        background: rgba(255,92,31,0.06); color: #bdb8b1; font-size: 0.86rem; line-height: 1.6;
+      }
+      .request-status { min-height: 1.3em; }
+      .request-status[data-state="success"] { color: #9fd4ad; }
+      .request-status[data-state="error"] { color: #ffad91; }
+
+      /* ---- pipeline diagram ---- */
+      .pipeline { display: grid; gap: 0.5rem; margin: 1.2rem 0 0; }
+      .dept {
+        display: grid; grid-template-columns: 118px 1fr; align-items: center; gap: 0.9rem;
+        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+        border-left: 3px solid #ff5c1f; border-radius: 10px; padding: 0.7rem 0.9rem;
+      }
+      .dept .name { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; color: #ffb08f; }
+      .dept .what { font-size: 0.85rem; color: #b8b8b8; line-height: 1.45; }
+      .dept .stages { font-size: 0.68rem; color: #777; display: block; margin-top: 0.15rem; }
+      .gate {
+        display: flex; align-items: center; gap: 0.6rem;
+        border: 1px dashed rgba(255,213,0,0.45); border-radius: 10px;
+        padding: 0.6rem 0.9rem; background: rgba(255,213,0,0.05);
+        font-size: 0.82rem; color: #e8d9a0;
+      }
+      .gate i { color: #ffd500; }
+      @media (max-width: 620px) {
+        .dept { grid-template-columns: 1fr; gap: 0.25rem; }
+      }
+
+      .public-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.1); }
+      .public-fact { background: #090909; padding: 1rem; }
+      .public-fact strong { display: block; margin-bottom: 0.4rem; color: #f2eee8; font-size: 0.9rem; }
+      .public-fact span { color: #8f8c87; font-size: 0.78rem; line-height: 1.5; }
+      .provider-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0; }
+      .provider-list span { padding: 0.45rem 0.65rem; border: 1px solid rgba(255,255,255,0.12); border-radius: 5px; color: #d8d4ce; font-size: 0.74rem; font-weight: 700; }
+
+      .disclosure {
+        background: rgba(255,69,0,0.06); border: 1px solid rgba(255,92,31,0.28);
+        border-radius: 14px; padding: 1.1rem 1.2rem; margin-top: 1.4rem;
+      }
+      .disclosure p:last-child { margin-bottom: 0; }
+      .case-links { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.6rem; }
+      .case-links a {
+        display: inline-flex; align-items: center; gap: 0.45rem;
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 999px; padding: 0.5rem 1rem; color: #eee; text-decoration: none;
+        font-size: 0.85rem; transition: border-color 0.2s ease, background 0.2s ease;
+      }
+      .case-links a:hover { border-color: rgba(255,92,31,0.6); background: rgba(255,69,0,0.12); }
+      .stack-line { font-size: 0.86rem; color: #a8a8a8; line-height: 1.7; }
+      .stack-line strong { color: #ffb08f; font-weight: 600; }
+    </style>
+</head>
+<body class="case-study-page">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <div class="lava-lamp">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <nav class="navbar" aria-label="Primary navigation">
+        <div class="nav-content">
+            <div class="logo-section"><a href="/" class="logo logo-link">DM</a></div>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open navigation">
+                <span>Menu</span>
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-links" id="primary-navigation">
+                <li><a href="/">Home</a></li>
+                <li><a href="/#research">Flagship work</a></li>
+                <li><a href="/#projects">Additional work</a></li>
+                <li><a href="/#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="case-page" id="main-content" tabindex="-1">
+        <p class="case-kicker">Agentic Systems &middot; Case Study</p>
+        <h1>TC_ACC: an autonomous documentary studio</h1>
+        <p class="case-lede">
+            One case reference link goes in. Roughly five hours later, the system returns a finished
+            ten-minute documentary package. This page presents the public scope and verified output
+            without documenting the private prompts, tuning, routing, or production control logic.
+        </p>
+
+        <div class="stat-row">
+            <div class="stat"><div class="v">29</div><div class="l">Stages</div></div>
+            <div class="stat"><div class="v">6</div><div class="l">Departments</div></div>
+            <div class="stat"><div class="v">2</div><div class="l">Review gates</div></div>
+            <div class="stat"><div class="v">~5h</div><div class="l">Current runtime</div></div>
+            <div class="stat"><div class="v">0</div><div class="l">Human steps</div></div>
+        </div>
+
+        <figure class="tcacc-case-image">
+            <img src="/images/tcacc-episode-stills.jpg" alt="A montage of documentary imagery used in a TC_ACC episode: coastline, archival surveillance, document research, and a harbor" width="1280" height="720">
+            <figcaption>Representative episode imagery &middot; research, archival material, documents, and location context assembled into one edit.</figcaption>
+        </figure>
+
+        <h2>What it produces</h2>
+        <p>
+            The public claim is deliberately simple: a case reference is turned into a researched,
+            written, narrated, illustrated, edited, rendered, and packaged documentary episode.
+            The four outputs below show the system at different points in its development.
+        </p>
+        <div class="episodes">
+            <article class="episode">
+                <div class="episode-media">
+                    <video controls playsinline preload="none" poster="/images/tcacc-animation-only.jpg" data-src="/videos/tcacc-animation-only.mp4" aria-label="Animation-only TC_ACC render">
+                        Your browser does not support embedded video.
+                    </video>
+                    <button class="episode-load" type="button" aria-label="Load and play the animation-only TC_ACC render"><i class="fas fa-play" aria-hidden="true"></i></button>
+                </div>
+                <div class="episode-body">
+                    <span class="episode-tag">Animation study</span>
+                    <h3>Animation-only render</h3>
+                    <p>An early visual-system pass focused on the motion and editorial layer. The narration is my own voice, generated through ElevenLabs.</p>
+                    <div class="episode-meta">6:53 runtime</div>
+                </div>
+            </article>
+            <article class="episode">
+                <div class="episode-media">
+                    <video controls playsinline preload="none" poster="/images/tcacc-full-july.jpg" data-src="/videos/tcacc-full-july.mp4" aria-label="First full TC_ACC production pass">
+                        Your browser does not support embedded video.
+                    </video>
+                    <button class="episode-load" type="button" aria-label="Load and play the first full TC_ACC production pass"><i class="fas fa-play" aria-hidden="true"></i></button>
+                </div>
+                <div class="episode-body">
+                    <span class="episode-tag">Full pipeline</span>
+                    <h3>First full production pass</h3>
+                    <p>A longer end-to-end render from the same case, showing the assembled documentary package.</p>
+                    <div class="episode-meta">13:14 runtime</div>
+                </div>
+            </article>
+            <article class="episode">
+                <div class="episode-media">
+                    <video controls playsinline preload="none" poster="/images/tcacc-full-august.jpg" data-src="/videos/tcacc-full-august.mp4" aria-label="Refined TC_ACC production pass">
+                        Your browser does not support embedded video.
+                    </video>
+                    <button class="episode-load" type="button" aria-label="Load and play the refined TC_ACC production pass"><i class="fas fa-play" aria-hidden="true"></i></button>
+                </div>
+                <div class="episode-body">
+                    <span class="episode-tag">Full pipeline</span>
+                    <h3>Refined production pass</h3>
+                    <p>A later full-system iteration with the visual, narrative, audio, and finishing layers together.</p>
+                    <div class="episode-meta">9:56 runtime</div>
+                </div>
+            </article>
+            <article class="episode">
+                <div class="episode-media">
+                    <video controls playsinline preload="none" poster="/images/tcacc-recent-episode.jpg" data-src="/videos/tcacc-recent-episode.mp4" aria-label="Recent TC_ACC episode render">
+                        Your browser does not support embedded video.
+                    </video>
+                    <button class="episode-load" type="button" aria-label="Load and play the recent TC_ACC episode render"><i class="fas fa-play" aria-hidden="true"></i></button>
+                </div>
+                <div class="episode-body">
+                    <span class="episode-tag">Recent output</span>
+                    <h3>Recent episode render</h3>
+                    <p>A separate case rendered through the newer production path.</p>
+                    <div class="episode-meta">8:15 runtime</div>
+                </div>
+            </article>
+        </div>
+        <p class="runtime-note"><strong>Current runtime:</strong> a complete run takes about five hours. Time was not a project constraint, so I prioritized output quality and a reliable sequential workflow over concurrency optimization. That runtime is a current engineering tradeoff, not a speed claim.</p>
+
+        <section class="video-request" aria-labelledby="video-request-title">
+            <div>
+                <p class="case-kicker">A useful next test</p>
+                <h2 id="video-request-title">Give the pipeline a case.</h2>
+                <p>Have a story or unusual case you want to see processed? Leave your email and a short reference. The request is sent directly to me; a full pipeline run currently takes about five hours.</p>
+            </div>
+            <form id="videoRequestForm">
+                <label for="requestEmail">Your email</label>
+                <input id="requestEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+                <label for="requestTopic">Case or reference</label>
+                <textarea id="requestTopic" name="topic" rows="4" required placeholder="A link or two sentences is enough."></textarea>
+                <div class="form-trap" hidden><label for="requestWebsite">Website</label><input id="requestWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+                <button type="submit">Send the request <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+                <p class="request-note">Your email and case reference are used only to receive and reply to this request. See the <a href="/privacy">privacy policy</a>.</p>
+                <p class="request-note request-status" id="videoRequestStatus" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <h2>Public system overview</h2>
+        <p>
+            The public repository describes six production departments, twenty-nine stages, and two
+            independent review gates. The diagram stays at that published level; internal stage
+            contracts, routing, retry policy, and tuned orchestration are intentionally omitted.
+        </p>
+
+        <div class="pipeline">
+            <div class="dept">
+                <div class="name">Research</div>
+                <div class="what">Source intake, research, and evidence assembly</div>
+            </div>
+            <div class="dept">
+                <div class="name">Story</div>
+                <div class="what">Story development, writing, and narration</div>
+            </div>
+            <div class="dept">
+                <div class="name">Assets</div>
+                <div class="what">Visual planning, acquisition, and review</div>
+            </div>
+            <div class="dept">
+                <div class="name">Sound</div>
+                <div class="what">Voice and sound production</div>
+            </div>
+            <div class="gate">
+                <i class="fas fa-shield-halved"></i>
+                <span><strong>Independent review gate</strong></span>
+            </div>
+            <div class="dept">
+                <div class="name">Animation</div>
+                <div class="what">Editorial assembly and motion</div>
+            </div>
+            <div class="gate">
+                <i class="fas fa-shield-halved"></i>
+                <span><strong>Independent review gate</strong></span>
+            </div>
+            <div class="dept">
+                <div class="name">Finishing</div>
+                <div class="what">Rendering, metadata, and delivery packaging</div>
+            </div>
+        </div>
+
+        <h2>Public evidence</h2>
+        <div class="public-facts">
+            <div class="public-fact"><strong>Selected production code</strong><span>The excerpt contains real, low-disclosure-risk modules rather than display-only pseudocode.</span></div>
+            <div class="public-fact"><strong>46 published tests</strong><span>The included modules and their tests run independently of the private package.</span></div>
+            <div class="public-fact"><strong>Measured output</strong><span>The published reference run reports 9:55 at 1920&times;1080, 14,294 frames, 128 shots, and 760 reviewed assets.</span></div>
+        </div>
+
+        <h2>Public technology boundary</h2>
+        <p class="stack-line">
+            <strong>Python 3.12</strong> for the pipeline, <strong>TypeScript</strong> for rendering &middot;
+            <strong>LangGraph</strong> and <strong>Pydantic</strong> for the public architecture &middot;
+            <strong>Remotion</strong> and <strong>ffmpeg</strong> for video &middot;
+            <strong>pytest</strong> for the published tests.
+        </p>
+        <p>Named model and voice providers:</p>
+        <div class="provider-list" aria-label="TC_ACC model and voice providers">
+            <span>OpenAI</span><span>Gemini</span><span>Qwen</span><span>ElevenLabs</span><span>Fish Audio</span>
+        </div>
+        <p>Specific models, routing order, provider contracts, fallback policy, and configuration are intentionally not documented here.</p>
+
+        <h2>Disclosure boundary</h2>
+        <p>
+            The public repository is intentionally not a runnable copy of the production system. It
+            includes selected modules, tests, redacted configuration structure, and explanatory docs;
+            it omits the entry point, dependency manifest, environment template, and most production modules.
+        </p>
+
+        <div class="disclosure">
+            <p>
+                <strong>Intentionally withheld.</strong> Prompts, tuned configuration values, production
+                orchestration, resume and reuse machinery, provider integrations, research/search logic,
+                the brand and animation system, and most of the TypeScript renderer and agent implementation.
+            </p>
+            <p>
+                The portfolio follows the same boundary. It demonstrates the system's scope and public
+                evidence without reproducing the transferable implementation details.
+            </p>
+        </div>
+
+        <div class="case-links">
+            <a href="https://github.com/daMS2005/TC_ACC_PUBLIC" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> Public repository</a>
+            <a href="/#research"><i class="fas fa-arrow-left"></i> Back to flagship work</a>
+        </div>
+    </main>
+
+    <script>
+      document.querySelectorAll('.episode-load').forEach((button) => {
+        button.addEventListener('click', () => {
+          const video = button.parentElement.querySelector('video');
+          if (!video || !video.dataset.src) return;
+          video.src = video.dataset.src;
+          button.remove();
+          video.play().catch(() => {});
+          window.track && window.track('tcacc-video-play', video.dataset.src.split('/').pop());
+        });
+      });
+
+      document.querySelectorAll('.episode-media video').forEach((video) => {
+        video.addEventListener('play', () => {
+          document.querySelectorAll('.episode-media video').forEach((other) => {
+            if (other !== video) other.pause();
+          });
+        });
+      });
+
+      document.getElementById('videoRequestForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        if (!form.reportValidity()) return;
+        const button = form.querySelector('button[type="submit"]');
+        const status = document.getElementById('videoRequestStatus');
+        button.disabled = true;
+        button.textContent = 'Sending...';
+        status.dataset.state = '';
+        status.textContent = '';
+        try {
+          const response = await fetch('/api/video-request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: form.elements.email.value.trim(),
+              topic: form.elements.topic.value.trim(),
+              website: form.elements.website.value,
+            }),
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(payload.error || 'The request could not be sent.');
+          form.reset();
+          status.dataset.state = 'success';
+          status.textContent = 'Request sent. I will reply by email if I can take it on.';
+          window.track && window.track('video-request-sent');
+        } catch (error) {
+          status.dataset.state = 'error';
+          status.innerHTML = `${error.message} You can also email <a href="mailto:damorasoler@gmail.com">damorasoler@gmail.com</a>.`;
+        } finally {
+          button.disabled = false;
+          button.innerHTML = 'Send the request <i class="fas fa-arrow-right" aria-hidden="true"></i>';
+        }
+      });
+    </script>
+    <script src="/javascript-files/main.js?v=access-v2"></script>
+    <script src="/javascript-files/analytics.js" defer></script>
+</body>
+</html>

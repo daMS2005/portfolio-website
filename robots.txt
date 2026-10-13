@@ -1,0 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# private dashboard and API endpoints
+Disallow: /stats
+Disallow: /stats.html
+Disallow: /api/
+Disallow: /auth/
+
+Sitemap: https://danielmora.dev/sitemap.xml

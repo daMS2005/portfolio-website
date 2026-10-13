@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Cloud Preview</title>
+  <style>
+    body { margin: 0; background: radial-gradient(ellipse at 50% 15%, #1a1a1e 0%, #050506 65%); height: 100vh; overflow: hidden; font-family: ui-monospace, monospace; }
+    #stage { position: fixed; inset: 0; }
+    .msg { position: fixed; top: 45vh; width: 100%; text-align: center; color: #8a8a8a; }
+    .hint { position: fixed; bottom: 4vh; width: 100%; text-align: center; color: #6a6a6a; font-size: 12px; }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="stage"></div>
+  <p class="msg" id="msg">Loading face cloud&hellip;</p>
+  <p class="hint">Local preview only &middot; assets/face-cloud.ply &middot; ?ry=180 to spin, ?size=0.008 for fatter points</p>
+  <script type="module">
+    import * as THREE from 'three';
+    import { buildFaceCloud } from './javascript-files/face-cloud.js?v=4';
+
+    const params = new URLSearchParams(location.search);
+    const container = document.getElementById('stage');
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.01, 50);
+    camera.position.set(0, 0, 1.4);
+    camera.lookAt(0, 0, 0);
+
+    let face = null;
+    try {
+      face = await buildFaceCloud('assets/face-cloud.ply?' + Date.now());
+      // orientation fixes go on the inner points object; the tracking
+      // lookAt owns the outer group's rotation.
+      const inner = face.group.children[0];
+      inner.rotation.y = (parseFloat(params.get('ry')) || 0) * Math.PI / 180;
+      inner.rotation.x = (parseFloat(params.get('rx')) || 0) * Math.PI / 180;
+      inner.rotation.z = (parseFloat(params.get('rz')) || 0) * Math.PI / 180;
+      const size = parseFloat(params.get('size'));
+      if (size) inner.material.size = size;
+      scene.add(face.group);
+      window.__face = face;
+      document.getElementById('msg').remove();
+    } catch (e) {
+      document.getElementById('msg').textContent =
+        'No face scan yet — run the scan pipeline to create assets/face-cloud.ply';
+    }
+
+    const pointer = new THREE.Vector2(0, 0);
+    addEventListener('pointermove', (e) => {
+      pointer.x = (e.clientX / innerWidth) * 2 - 1;
+      pointer.y = -((e.clientY / innerHeight) * 2 - 1);
+    });
+
+    const lookTarget = new THREE.Vector3(0, 0, 2);
+    const dq = new THREE.Quaternion();
+    const cq = new THREE.Quaternion();
+    const clock = new THREE.Clock();
+    (function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+      if (face) {
+        lookTarget.set(pointer.x * 1.4, pointer.y * 0.9, 2);
+        cq.copy(face.group.quaternion);
+        face.group.lookAt(lookTarget);
+        dq.copy(face.group.quaternion);
+        face.group.quaternion.copy(cq).slerp(dq, 0.1);
+        face.group.position.y = Math.sin(t * 1.1) * 0.02;
+      }
+      renderer.render(scene, camera);
+    })();
+
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+  </script>
+</body>
+</html>

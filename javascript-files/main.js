@@ -14,24 +14,77 @@ document.getElementById('learnMoreBtn')?.addEventListener('click', () => {
     scrollToSection('aboutMe');
 });
 
-document.getElementById('viewProjectsBtn')?.addEventListener('click', () => {
-    scrollToSection('projects');
+const skipLink = document.querySelector('.skip-link');
+const mainContent = document.getElementById('main-content');
+
+skipLink?.addEventListener('click', event => {
+    event.preventDefault();
+    if (!mainContent) return;
+    mainContent.focus({ preventScroll: true });
+    scrollToSection('main-content');
 });
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+document.querySelectorAll('a[href^="#"]:not(.skip-link)').forEach(anchor => {
     anchor.addEventListener('click', event => {
         event.preventDefault();
         scrollToSection(anchor.getAttribute('href').slice(1));
     });
 });
 
+const navToggle = document.querySelector('.nav-toggle');
+const navLinks = document.getElementById('primary-navigation');
+const navbarElement = document.querySelector('.navbar');
+
+function setNavigationOpen(open, { returnFocus = false } = {}) {
+    if (!navToggle || !navLinks) return;
+
+    navLinks.classList.toggle('is-open', open);
+    navToggle.setAttribute('aria-expanded', String(open));
+    navToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+
+    const icon = navToggle.querySelector('i');
+    icon?.classList.toggle('fa-bars', !open);
+    icon?.classList.toggle('fa-xmark', open);
+
+    if (returnFocus) navToggle.focus();
+}
+
+navToggle?.addEventListener('click', () => {
+    setNavigationOpen(navToggle.getAttribute('aria-expanded') !== 'true');
+});
+
+navLinks?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => setNavigationOpen(false));
+});
+
+document.addEventListener('click', event => {
+    if (navToggle?.getAttribute('aria-expanded') !== 'true') return;
+    if (!navbarElement?.contains(event.target)) setNavigationOpen(false);
+});
+
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && navToggle?.getAttribute('aria-expanded') === 'true') {
+        setNavigationOpen(false, { returnFocus: true });
+    }
+});
+
+window.matchMedia('(min-width: 769px)').addEventListener('change', event => {
+    if (event.matches) setNavigationOpen(false);
+});
+
 const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
+let navbarFrame = null;
+function updateNavbar() {
     if (!navbar) return;
     navbar.style.background = window.scrollY > 50
         ? 'rgba(0, 0, 0, 0.9)'
         : 'rgba(0, 0, 0, 0.8)';
-});
+    navbarFrame = null;
+}
+window.addEventListener('scroll', () => {
+    if (navbarFrame === null) navbarFrame = window.requestAnimationFrame(updateNavbar);
+}, { passive: true });
+updateNavbar();
 
 const animatedElements = document.querySelectorAll('.detail-item, .skill-category, .contact-item');
 animatedElements.forEach(element => {
@@ -40,18 +93,45 @@ animatedElements.forEach(element => {
     element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
 });
 
-function animateOnScroll() {
-    animatedElements.forEach(element => {
-        const rect = element.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
+if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const element = entry.target;
             element.style.opacity = '1';
             element.style.transform = 'translateY(0)';
-        }
+            observer.unobserve(element);
+        });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    animatedElements.forEach(element => revealObserver.observe(element));
+} else {
+    animatedElements.forEach(element => {
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0)';
     });
 }
 
-window.addEventListener('scroll', animateOnScroll);
-animateOnScroll();
+const projectDisclosures = [...document.querySelectorAll('.project-disclosure')];
+const projectDetailsToggle = document.getElementById('toggleProjectDetails');
+
+function syncProjectDetailsToggle() {
+    if (!projectDetailsToggle || !projectDisclosures.length) return;
+    const allOpen = projectDisclosures.every(disclosure => disclosure.open);
+    projectDetailsToggle.setAttribute('aria-pressed', String(allOpen));
+    projectDetailsToggle.innerHTML = allOpen
+        ? 'Collapse all details <i class="fas fa-minus" aria-hidden="true"></i>'
+        : 'Expand all details <i class="fas fa-plus" aria-hidden="true"></i>';
+}
+
+projectDetailsToggle?.addEventListener('click', () => {
+    const open = !projectDisclosures.every(disclosure => disclosure.open);
+    projectDisclosures.forEach(disclosure => { disclosure.open = open; });
+    syncProjectDetailsToggle();
+});
+
+projectDisclosures.forEach(disclosure => {
+    disclosure.addEventListener('toggle', syncProjectDetailsToggle);
+});
 
 const tagline = document.querySelector('.tagline');
 if (tagline && !prefersReducedMotion) {
@@ -64,6 +144,71 @@ if (tagline && !prefersReducedMotion) {
         }, index * 35);
     });
 }
+
+document.querySelectorAll('.project-card .card-inner').forEach((inner, index) => {
+    const card = inner.closest('.project-card');
+    const front = inner.querySelector('.card-front');
+    const back = inner.querySelector('.card-back');
+    if (!card || !front || !back) return;
+
+    const title = front.querySelector('h3')?.textContent?.trim() || `project ${index + 1}`;
+    const backId = `project-details-${index + 1}`;
+    back.id = backId;
+
+    const detailsButton = document.createElement('button');
+    detailsButton.type = 'button';
+    detailsButton.className = 'flip-btn';
+    detailsButton.setAttribute('aria-controls', backId);
+    detailsButton.setAttribute('aria-expanded', 'false');
+    detailsButton.innerHTML = 'View details <i class="fas fa-arrow-right" aria-hidden="true"></i>';
+
+    const backButton = document.createElement('button');
+    backButton.type = 'button';
+    backButton.className = 'flip-btn flip-btn--back';
+    backButton.innerHTML = '<i class="fas fa-arrow-left" aria-hidden="true"></i> Back';
+    backButton.setAttribute('aria-label', `Return to ${title}`);
+
+    front.append(detailsButton);
+    back.prepend(backButton);
+
+    function setCardFlipped(flipped, focusTarget) {
+        card.classList.toggle('is-flipped', flipped);
+        detailsButton.setAttribute('aria-expanded', String(flipped));
+
+        if (flipped) {
+            back.inert = false;
+            back.setAttribute('aria-hidden', 'false');
+            focusTarget?.focus();
+            front.inert = true;
+            front.setAttribute('aria-hidden', 'true');
+        } else {
+            front.inert = false;
+            front.setAttribute('aria-hidden', 'false');
+            focusTarget?.focus();
+            back.inert = true;
+            back.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    detailsButton.addEventListener('click', event => {
+        event.stopPropagation();
+        setCardFlipped(true, backButton);
+    });
+
+    backButton.addEventListener('click', event => {
+        event.stopPropagation();
+        setCardFlipped(false, detailsButton);
+    });
+
+    card.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && card.classList.contains('is-flipped')) {
+            event.stopPropagation();
+            setCardFlipped(false, detailsButton);
+        }
+    });
+
+    setCardFlipped(false);
+});
 
 document.querySelectorAll('.screenshot-gallery').forEach(gallery => {
     const images = [...gallery.querySelectorAll('img')];
@@ -102,18 +247,23 @@ document.querySelectorAll('.screenshot-gallery').forEach(gallery => {
 
 const modal = document.getElementById('comingSoonModal');
 const closeModalButton = document.querySelector('.close-modal');
+let lastModalTrigger = null;
 
-function openPrivateRepoModal() {
+function openPrivateRepoModal(event) {
     if (!modal) return;
+    lastModalTrigger = event?.currentTarget || document.activeElement;
+    modal.hidden = false;
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
     closeModalButton?.focus();
 }
 
 function closePrivateRepoModal() {
-    if (!modal) return;
+    if (!modal || modal.hidden) return;
     modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    lastModalTrigger?.focus();
 }
 
 document.querySelectorAll('[data-modal-trigger]').forEach(trigger => {
@@ -129,72 +279,26 @@ window.addEventListener('click', event => {
 });
 
 document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && modal && !modal.hidden) {
         closePrivateRepoModal();
     }
 });
 
-document.querySelectorAll('[data-video-story]').forEach(story => {
-    const scenes = [...story.querySelectorAll('.video-scene')];
-    if (!scenes.length) return;
+modal?.addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
 
-    let sceneIndex = 0;
-    let isPlaying = !prefersReducedMotion;
-    let intervalId = null;
-    const container = story.closest('.gpu-story-box');
-    const label = container?.querySelector('[data-story-label]');
-    const toggleButton = container?.querySelector('[data-story-toggle]');
-    const prevButton = container?.querySelector('[data-story-prev]');
-    const nextButton = container?.querySelector('[data-story-next]');
+    const focusable = [...modal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+        .filter(element => !element.hidden);
+    if (!focusable.length) return;
 
-    const showScene = index => {
-        sceneIndex = (index + scenes.length) % scenes.length;
-        scenes.forEach((scene, currentIndex) => {
-            scene.classList.toggle('is-active', currentIndex === sceneIndex);
-        });
-        if (label) {
-            label.textContent = scenes[sceneIndex].dataset.sceneLabel || `Scene ${sceneIndex + 1}`;
-        }
-    };
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
 
-    const updateToggleIcon = () => {
-        if (!toggleButton) return;
-        toggleButton.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
-        toggleButton.setAttribute('aria-label', isPlaying ? 'Pause story' : 'Play story');
-    };
-
-    const stopPlayback = () => {
-        if (intervalId) {
-            window.clearInterval(intervalId);
-            intervalId = null;
-        }
-    };
-
-    const startPlayback = () => {
-        stopPlayback();
-        if (!isPlaying || prefersReducedMotion) return;
-        intervalId = window.setInterval(() => {
-            showScene(sceneIndex + 1);
-        }, 5000);
-    };
-
-    showScene(sceneIndex);
-    updateToggleIcon();
-    startPlayback();
-
-    prevButton?.addEventListener('click', () => {
-        showScene(sceneIndex - 1);
-        startPlayback();
-    });
-
-    nextButton?.addEventListener('click', () => {
-        showScene(sceneIndex + 1);
-        startPlayback();
-    });
-
-    toggleButton?.addEventListener('click', () => {
-        isPlaying = !isPlaying;
-        updateToggleIcon();
-        startPlayback();
-    });
+    if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+    }
 });

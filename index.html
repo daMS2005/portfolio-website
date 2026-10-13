@@ -3,14 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daniel Mora - AI & Software Engineer</title>
-    <link rel="stylesheet" href="css-files/style.css">
+    <title>Daniel Mora - AI Systems &amp; Research Engineer</title>
+    <meta name="description" content="AI systems and research engineer building interpretability research, trained models, and autonomous pipelines.">
+    <meta name="author" content="Daniel Mora">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Daniel Mora - AI Systems &amp; Research Engineer">
+    <meta property="og:description" content="Interpretability research, trained models, and autonomous AI systems - with MORA-01 as an optional guide.">
+    <meta property="og:image" content="/images/og-robot.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="css-files/style.css?v=access-v5">
+    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=flagship-v10">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
+      }
+    }
+    </script>
     <link rel="icon" href="images/favicon.png?v=mob-20260621" type="image/png" sizes="32x32">
     <link rel="shortcut icon" href="images/favicon.png?v=mob-20260621" type="image/png">
     <link rel="apple-touch-icon" href="images/favicon-180.png?v=mob-20260621">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <!-- Add blobs to simulate the lava lamp -->
     <div class="lava-lamp">
         <div class="blob"></div>
@@ -19,7 +38,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Primary navigation">
         <div class="nav-content">
             <div class="logo-section">
                 <div class="logo">DM</div>
@@ -31,13 +50,19 @@
                         <i class="fab fa-linkedin"></i>
                     </a>
                     <a href="https://huggingface.co/dams2005" target="_blank" rel="noopener noreferrer" class="hf-nav" aria-label="Hugging Face profile">
-                        <img src="images/hugging-face-logo-primary.png" alt="" class="hf-logo">
+                        <img src="images/hf-logo-small.png" alt="" class="hf-logo">
                     </a>
                 </div>
             </div>
-            <ul class="nav-links">
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open navigation">
+                <span>Menu</span>
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-links" id="primary-navigation">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#aboutMe">About</a></li>
+                <li><a href="/personal.html">Outside work</a></li>
+                <li><a href="#research">Research</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
                 <li><a href="#websites">Websites</a></li>
@@ -46,15 +71,16 @@
         </div>
     </nav>
 
+    <main id="main-content" tabindex="-1">
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
             <h1>Daniel Mora</h1>
-            <h2>AI Engineer & Full-Stack Developer</h2>
-            <p class="tagline">I build AI products, full-stack systems, and practical tools that turn complex ideas into useful software.</p>
+            <h2>AI Systems &amp; Research Engineer</h2>
+            <p class="tagline">I study how models represent information and build AI systems that survive contact with the real world.</p>
             <div class="cta-buttons">
                 <button id="learnMoreBtn" class="primary-btn">Learn More</button>
-                <button id="viewProjectsBtn" class="secondary-btn" aria-label="View my projects">View Projects</button>
+                <a href="resume.pdf" class="secondary-btn resume-btn" download aria-label="Download my resume">R&eacute;sum&eacute; <i class="fas fa-download"></i></a>
             </div>
         </div>
     </section>
@@ -66,7 +92,7 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>
-                        Hey, I'm Daniel. I'm a software engineer focused on AI, automation, and full-stack products. I like building systems that are useful in the real world: chatbots, recommendation engines, cloud apps, data pipelines, client websites, and the occasional game when the creative itch wins.
+                        Hey, I'm Daniel. I'm an AI systems and research engineer focused on interpretability, automation, and applied machine learning. I like building systems that are useful in the real world: trained models, agentic pipelines, research tooling, client software, and the occasional game when the creative itch wins.
                     </p>
                     <div class="about-details">
                         <div class="detail-item">
@@ -75,411 +101,326 @@
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-code"></i>
-                            <span>AI & ML Builder</span>
+                            <span>AI &amp; ML Builder</span>
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-globe"></i>
-                            <span>3 Languages</span>
+                            <span>Spanish &amp; English</span>
                         </div>
                     </div>
                 </div>
                 <div class="about-image">
-                    <img src="images/profile.png" alt="Daniel Mora - AI & Software Engineer" class="profile-image">
+                    <img src="images/profile.webp" alt="Daniel Mora - AI Systems and Research Engineer" class="profile-image" width="800" height="1066" loading="lazy">
                     <div class="image-backdrop"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="section">
+    <!-- Flagship work -->
+    <section id="research" class="section flagship-section">
         <div class="container">
-            <h2>Featured Projects</h2>
-            <p class="section-description">Open the repos, model releases, and project details <i class="fas fa-hand-pointer"></i></p>
-            <div class="projects-grid">
-                <a href="https://github.com/daMS2005/alieninvasion" target="_blank" rel="noopener noreferrer" class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>Alien Invasion</h3>
-                            <p>Designed and implemented a 2D shooter game in C++, featuring real-time enemy AI, dynamic difficulty scaling, and engaging gameplay mechanics.</p>
-                            <div class="project-tech">
-                                <span>C++</span>
-                                <span>SFML</span>
-                                <span>OpenGL</span>
-                                <span>SDL</span>
-                            </div>
-                        </div>
-                        <div class="card-back">
-                            <div class="project-screenshots">
-                                <div class="screenshot-gallery">
-                                    <img src="alieninvasionpics/gameplay.png" alt="Alien Invasion Gameplay" class="active">
-                                    <img src="alieninvasionpics/enemies.png" alt="Alien Invasion Enemies">
-                                    <img src="alieninvasionpics/shooting.png" alt="Alien Invasion Shooting Mechanics">
-                                    <img src="alieninvasionpics/score.png" alt="Alien Invasion Scoring System">
-                                </div>
-                                <div class="screenshot-nav">
-                                    <button class="prev-btn" type="button" aria-label="Previous screenshot">❮</button>
-                                    <button class="next-btn" type="button" aria-label="Next screenshot">❯</button>
-                                </div>
-                            </div>
-                            <h3>Game Features</h3>
-                            <ul class="feature-list">
-                                <li>🎮 Real-time Enemy AI</li>
-                                <li>📈 Dynamic Difficulty Scaling</li>
-                                <li>🎯 Pathfinding AI</li>
-                                <li>💥 Optimized Game Loop</li>
-                                <li>🎨 2D Graphics & Rendering</li>
-                            </ul>
-                            <h3>Technologies Used</h3>
-                            <ul class="tech-list">
-                                <li>C++: Object-oriented programming</li>
-                                <li>SFML: Game development framework</li>
-                                <li>OpenGL & SDL: Graphics & rendering</li>
-                                <li>GitHub: Version control</li>
-                            </ul>
+            <div class="section-heading editorial-heading">
+                <p class="eyebrow">Selected systems &amp; research</p>
+                <h2>Flagship work</h2>
+                <p>Three projects that best represent how I think: begin with a hard question, make the system legible, and test the part most likely to fail.</p>
+            </div>
+
+            <div class="flagship-list">
+                <article class="flagship-card flagship-thesis">
+                    <div class="flagship-copy">
+                        <div class="flagship-meta"><span>01</span><span>Thesis &middot; paper draft</span></div>
+                        <h3>Brain&ndash;LLM Feature Correspondence</h3>
+                        <p class="flagship-lede">A cross-description test of whether sparse language-model features and human brain responses depend on the same representational structure.</p>
+                        <dl class="flagship-facts">
+                            <div><dt>59</dt><dd>participants</dd></div>
+                            <div><dt>200</dt><dd>brain parcels</dd></div>
+                            <div><dt>6</dt><dd>SAE systems</dd></div>
+                        </dl>
+                        <div class="project-actions flagship-actions" aria-label="Brain–LLM Feature Correspondence links">
+                            <a class="project-action project-action-primary" href="/thesis.html">Case study <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                            <a class="project-action" href="/thesis.pdf">Paper PDF</a>
+                            <a class="project-action project-action-icon" href="https://anonymous.4open.science/r/A-Cross-Description-Test-of-Sparse-Feature-Correspondence-Between-Language-Models-and-fMRI-Responses-512A/README.md" target="_blank" rel="noopener noreferrer" aria-label="Open the anonymous paper repository" title="Anonymous paper repository"><i class="fas fa-code-branch" aria-hidden="true"></i></a>
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/thesis_neuro" target="_blank" rel="noopener noreferrer" aria-label="Open the thesis development repository on GitHub" title="Thesis development repository on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                </a>
-                <a href="https://github.com/daMS2005/AI_BotAssistent_Personality" target="_blank" rel="noopener noreferrer" class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>AI Sales Chatbot</h3>
-                            <p>Engineered an AI-driven chatbot leveraging NLP to enhance customer support automation, handling real-time inquiries and product recommendations.</p>
-                            <div class="project-tech">
-                                <span>OpenAI GPT</span>
-                                <span>NLP</span>
-                                <span>React</span>
-                                <span>Python</span>
+                    <div class="flagship-visual thesis-visual" aria-label="Diagram showing the thesis transfer design">
+                        <span class="visual-label">Cross-description transfer</span>
+                        <div class="thesis-flow">
+                            <div class="flow-node">Description A<small>select feature bank</small></div>
+                            <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+                            <div class="flow-node flow-node-accent">Frozen SAE basis<small>same feature IDs</small></div>
+                            <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+                            <div class="flow-split">
+                                <span>fMRI response</span>
+                                <span>LM hidden state</span>
                             </div>
                         </div>
-                        <div class="card-back">
-                            <h3>Features</h3>
-                            <ul class="feature-list">
-                                <li>🤖 Real-time Customer Support</li>
-                                <li>💬 Natural Language Processing</li>
-                                <li>🛍️ Product Recommendations</li>
-                                <li>📱 Multi-platform Integration</li>
-                                <li>📊 Analytics Dashboard</li>
-                            </ul>
-                            <h3>Technologies Used</h3>
-                            <ul class="tech-list">
-                                <li>AI & NLP: OpenAI GPT, spaCy, NLTK</li>
-                                <li>Backend: Python (Flask, FastAPI)</li>
-                                <li>Frontend: React.js, Next.js</li>
-                                <li>Cloud: AWS Lambda, Firebase</li>
-                                <li>Database: MongoDB, Redis</li>
-                            </ul>
+                        <p>Prediction transfers. Feature-importance ordering does not.</p>
+                    </div>
+                </article>
+
+                <article class="flagship-card flagship-tcacc">
+                    <div class="flagship-copy">
+                        <div class="flagship-meta"><span>02</span><span>Autonomous media system</span></div>
+                        <h3>TC_ACC Documentary Studio</h3>
+                        <p class="flagship-lede">A multi-stage production system that turns a case reference into a researched, narrated, rendered documentary episode.</p>
+                        <dl class="flagship-facts">
+                            <div><dt>29</dt><dd>stages</dd></div>
+                            <div><dt>6</dt><dd>departments</dd></div>
+                            <div><dt>2</dt><dd>review gates</dd></div>
+                        </dl>
+                        <div class="project-actions flagship-actions" aria-label="TC_ACC Documentary Studio links">
+                            <a class="project-action project-action-primary" href="/tc-acc.html">Architecture case study <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/TC_ACC_PUBLIC" target="_blank" rel="noopener noreferrer" aria-label="Open the TC_ACC public excerpt on GitHub" title="Public excerpt on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                </a>
-                <a href="https://github.com/IE-BestBank" target="_blank" rel="noopener noreferrer" class="project-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>Cloud Banking Platform</h3>
-                            <p>Developed a full-stack banking web application with a robust CI/CD pipeline and deployed on Azure Cloud, featuring secure authentication and transaction processing.</p>
-                            <div class="project-tech">
-                                <span>Azure</span>
-                                <span>React</span>
-                                <span>Python</span>
-                                <span>Docker</span>
-                            </div>
-                        </div>
-                        <div class="card-back">
-                            <h3>Features</h3>
-                            <ul class="feature-list">
-                                <li>🔒 Secure Authentication</li>
-                                <li>💳 Account Management</li>
-                                <li>💸 Transaction Processing</li>
-                                <li>📊 Analytics Dashboard</li>
-                                <li>🔄 CI/CD Pipeline</li>
-                            </ul>
-                            <h3>Technologies Used</h3>
-                            <ul class="tech-list">
-                                <li>Backend: Python (FastAPI), Node.js</li>
-                                <li>Frontend: React.js, TailwindCSS</li>
-                                <li>Cloud: Azure, Docker, Kubernetes</li>
-                                <li>Security: OAuth2, JWT</li>
-                                <li>CI/CD: GitHub Actions, Azure DevOps</li>
-                            </ul>
+                    <div class="flagship-visual tcacc-visual">
+                        <img src="images/tcacc-episode-stills.jpg" alt="A montage of documentary imagery produced for a TC_ACC episode" loading="lazy" width="1280" height="720">
+                        <div class="pipeline-strip" aria-label="TC_ACC production pipeline">
+                            <span>Research</span><i aria-hidden="true"></i><span>Story</span><i aria-hidden="true"></i><span>Assets</span><i aria-hidden="true"></i><span>Sound</span><i aria-hidden="true"></i><span>Animation</span><i aria-hidden="true"></i><span>Finish</span>
                         </div>
                     </div>
-                </a>
-                <a href="https://github.com/EduRecommender/LearnMate" target="_blank" rel="noopener noreferrer" class="project-card">
-                    <div class="coming-soon-tag">In Development</div>
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>LearnMate</h3>
-                            <p>An AI-powered study platform that personalizes learning content and provides intelligent recommendations. Features a ChatGPT learning assistant for interactive help.</p>
-                            <div class="project-tech">
-                                <span>TensorFlow</span>
-                                <span>FastAPI</span>
-                                <span>Streamlit</span>
-                                <span>ChatGPT</span>
-                            </div>
-                        </div>
-                        <div class="card-back">
-                            <h3>Features</h3>
-                            <ul class="feature-list">
-                                <li>🤖 ChatGPT-Powered Learning Assistant</li>
-                                <li>🎯 Personalized Learning Recommendations</li>
-                                <li>📊 Performance Analytics</li>
-                                <li>🔄 Cross-Model Validation</li>
-                                <li>🌐 Multi-Platform Integration</li>
-                            </ul>
-                            <h3>Technologies Used</h3>
-                            <ul class="tech-list">
-                                <li>ML & AI: TensorFlow, Scikit-Learn, Collaborative & Content-Based Filtering</li>
-                                <li>NLP: ChatGPT, spaCy, NLTK, Hugging Face Transformers</li>
-                                <li>Cross-Model: DeepSeek</li>
-                                <li>Backend: Python (FastAPI, Flask)</li>
-                                <li>Frontend: Streamlit</li>
-                                <li>APIs: OpenAI (ChatGPT), Google Books, YouTube Data, Deepseek</li>
-                            </ul>
+                </article>
+
+                <article class="flagship-card flagship-npc">
+                    <div class="flagship-copy">
+                        <div class="flagship-meta"><span>03</span><span class="status-live"><i></i> Active development</span></div>
+                        <h3>NPC Transformer</h3>
+                        <p class="flagship-lede">A transformer-based model for NPC behavior. The core is implemented; training and evaluation are still ahead, so this is a development marker rather than a finished claim.</p>
+                        <dl class="flagship-facts">
+                            <div><dt>Core</dt><dd>implemented</dd></div>
+                            <div><dt>Next</dt><dd>training</dd></div>
+                            <div><dt>Then</dt><dd>evaluation</dd></div>
+                        </dl>
+                        <div class="project-actions flagship-actions" aria-label="NPC Transformer links">
+                            <a class="project-action project-action-primary" href="/npc-transformer.html">Development page <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                </a>
-                <div class="project-card model-artifact-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>Triplet SAE Project</h3>
-                            <p>Research pipeline comparing sparse autoencoder feature steering with LoRA fine-tuning for factual subject-predicate-object triplet extraction.</p>
-                            <div class="project-tech">
-                                <span>Python</span>
-                                <span>Gemma 3</span>
-                                <span>SAE</span>
-                                <span>LoRA</span>
-                            </div>
+                    <div class="flagship-visual npc-visual" aria-label="Placeholder architecture for the NPC Transformer project">
+                        <div class="npc-grid" aria-hidden="true">
+                            <span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span>
                         </div>
-                        <div class="card-back">
-                            <h3>Research Focus</h3>
-                            <ul class="feature-list">
-                                <li>Factual triplet extraction with qualifiers</li>
-                                <li>SAE activation analysis and feature ranking</li>
-                                <li>Ablation and steering experiments</li>
-                                <li>Gemma 3 4B instruction-tuning with LoRA</li>
-                                <li>Quantized model export for deployment</li>
-                            </ul>
-                            <h3>Technologies Used</h3>
-                            <ul class="tech-list">
-                                <li>Models: Gemma 3 4B IT, sparse autoencoders</li>
-                                <li>Training: Hugging Face, PEFT, Accelerate</li>
-                                <li>Evaluation: precision, recall, F1, entity overlap</li>
-                                <li>Deployment: LoRA adapter, GPTQ 4-bit and 8-bit exports</li>
-                            </ul>
-                            <div class="project-resource-links">
-                                <a href="https://github.com/daMS2005/triplet_sae_project" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
-                                <a href="https://huggingface.co/dams2005/gemma-3-4b-it-triplet-extractor" target="_blank" rel="noopener noreferrer"><img src="images/hugging-face-logo-primary.png" alt="" class="hf-inline-logo"> Hugging Face</a>
-                            </div>
-                        </div>
+                        <div class="npc-core">Transformer core<small>training pending</small></div>
                     </div>
-                </div>
-                <div class="project-card model-artifact-card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>OLMo SAE Builder</h3>
-                            <p>Readable sparse autoencoder tooling for OLMo-3-7B-Think, built as a plain PyTorch single-GPU pipeline for activation collection and SAE training.</p>
-                            <div class="project-tech">
-                                <span>Python</span>
-                                <span>PyTorch</span>
-                                <span>OLMo</span>
-                                <span>SAE</span>
-                            </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional work -->
+    <section id="projects" class="section supporting-work-section">
+        <div class="container">
+            <div class="section-heading editorial-heading compact-heading">
+                <p class="eyebrow">Additional work</p>
+                <h2>More systems, with the work left visible</h2>
+                <p>These are supporting projects, not footnotes. Each one shows what I owned, what I built, and where the work can be inspected.</p>
+            </div>
+            <div class="project-view-options">
+                <span>Summaries are shown first.</span>
+                <button id="toggleProjectDetails" type="button" aria-pressed="false">Expand all details <i class="fas fa-plus" aria-hidden="true"></i></button>
+            </div>
+            <div class="project-records">
+                <article class="project-record">
+                    <header class="project-record-header">
+                        <div><span class="work-type">Model research &middot; release</span><h3>Triplet SAE Project</h3></div>
+                        <div class="project-actions" aria-label="Triplet SAE Project links">
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/triplet_sae_project" target="_blank" rel="noopener noreferrer" aria-label="Open the Triplet SAE project on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a>
+                            <a class="project-action project-action-icon" href="https://huggingface.co/dams2005/gemma-3-4b-it-triplet-extractor" target="_blank" rel="noopener noreferrer" aria-label="Open the Triplet SAE model on Hugging Face" title="Hugging Face model"><img class="hf-action-logo" src="images/hf-logo-small.png" alt=""></a>
                         </div>
-                        <div class="card-back">
-                            <h3>Pipeline</h3>
-                            <ul class="feature-list">
-                                <li>Download OLMo-3-7B-Think locally</li>
-                                <li>Stream text and collect residual activations</li>
-                                <li>Compute pre-bias activation means</li>
-                                <li>Train TopK sparse autoencoders from saved chunks</li>
-                                <li>Single-GPU scripts designed for readability</li>
+                    </header>
+                    <p class="project-summary">Compared LoRA fine-tuning with SAE feature steering to determine which technique was better for subject&ndash;predicate&ndash;object extraction used in Graph-RAG navigation.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>Research question</span> Which approach performs better for Graph-RAG triplet extraction: LoRA fine-tuning or targeted steering through sparse autoencoder features?</p>
+                            <ul class="project-evidence">
+                                <li>Built comparable SAE-steering and LoRA fine-tuning workflows, then evaluated their subject&ndash;predicate&ndash;object extraction quality for downstream Graph-RAG traversal.</li>
+                                <li>Fine-tuned Gemma 3 4B IT with LoRA and packaged deployment-oriented GPTQ 4-bit and 8-bit variants.</li>
+                                <li>Ran the GPU-heavy analysis and training workflow on Google Cloud compute.</li>
                             </ul>
-                            <h3>Technologies Used</h3>
-                            <ul class="tech-list">
-                                <li>Model: allenai/Olmo-3-7B-Think</li>
-                                <li>Training: PyTorch, bfloat16, forward hooks</li>
-                                <li>SAE: tied decoder, TopK activation, reconstruction loss</li>
-                                <li>Data: Dolma and Dolci-Instruct-SFT activation streams</li>
-                            </ul>
-                            <div class="project-resource-links">
-                                <a href="https://github.com/daMS2005/olmo-sae-builder" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
-                                <a href="https://huggingface.co/dams2005/olmo-3-7b-think-saes" target="_blank" rel="noopener noreferrer"><img src="images/hugging-face-logo-primary.png" alt="" class="hf-inline-logo"> Hugging Face</a>
-                            </div>
+                            <div class="project-stack" aria-label="Triplet SAE Project technologies"><span>Python</span><span>PyTorch</span><span>Gemma 3</span><span>Graph-RAG</span><span>SAE</span><span>PEFT / LoRA</span><span>Google Cloud</span><span>Hugging Face</span></div>
                         </div>
+                    </details>
+                </article>
+
+                <article class="project-record">
+                    <header class="project-record-header">
+                        <div><span class="work-type">Interpretability infrastructure</span><h3>OLMo SAE Builder</h3></div>
+                        <div class="project-actions" aria-label="OLMo SAE Builder links">
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/olmo-sae-builder" target="_blank" rel="noopener noreferrer" aria-label="Open the OLMo SAE Builder on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a>
+                            <a class="project-action project-action-icon" href="https://huggingface.co/dams2005/olmo-3-7b-think-saes" target="_blank" rel="noopener noreferrer" aria-label="Open the OLMo SAE release on Hugging Face" title="Hugging Face SAE release"><img class="hf-action-logo" src="images/hf-logo-small.png" alt=""></a>
+                        </div>
+                    </header>
+                    <p class="project-summary">A readable, single-GPU pipeline for turning large text corpora into released sparse autoencoders for OLMo-3-7B-Think.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>Scope</span> Data collection, activation infrastructure, SAE training, validation, and public model packaging.</p>
+                            <ul class="project-evidence">
+                                <li>Streamed Dolma and Dolci-Instruct-SFT data, captured residual activations with forward hooks, and wrote disk-backed chunks instead of loading the corpus into memory.</li>
+                                <li>Trained TopK SAEs across four model layers on roughly 20 million token activations per layer and released seven SAELens-compatible artifacts.</li>
+                                <li>Built and operated the Google Cloud GPU workflow needed to move data, run long jobs, preserve checkpoints, and publish the outputs.</li>
+                            </ul>
+                            <div class="project-stack" aria-label="OLMo SAE Builder technologies"><span>Python</span><span>PyTorch</span><span>OLMo 3 7B</span><span>TopK SAE</span><span>CUDA</span><span>Google Cloud</span><span>SAELens</span></div>
+                        </div>
+                    </details>
+                </article>
+
+                <article class="project-record">
+                    <header class="project-record-header">
+                        <div><span class="work-type">Agent experiment</span><h3>Dual-Agent AI Chatbot</h3></div>
+                        <div class="project-actions"><a class="project-action project-action-icon" href="https://github.com/daMS2005/AI_BotAssistent_Personality" target="_blank" rel="noopener noreferrer" aria-label="Open the Dual-Agent AI Chatbot on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a></div>
+                    </header>
+                    <p class="project-summary">A controlled persuasion experiment that placed a helpful electric-car guide against a deliberately relentless Dacia Duster salesperson.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>My role</span> Architect and project manager; owned the experimental design and research write-up while two teammates implemented the agents.</p>
+                            <ul class="project-evidence"><li>Designed opposing agent goals and the conversation structure.</li><li>Turned a playful chatbot into an explicit behavioral experiment with documented findings.</li></ul>
+                            <div class="project-stack"><span>Python</span><span>CrewAI</span><span>LLM agents</span><span>Experiment design</span></div>
+                        </div>
+                    </details>
+                </article>
+
+                <article class="project-record">
+                    <header class="project-record-header">
+                        <div><span class="work-type">Learning product &middot; team project</span><h3>LearnMate</h3></div>
+                        <div class="project-actions" aria-label="LearnMate links"><a class="project-action project-action-icon" href="https://github.com/EduRecommender/LearnMate" target="_blank" rel="noopener noreferrer" aria-label="Open LearnMate on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a></div>
+                    </header>
+                    <p class="project-summary">An agentic study partner that combines interactive help with personalized learning-resource recommendations.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>My role</span> Built the agent flows, backend, and first Streamlit prototypes in a seven-person team.</p>
+                            <ul class="project-evidence"><li>Connected conversational guidance to resource discovery and recommendation flows.</li><li>Carried the work from early prototype into an integrated team application.</li></ul>
+                            <div class="project-stack"><span>Python</span><span>Streamlit</span><span>LLM agents</span><span>Recommendation systems</span><span>APIs</span></div>
+                        </div>
+                    </details>
+                </article>
+
+                <article class="project-record">
+                    <header class="project-record-header">
+                        <div><span class="work-type">Cloud application &middot; team system</span><h3>Cloud Banking Platform</h3></div>
+                        <div class="project-actions"><a class="project-action project-action-icon" href="https://github.com/IE-BestBank" target="_blank" rel="noopener noreferrer" aria-label="Open the Cloud Banking Platform organization on GitHub" title="GitHub organization"><i class="fab fa-github" aria-hidden="true"></i></a></div>
+                    </header>
+                    <p class="project-summary">A mock banking platform built as a six-role software team, with application code, infrastructure, delivery automation, and secret handling treated as one system.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>My role</span> One of two full-stack developers, working across the Vue interface, Flask API, and deployment infrastructure.</p>
+                            <ul class="project-evidence"><li>Implemented product work across frontend, backend, and PostgreSQL-backed data flows.</li><li>Provisioned Azure infrastructure with Bicep and supported CI/CD, secrets, sprints, and ticketed team delivery.</li></ul>
+                            <div class="project-stack"><span>Vue</span><span>Flask</span><span>PostgreSQL</span><span>Azure</span><span>Bicep</span><span>GitHub Actions</span></div>
+                        </div>
+                    </details>
+                </article>
+
+                <article class="project-record">
+                    <header class="project-record-header">
+                        <div><span class="work-type">Solo automation system &middot; sunset</span><h3>Automated Content Poster (ACC)</h3></div>
+                        <div class="project-actions" aria-label="Automated Content Poster links">
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/Autopost" target="_blank" rel="noopener noreferrer" aria-label="Open the Automated Content Poster on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a>
+                            <a class="project-action project-action-icon" href="https://www.instagram.com/goated_reddit/" target="_blank" rel="noopener noreferrer" aria-label="Open the Automated Content Poster Instagram page" title="Instagram page"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        </div>
+                    </header>
+                    <p class="project-summary">A source-to-publish media pipeline that rewrote content, created voiceovers, assembled posts, and published them automatically.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>Ownership</span> Solo build; operated it in production, tracked the output, and chose when to sunset it.</p>
+                            <ul class="project-evidence"><li>Connected GPT rewriting, ElevenLabs narration, media processing, scheduling, and Instagram delivery.</li><li>Deployed the long-running automation on Google Cloud Run and handled its production lifecycle.</li></ul>
+                            <div class="project-stack"><span>Python</span><span>OpenAI</span><span>ElevenLabs</span><span>Cloud Run</span><span>Automation</span><span>Media APIs</span></div>
+                        </div>
+                    </details>
+                </article>
+
+                <article class="project-record project-record-with-media">
+                    <header class="project-record-header">
+                        <div><span class="work-type">C++ systems &middot; game</span><h3>Alien Invasion</h3></div>
+                        <div class="project-actions"><a class="project-action project-action-icon" href="https://github.com/daMS2005/alieninvasion" target="_blank" rel="noopener noreferrer" aria-label="Open Alien Invasion on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a></div>
+                    </header>
+                    <img src="alieninvasionpics/gameplay.png" alt="Alien Invasion game screen" loading="lazy" width="1280" height="720">
+                    <div class="project-record-content">
+                        <p class="project-summary">A Space Invaders-style SFML game used to practice real-time state, rendering, testing, and native build tooling.</p>
+                        <details class="project-disclosure">
+                            <summary><span class="when-closed">Team project details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                            <div class="project-disclosure-body">
+                                <p class="project-role"><span>Collaboration</span> Team C++ project.</p>
+                                <ul class="project-evidence"><li>The project includes four enemy types, difficulty scaling, collision and scoring systems, plus a persistent leaderboard.</li><li>Its engineering surface includes unit tests, CMake build tooling, and Sphinx/Doxygen documentation.</li></ul>
+                                <div class="project-stack"><span>C++</span><span>SFML</span><span>CMake</span><span>Unit testing</span><span>Sphinx / Doxygen</span></div>
+                            </div>
+                        </details>
                     </div>
-                </div>
-                <a href="https://github.com/daMS2005/thesis_neuro" target="_blank" rel="noopener noreferrer" class="project-card thesis-project">
-                    <div class="coming-soon-tag paper-tag">Paper Coming Soon</div>
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>Brain-LLM Feature Alignment</h3>
-                            <p>Bachelor thesis testing whether brains and language models use overlapping transcript-grounded SAE features during naturalistic story comprehension.</p>
-                            <div class="project-tech">
-                                <span>fMRI</span>
-                                <span>SAE</span>
-                                <span>Ridge</span>
-                                <span>RSA</span>
-                            </div>
-                        </div>
-                        <div class="card-back">
-                            <h3>Thesis Question</h3>
-                            <ul class="feature-list">
-                                <li>Do brains and language models rely on overlapping transcript-grounded features?</li>
-                                <li>Compare feature salience, predictive recoverability, and representational geometry</li>
-                                <li>Focus on Narratives stories: shapesphysical and shapessocial</li>
-                                <li>Finding: commonality appears stronger in which features matter than in shared geometry</li>
-                            </ul>
-                            <h3>Methodology</h3>
-                            <ul class="tech-list">
-                                <li>Models: Gemma 2 2B, Gemma 2 9B, Llama 3.1 8B</li>
-                                <li>Brain data: OpenNeuro Narratives, Schaefer-200 cortical parcels</li>
-                                <li>Pipeline: transcript SAE discovery, TR-grid alignment, ridge regression</li>
-                                <li>Evaluation: held-out fit, feature-importance agreement, weight similarity, RSA</li>
-                            </ul>
-                        </div>
-                    </div>
-                </a>
-                <button class="project-card private-project" type="button" data-modal-trigger>
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>Content Scraper & Analytics</h3>
-                            <p>A web scraping platform that automatically collects and analyzes data from multiple sources, with automated scheduling and engagement tracking.</p>
-                            <div class="project-tech">
-                                <span>Python</span>
-                                <span>TensorFlow</span>
-                                <span>Flask</span>
-                            </div>
-                        </div>
-                        <div class="card-back">
-                            <h3>Features</h3>
-                            <ul class="feature-list">
-                                <li>🌐 Web Scraping & Data Extraction</li>
-                                <li>📊 Data Processing & Analytics</li>
-                                <li>🤖 AI-Driven Content Creation</li>
-                                <li>📈 Engagement Tracking</li>
-                                <li>🔄 Automated Task Scheduling</li>
-                            </ul>
-                            <h3>Technologies Used</h3>
-                            <ul class="tech-list">
-                                <li>Web Scraping: BeautifulSoup, Scrapy, Selenium</li>
-                                <li>Data Processing: Pandas, NumPy, Apache Spark</li>
-                                <li>AI & ML: TensorFlow, OpenAI GPT</li>
-                                <li>Cloud: AWS S3, Google Cloud Functions</li>
-                                <li>Backend: Python (Flask), Celery</li>
-                                <li>Database: PostgreSQL, Firebase Firestore</li>
-                            </ul>
-                        </div>
-                    </div>
-                </button>
+                </article>
             </div>
         </div>
     </section>
 
     <!-- Popup Modal -->
-    <div id="comingSoonModal" class="modal">
+    <div id="comingSoonModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="privateRepoTitle" aria-describedby="privateRepoDescription" hidden>
         <div class="modal-content">
             <button class="close-modal" type="button" aria-label="Close modal">&times;</button>
-            <h3>Private Repository</h3>
-            <p>This project is currently in a private repository. Please contact me for more information or to view the code.</p>
+            <h3 id="privateRepoTitle">Private Repository</h3>
+            <p id="privateRepoDescription">This project is currently in a private repository. Please contact me for more information or to view the code.</p>
         </div>
     </div>
 
     <!-- Skills Section -->
     <section id="skills" class="section">
         <div class="container">
-            <h2>Skills & Expertise</h2>
+            <h2>Skills &amp; Expertise</h2>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3>Programming & Development</h3>
-                    <div class="skill-subcategory">
-                        <h4>Languages</h4>
-                        <ul>
-                            <li>Python (Advanced)</li>
-                            <li>C++ (Intermediate)</li>
-                            <li>JavaScript (Intermediate)</li>
-                            <li>SQL (Advanced)</li>
-                        </ul>
-                    </div>
-                    <div class="skill-subcategory">
-                        <h4>Backend Development</h4>
-                        <ul>
-                            <li>Python (FastAPI, Flask)</li>
-                            <li>Node.js (Intermediate)</li>
-                        </ul>
-                    </div>
-                    <div class="skill-subcategory">
-                        <h4>Frontend Development</h4>
-                        <ul>
-                            <li>Vue.js</li>
-                        </ul>
-                    </div>
-                    <div class="skill-subcategory">
-                        <h4>Cloud & DevOps</h4>
-                        <ul>
-                            <li>Azure</li>
-                            <li>Bicep (Intermediate)</li>
-                        </ul>
-                    </div>
-                    <div class="skill-subcategory">
-                        <h4>Infrastructure Tools</h4>
-                        <ul>
-                            <li>CMake</li>
-                            <li>Makefile</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>CI/CD & DevOps</h3>
+                    <h3>Languages</h3>
                     <ul>
-                        <li>GitHub Actions</li>
-                        <li>Azure DevOps</li>
-                        <li>Docker & Containerization</li>
-                        <li>Kubernetes Orchestration</li>
-                        <li>Jenkins Pipeline Automation</li>
-                        <li>Infrastructure as Code (IaC)</li>
-                        <li>Automated Testing Integration</li>
-                        <li>Continuous Deployment</li>
+                        <li>Python (advanced)</li>
+                        <li>C++</li>
+                        <li>SQL</li>
+                        <li>JavaScript</li>
+                        <li>TypeScript</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Game Development</h3>
+                    <h3>Modeling &amp; Interpretability</h3>
                     <ul>
-                        <li>Object-Oriented Programming (OOP)</li>
-                        <li>Game Mechanics Design</li>
-                        <li>SFML for Graphics Rendering</li>
+                        <li>PyTorch &mdash; SAE training, forward hooks, mixed precision</li>
+                        <li>Sparse autoencoders &mdash; TopK training, ablation, feature steering</li>
+                        <li>Transformers &mdash; Gemma, OLMo, Llama, Qwen, PEFT / LoRA</li>
+                        <li>Local models &mdash; local inference, evaluation, and model-serving workflows</li>
+                        <li>Evaluation &mdash; ridge models, RSA, structured extraction metrics</li>
+                        <li>Hugging Face &mdash; model cards, quantized exports, SAELens releases</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Machine Learning & AI</h3>
+                    <h3>Research Compute &amp; ML Systems</h3>
                     <ul>
-                        <li>Natural Language Processing (NLP)</li>
-                        <li>Scikit-Learn, TensorFlow</li>
-                        <li>AI-based Security Models</li>
-                        <li>Recommendation Systems</li>
-                        <li>CrewAI for AI Chatbot Development</li>
+                        <li>Google Cloud &mdash; GPU training workloads and remote Linux environments</li>
+                        <li>Large activation datasets &mdash; streaming, chunking, storage, transfer</li>
+                        <li>Long-running jobs &mdash; checkpoints, recovery, validation, artifact publishing</li>
+                        <li>CUDA-aware workflows, bfloat16 / float16, memory-conscious data loading</li>
+                        <li>Triton &mdash; GPU kernel work for ML workloads</li>
+                        <li>Distributed systems &mdash; coordination, checkpointing, failure handling, and recovery</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Data Processing & Visualization</h3>
+                    <h3>Agentic Systems &amp; Backend</h3>
                     <ul>
-                        <li>Power BI, Tableau</li>
-                        <li>Pandas, NumPy</li>
-                        <li>MySQL, PostgreSQL, MongoDB</li>
+                        <li>Agentic workflow design, structured outputs, and provider integration</li>
+                        <li>OpenAI, Gemini, CrewAI, LangGraph, provider integrations</li>
+                        <li>Flask, FastAPI, SQLAlchemy, PostgreSQL, Redis</li>
+                        <li>Automated media workflows with ffmpeg and Remotion</li>
                     </ul>
                 </div>
                 <div class="skill-category">
-                    <h3>Software Testing & Automation</h3>
+                    <h3>Product Delivery &amp; Interface</h3>
                     <ul>
-                        <li>ML Model Testing & Hyperparameter Tuning</li>
-                        <li>Debugging & Data Pipeline Optimization</li>
-                        <li>Web Scraping & API Integration</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Computer Skills</h3>
-                    <ul>
-                        <li>Photoshop (Intermediate)</li>
-                        <li>Social Media Management</li>
+                        <li>Vue.js, Streamlit</li>
+                        <li>React / Next.js / Tailwind (client work)</li>
+                        <li>three.js &mdash; this site's tour guide</li>
+                        <li>Azure + Bicep, Cloud Run, Docker, GitHub Actions</li>
+                        <li>CMake, unit testing, Sphinx / Doxygen documentation</li>
                     </ul>
                 </div>
             </div>
@@ -489,69 +430,55 @@
     <!-- Websites Section -->
     <section id="websites" class="section">
         <div class="container">
-            <h2>Upon Request Websites</h2>
-            <p class="section-description">Custom websites developed for clients and businesses</p>
+            <div class="section-heading editorial-heading compact-heading">
+                <p class="eyebrow">Client work</p>
+                <h2>Websites built to a real brief</h2>
+                <p>Solo client builds, handled from scope and design through launch and direct communication.</p>
+            </div>
             <div class="websites-grid">
-                <a href="https://javis-jet.vercel.app" target="_blank" rel="noopener noreferrer" class="website-card">
+                <a href="https://javis-jet.vercel.app" target="_blank" rel="noopener noreferrer" class="website-card" aria-label="Open SENSE Travel Agency website">
                     <div class="website-content">
                         <div class="website-header">
-                            <h3>SΞNSΞ TRAVEL AGENCY</h3>
-                            <span class="website-type">Travel Agency</span>
+                            <div><span class="website-type">Travel agency &middot; 01</span><h3>SΞNSΞ TRAVEL AGENCY</h3></div>
+                            <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
                         </div>
-                        <p>Main page for a travel agency featuring modern design, social media integration, WhatsApp contact, and form submissions for inquiries.</p>
+                        <p>Travel agency site with WhatsApp contact and inquiry forms.</p>
                         <div class="website-tech">
                             <span>React</span>
                             <span>Next.js</span>
                             <span>Tailwind CSS</span>
                             <span>Vercel</span>
                         </div>
-                        <div class="website-features">
-                            <span>📱 Responsive Design</span>
-                            <span>💬 WhatsApp Integration</span>
-                            <span>📧 Contact Forms</span>
-                            <span>📱 Social Media</span>
-                        </div>
                     </div>
                 </a>
                 
-                <a href="https://reusa-mocha.vercel.app" target="_blank" rel="noopener noreferrer" class="website-card">
+                <a href="https://reusa-mocha.vercel.app" target="_blank" rel="noopener noreferrer" class="website-card" aria-label="Open Reusa website">
                     <div class="website-content">
                         <div class="website-header">
-                            <h3>Reusa</h3>
-                            <span class="website-type">Dominican Startup</span>
+                            <div><span class="website-type">Dominican startup &middot; 02</span><h3>Reusa</h3></div>
+                            <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
                         </div>
-                        <p>Landing page for a Dominican startup showcasing their mission, services, and value proposition.</p>
+                        <p>Landing page for a Dominican startup.</p>
                         <div class="website-tech">
                             <span>React</span>
                             <span>Next.js</span>
                             <span>Tailwind CSS</span>
                             <span>Vercel</span>
                         </div>
-                        <div class="website-features">
-                            <span>🚀 Startup Landing</span>
-                            <span>💼 Service Showcase</span>
-                            <span>📈 Growth Focused</span>
-                        </div>
                     </div>
                 </a>
                 
-                <a href="https://www.draevangelinasoler.com" target="_blank" rel="noopener noreferrer" class="website-card">
+                <a href="https://www.draevangelinasoler.com" target="_blank" rel="noopener noreferrer" class="website-card" aria-label="Open Dr. Evangelina Soler website">
                     <div class="website-content">
                         <div class="website-header">
-                            <h3>Dr. Evangelina Soler</h3>
-                            <span class="website-type">Medical Practice</span>
+                            <div><span class="website-type">Medical practice &middot; 03</span><h3>Dr. Evangelina Soler</h3></div>
+                            <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
                         </div>
-                        <p>Professional website for a medical doctor featuring patient information, services, and appointment booking.</p>
+                        <p>Medical practice site with services and appointment booking.</p>
                         <div class="website-tech">
                             <span>HTML</span>
                             <span>CSS</span>
                             <span>JavaScript</span>
-                            <span>Responsive</span>
-                        </div>
-                        <div class="website-features">
-                            <span>👩‍⚕️ Medical Practice</span>
-                            <span>📅 Appointment Booking</span>
-                            <span>🏥 Patient Information</span>
                         </div>
                     </div>
                 </a>
@@ -565,14 +492,14 @@
             <h2>Get In Touch</h2>
             <div class="contact-content contact-content-centered">
                 <div class="contact-info contact-info-centered">
-                    <div class="contact-item">
+                    <a class="contact-item contact-link" href="mailto:damorasoler@gmail.com">
                         <i class="fas fa-envelope"></i>
                         <span>damorasoler@gmail.com</span>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <span>+34 614 21 17 93</span>
-                    </div>
+                    </a>
+                    <a class="contact-item contact-link" href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-linkedin"></i>
+                        <span>LinkedIn</span>
+                    </a>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
                         <span>Madrid, Spain</span>
@@ -583,6 +510,8 @@
         </div>
     </section>
 
+    </main>
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -590,14 +519,62 @@
                 <div class="social-links">
                     <a href="https://github.com/daMS2005" target="_blank" rel="noopener noreferrer" title="GitHub Profile" aria-label="GitHub profile"><i class="fab fa-github"></i></a>
                     <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" rel="noopener noreferrer" title="LinkedIn Profile" aria-label="LinkedIn profile"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://huggingface.co/dams2005" target="_blank" rel="noopener noreferrer" title="Hugging Face Profile" aria-label="Hugging Face profile"><img src="images/hugging-face-logo-primary.png" alt="" class="hf-footer-logo"></a>
+                    <a href="https://huggingface.co/dams2005" target="_blank" rel="noopener noreferrer" title="Hugging Face Profile" aria-label="Hugging Face profile"><img src="images/hf-logo-small.png" alt="" class="hf-footer-logo"></a>
                 </div>
-                <p class="footer-legal"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>
+                <p class="footer-legal"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a> · 3D droid: <a href="https://app.spline.design/community/file/bcc9e075-7b80-40cf-8dc9-9c5d521655a6" target="_blank" rel="noopener noreferrer">Droid by ela</a> via Spline Community</p>
                 <p>&copy; 2026 Daniel Mora. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="javascript-files/main.js"></script>
+    <button class="guide-entry" id="guideEntry" type="button" aria-controls="droid-guide" aria-expanded="false">
+        <i class="fas fa-robot" aria-hidden="true"></i> Meet MORA-01
+    </button>
+    <div id="droid-guide" role="button" tabindex="-1" aria-label="MORA-01, an optional interactive portfolio guide"></div>
+
+    <script src="javascript-files/main.js?v=access-v2"></script>
+    <script src="javascript-files/analytics.js" defer></script>
+    <script src="/_vercel/insights/script.js" defer></script>
+    <script type="module">
+        // The guide is opt-in. Its 3D model and chat code are not downloaded
+        // until a visitor asks to meet it.
+        const entry = document.getElementById('guideEntry');
+        const container = document.getElementById('droid-guide');
+        let guideApi = null;
+        let guideLoading = false;
+
+        async function startGuide() {
+            if (guideApi) {
+                document.body.classList.remove('guide-hidden');
+                entry.setAttribute('aria-expanded', 'true');
+                try { sessionStorage.setItem('guideHidden', '0'); } catch (error) { /* optional preference */ }
+                guideApi.resize?.();
+                guideApi.react?.('wave');
+                return;
+            }
+            if (guideLoading) return;
+            guideLoading = true;
+            entry.disabled = true;
+            try {
+                const [{ DroidGuide }, { initTourGuide }] = await Promise.all([
+                import('./javascript-files/droid.js?v=10'),
+                import('./javascript-files/tour-guide.js?v=9'),
+                ]);
+                try { sessionStorage.setItem('guideHidden', '0'); } catch (error) { /* optional preference */ }
+                guideApi = DroidGuide.mount(container, { modelUrl: 'assets/droid.glb?v=2' });
+                document.body.classList.add('guide-ready');
+                container.tabIndex = 0;
+                entry.setAttribute('aria-expanded', 'true');
+                initTourGuide({ container, api: guideApi, immediate: true, entry });
+            } catch (error) {
+                entry.innerHTML = '<i class="fas fa-robot" aria-hidden="true"></i> Guide unavailable';
+            } finally {
+                guideLoading = false;
+                entry.disabled = false;
+            }
+        }
+
+        entry.addEventListener('click', startGuide);
+    </script>
 </body>
 </html>

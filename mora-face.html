@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MORA-01 Face</title>
+  <style>
+    body { margin: 0; background: radial-gradient(ellipse at 50% 15%, #1a1a1e 0%, #050506 65%); height: 100vh; overflow: hidden; font-family: ui-monospace, monospace; }
+    #stage { position: fixed; inset: 0; }
+    h1 { position: fixed; top: 4vh; width: 100%; text-align: center; color: #e8e8e8; font-size: 1.6rem; margin: 0; }
+    .hint { position: fixed; bottom: 4vh; width: 100%; text-align: center; color: #6a6a6a; font-size: 12px; }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <h1>MORA&#8209;01 &middot; head edition</h1>
+  <div id="stage"></div>
+  <p class="hint">Robots + a generic mannequin head as the floating center &middot; all three track the cursor &middot; ?me=1 loads your scanned face instead (local only)</p>
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+    import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+    import { buildPrimitivesRobot } from './javascript-files/robot-primitives.js?v=1';
+    import { buildFaceCloud } from './javascript-files/face-cloud.js?v=4';
+
+    const container = document.getElementById('stage');
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.1, 50);
+    function fitCamera() {
+      const aspect = innerWidth / innerHeight;
+      camera.aspect = aspect;
+      const halfW = Math.tan(THREE.MathUtils.degToRad(17.5)) * aspect;
+      const dist = Math.max(3.7, 1.75 / halfW);
+      camera.position.set(0, 1.5, dist);
+      camera.lookAt(0, 1.2, 0);
+      camera.updateProjectionMatrix();
+    }
+    fitCamera();
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    const key = new THREE.DirectionalLight(0xffffff, 1.6);
+    key.position.set(2.5, 3.5, 2.5);
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(0x99aaff, 1.6);
+    rim.position.set(-3, 2, -2);
+    scene.add(rim);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+
+    const robots = [];
+    new GLTFLoader().load('assets/robot.glb', (gltf) => {
+      gltf.scene.position.x = -1.15;
+      scene.add(gltf.scene);
+      const torso = gltf.scene.getObjectByName('Torso');
+      robots.push({ head: gltf.scene.getObjectByName('Head'), torso, baseY: torso.position.y });
+    });
+
+    const js = buildPrimitivesRobot(THREE, RoundedBoxGeometry);
+    js.group.position.x = 1.15;
+    scene.add(js.group);
+    robots.push({ head: js.head, torso: js.torso, baseY: js.torso.position.y });
+
+    let face = null;
+    try {
+      const useMe = new URLSearchParams(location.search).has('me');
+      face = useMe
+        ? await buildFaceCloud('assets/face-cloud.ply?' + Date.now())
+        : await buildFaceCloud('assets/head-cloud.ply?' + Date.now(), { brightness: 0.32, additive: true, size: 0.0058 });
+      face.group.scale.setScalar(1.5);
+      face.group.position.set(0, 1.45, 0.1);
+      scene.add(face.group);
+      window.__face = face;
+    } catch (e) {
+      console.warn('no head cloud available', e);
+    }
+
+    const pointer = new THREE.Vector2(0, 0);
+    addEventListener('pointermove', (e) => {
+      pointer.x = (e.clientX / innerWidth) * 2 - 1;
+      pointer.y = -((e.clientY / innerHeight) * 2 - 1);
+    });
+
+    const lookTarget = new THREE.Vector3(0, 1.55, 2);
+    const dq = new THREE.Quaternion();
+    const cq = new THREE.Quaternion();
+    const clock = new THREE.Clock();
+
+    function trackCursor(part, target, smoothing) {
+      cq.copy(part.quaternion);
+      part.lookAt(target);
+      dq.copy(part.quaternion);
+      part.quaternion.copy(cq).slerp(dq, smoothing);
+    }
+
+    (function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+      lookTarget.set(pointer.x * 2.2, 1.55 + pointer.y * 1.1, 2.2);
+      for (const r of robots) {
+        trackCursor(r.head, lookTarget, 0.14);
+        trackCursor(r.torso, lookTarget, 0.03);
+        r.torso.position.y = r.baseY + Math.sin(t * 1.6) * 0.008;
+      }
+      if (face) {
+        trackCursor(face.group, lookTarget, 0.10);
+        face.group.position.y = 1.45 + Math.sin(t * 1.1) * 0.045;
+      }
+      renderer.render(scene, camera);
+    })();
+
+    addEventListener('resize', () => {
+      fitCamera();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+  </script>
+</body>
+</html>

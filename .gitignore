@@ -50,3 +50,10 @@ yarn-error.log*
 .env.production.local
 
 .vercel 
+# face scan artifacts (personal data - keep out of the repo)
+assets/face-cloud*
+scan/photogrammetry
+scan/input/
+scan/output/
+scan/
+videos/

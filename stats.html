@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Site Stats</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; }
+        body { background: #0a0a0c; color: #e8e8e8; font-family: -apple-system, "SF Pro Text", "Segoe UI", sans-serif; min-height: 100vh; padding: 2.5rem 1.5rem 4rem; }
+        .wrap { max-width: 1080px; margin: 0 auto; }
+        h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+        .sub { color: #8a8a8a; font-size: 0.88rem; margin-bottom: 1.8rem; }
+        .gate { max-width: 360px; margin: 18vh auto 0; text-align: center; }
+        .gate input { width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #fff; font-size: 1rem; margin: 1rem 0 0.8rem; outline: none; }
+        .gate input:focus { border-color: rgba(255,92,31,0.6); }
+        .gate button { width: 100%; padding: 0.8rem; border-radius: 12px; border: none; background: #ff4500; color: #fff; font-size: 1rem; cursor: pointer; }
+        .gate .err { color: #ff7a5c; font-size: 0.85rem; margin-top: 0.7rem; min-height: 1.2em; }
+
+        .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; margin-bottom: 1.2rem; }
+        .kpi { background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 0.9rem 1rem; }
+        .kpi .v { font-size: 1.7rem; font-variant-numeric: tabular-nums; color: #ff8a50; line-height: 1.1; }
+        .kpi .l { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: #8a8a8a; margin-top: 0.25rem; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        .panel { background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+        .panel h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #9a9a9a; margin-bottom: 0.85rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        td { padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; }
+        td.num { text-align: right; font-variant-numeric: tabular-nums; color: #ffb08f; white-space: nowrap; padding-left: 0.6rem; }
+        .bar { height: 5px; background: linear-gradient(90deg, #ff4500, #ff8a50); border-radius: 3px; margin-top: 3px; }
+        .q { padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.84rem; }
+        .q .meta { color: #7a7a7a; font-size: 0.7rem; margin-top: 2px; }
+        .days { display: flex; align-items: flex-end; gap: 4px; height: 100px; margin-bottom: 20px; }
+        .day { flex: 1; background: linear-gradient(180deg, #ff8a50, #ff4500); border-radius: 3px 3px 0 0; min-height: 2px; position: relative; }
+        .day span { position: absolute; bottom: -17px; left: 50%; transform: translateX(-50%); font-size: 0.55rem; color: #777; }
+        .funnel td:first-child { color: #cfcfcf; }
+        #dash { display: none; }
+        .refresh { float: right; background: none; border: 1px solid rgba(255,255,255,0.2); color: #bbb; border-radius: 8px; padding: 0.25rem 0.7rem; font-size: 0.75rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="gate" id="gate">
+            <h1>Site Stats</h1>
+            <p class="sub">Private dashboard</p>
+            <input type="password" id="pw" placeholder="Password" aria-label="Password">
+            <button id="go">Enter</button>
+            <p class="err" id="err"></p>
+        </div>
+
+        <div id="dash">
+            <button class="refresh" id="refresh">Refresh</button>
+            <h1>Site Stats</h1>
+            <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; last 14 days</p>
+
+            <div class="kpis" id="kpis"></div>
+
+            <div class="panel">
+                <h2>Events per day</h2>
+                <div class="days" id="days"></div>
+            </div>
+
+            <div class="grid">
+                <div class="panel"><h2>Traffic sources</h2><table id="sources"></table></div>
+                <div class="panel"><h2>Countries</h2><table id="countries"></table></div>
+                <div class="panel"><h2>Cities</h2><table id="cities"></table></div>
+                <div class="panel"><h2>Devices</h2><table id="devices"></table></div>
+                <div class="panel"><h2>Browsers</h2><table id="browsers"></table></div>
+                <div class="panel"><h2>Operating systems</h2><table id="os"></table></div>
+                <div class="panel"><h2>Languages</h2><table id="languages"></table></div>
+                <div class="panel"><h2>Scroll depth</h2><table id="scroll" class="funnel"></table></div>
+                <div class="panel"><h2>Sections viewed</h2><table id="sectionViews"></table></div>
+                <div class="panel"><h2>Time per section (total sec)</h2><table id="sectionSeconds"></table></div>
+                <div class="panel"><h2>All events</h2><table id="totals"></table></div>
+                <div class="panel"><h2>Campaigns (utm)</h2><table id="campaigns"></table></div>
+            </div>
+
+            <div class="panel">
+                <h2>Recent visits</h2>
+                <div id="visits"></div>
+            </div>
+            <div class="panel">
+                <h2>Recent droid questions</h2>
+                <div id="questions"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gate = document.getElementById('gate');
+        const dash = document.getElementById('dash');
+        const err = document.getElementById('err');
+        const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
+
+        async function load(pw) {
+            const r = await fetch('/api/stats', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pw }),
+            });
+            const data = await r.json().catch(() => ({}));
+            if (!r.ok) throw new Error(r.status === 401 ? 'Wrong password' : (data.error || 'Stats unavailable (' + r.status + ')'));
+            return data;
+        }
+
+        function fillTable(id, obj, fmt) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const entries = Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).slice(0, 12);
+            const max = entries.length ? entries[0][1] : 1;
+            el.innerHTML = entries.map(([k, v]) =>
+                `<tr><td>${esc(k)}<div class="bar" style="width:${Math.max(4, (v / max) * 100)}%"></div></td>
+                 <td class="num">${fmt ? fmt(v) : v}</td></tr>`
+            ).join('') || '<tr><td style="color:#666">No data yet</td></tr>';
+        }
+
+        function render(d) {
+            gate.style.display = 'none';
+            dash.style.display = 'block';
+            if (d.notice) document.getElementById('notice').textContent = d.notice;
+
+            const s = d.summary || {};
+            const mins = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + (n % 60) + 's' : n + 's';
+            document.getElementById('kpis').innerHTML = [
+                ['Pageviews', s.pageviews || 0],
+                ['Avg. time on site', mins(s.avgSeconds || 0)],
+                ['Engaged (30s+)', (s.engagedRate || 0) + '%'],
+                ['Résumé downloads', s.resumeDownloads || 0],
+                ['Chat messages', s.chatMessages || 0],
+            ].map(([l, v]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('');
+
+            fillTable('sources', d.sources);
+            fillTable('countries', d.countries);
+            fillTable('cities', d.cities);
+            fillTable('devices', d.devices);
+            fillTable('browsers', d.browsers);
+            fillTable('os', d.os);
+            fillTable('languages', d.languages);
+            fillTable('sectionViews', d.sectionViews);
+            fillTable('sectionSeconds', d.sectionSeconds, (v) => v + 's');
+            fillTable('totals', d.totals);
+            fillTable('campaigns', d.campaigns);
+
+            // scroll funnel as % of pageviews
+            const pv = Math.max(1, s.pageviews || 1);
+            const sc = d.scroll || {};
+            document.getElementById('scroll').innerHTML = ['25', '50', '75', '100'].map((k) => {
+                const v = Number(sc[k] || 0);
+                const pct = Math.round((v / pv) * 100);
+                return `<tr><td>${k}% of page<div class="bar" style="width:${Math.max(4, pct)}%"></div></td><td class="num">${pct}%</td></tr>`;
+            }).join('');
+
+            const days = Object.entries(d.daily || {});
+            const sums = days.map(([, ev]) => Object.values(ev).reduce((a, b) => a + b, 0));
+            const max = Math.max(1, ...sums);
+            document.getElementById('days').innerHTML = days.map(([day, ev], i) =>
+                `<div class="day" style="height:${(sums[i] / max) * 100}%" title="${day}: ${sums[i]} events"><span>${day.slice(8)}</span></div>`
+            ).join('');
+
+            document.getElementById('visits').innerHTML = (d.recentVisits || []).map((v) =>
+                `<div class="q">${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')} &middot; via ${esc(v.source)} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)}
+                 <div class="meta">${esc(v.vw)}&times;${esc(v.vh)} &middot; ${esc(v.lang || '')} &middot; ${esc(v.tz || '')} &middot; ${new Date(v.t).toLocaleString()}</div></div>`
+            ).join('') || '<p class="sub">No visits recorded yet.</p>';
+
+            document.getElementById('questions').innerHTML = (d.recentQuestions || []).map((q) =>
+                `<div class="q">${esc(q.q)}<div class="meta">${esc(q.country || '?')}${q.city ? ' · ' + esc(decodeURIComponent(q.city)) : ''} · ${new Date(q.t).toLocaleString()}</div></div>`
+            ).join('') || '<p class="sub">No questions yet.</p>';
+        }
+
+        async function attempt() {
+            err.textContent = '';
+            try {
+                const pw = document.getElementById('pw').value;
+                const data = await load(pw);
+                sessionStorage.setItem('statsPw', pw);
+                render(data);
+            } catch (e) { err.textContent = e.message; }
+        }
+        document.getElementById('go').addEventListener('click', attempt);
+        document.getElementById('pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') attempt(); });
+        document.getElementById('refresh').addEventListener('click', attempt);
+
+        const saved = sessionStorage.getItem('statsPw');
+        if (saved) { document.getElementById('pw').value = saved; attempt(); }
+    </script>
+</body>
+</html>

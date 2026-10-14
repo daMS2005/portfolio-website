@@ -13,7 +13,7 @@
     <meta property="og:image" content="/images/og-robot.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="css-files/style.css?v=access-v5">
-    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=flagship-v10">
+    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=flagship-v11">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script type="importmap">
     {
@@ -147,19 +147,34 @@
                             <a class="project-action project-action-icon" href="https://github.com/daMS2005/jepa-transformer-model" target="_blank" rel="noopener noreferrer" aria-label="Open the model repository on GitHub" title="Model repository on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <div class="flagship-visual thesis-visual" aria-label="Diagram of the two-stage JEPA Transformer">
+                    <div class="flagship-visual thesis-visual" role="img" aria-label="Diagram: ArgusJEPA learns a 256-d embedding per asset-day by matching an EMA teacher from a masked view; the frozen embeddings form a sequence that CassaFormer turns into a next-day Student-t forecast">
                         <span class="visual-label">Pretrain, freeze, forecast</span>
-                        <div class="thesis-flow">
-                            <div class="flow-node">Asset-day features<small>prices, filings, macro, news</small></div>
-                            <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-                            <div class="flow-node flow-node-accent">ArgusJEPA<small>frozen 256-d embedding</small></div>
-                            <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-                            <div class="flow-split">
-                                <span>CassaFormer</span>
-                                <span>next-day forecast</span>
+                        <div class="dg">
+                            <div class="dg-stage">
+                                <header><b>Stage I &middot; ArgusJEPA</b><span>self-supervised &middot; one day</span></header>
+                                <div class="dg-row">
+                                    <div class="dg-node">Asset-day features<small>prices, filings, macro, news</small></div>
+                                    <i class="dg-link"></i>
+                                    <div class="dg-node dg-accent">Context encoder<small>half the features masked</small></div>
+                                    <i class="dg-link dg-link-loss"><em>L1</em></i>
+                                    <div class="dg-node">EMA teacher<small>full view, latent target</small></div>
+                                </div>
+                            </div>
+                            <div class="dg-bridge">
+                                <span><i class="fas fa-snowflake" aria-hidden="true"></i> Freeze &middot; one 256-d embedding per day</span>
+                                <span class="dg-tokens"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b>t</b></span>
+                            </div>
+                            <div class="dg-stage">
+                                <header><b>Stage II &middot; CassaFormer</b><span>supervised &middot; sequence of days</span></header>
+                                <div class="dg-row">
+                                    <div class="dg-node">Causal attention<small>RoPE, QK&#8209;RMSNorm, 6 blocks</small></div>
+                                    <i class="dg-link"></i>
+                                    <div class="dg-node dg-accent">Top-1 MoE<small>4 experts, Triton kernel</small></div>
+                                    <i class="dg-link"></i>
+                                    <div class="dg-node">Student-t head<small>next-day location, scale, tails</small></div>
+                                </div>
                             </div>
                         </div>
-                        <p>Self-supervised representation first. Supervised forecasting second.</p>
                     </div>
                 </article>
                 <article class="flagship-card flagship-thesis">
@@ -178,19 +193,33 @@
                             <a class="project-action project-action-icon" href="https://github.com/daMS2005/sparse-feature-correspondence" target="_blank" rel="noopener noreferrer" aria-label="Open the code and reproducibility materials on GitHub" title="Code and reproducibility materials on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <div class="flagship-visual thesis-visual" aria-label="Diagram showing the thesis transfer design">
+                    <div class="flagship-visual thesis-visual" role="img" aria-label="Diagram: a sparse feature bank selected on one spoken description is frozen and transferred to a second description; it still predicts both fMRI and the language model, but the two do not rely on the features in the same order">
                         <span class="visual-label">Cross-description transfer</span>
-                        <div class="thesis-flow">
-                            <div class="flow-node">Description A<small>select feature bank</small></div>
-                            <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-                            <div class="flow-node flow-node-accent">Frozen SAE basis<small>same feature IDs</small></div>
-                            <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-                            <div class="flow-split">
-                                <span>fMRI response</span>
-                                <span>LM hidden state</span>
+                        <div class="dg">
+                            <div class="dg-stage">
+                                <header><b>Select, then freeze</b><span>source description only</span></header>
+                                <div class="dg-row dg-row-2">
+                                    <div class="dg-node">Description A<small>spoken story, 59 listeners</small></div>
+                                    <i class="dg-link"></i>
+                                    <div class="dg-node dg-accent">SAE feature bank<small>256 feature IDs, locked</small></div>
+                                </div>
+                            </div>
+                            <div class="dg-bridge">
+                                <span><i class="fas fa-right-left" aria-hidden="true"></i> Transfer unchanged to description B: same events, new words</span>
+                            </div>
+                            <div class="dg-stage">
+                                <header><b>Predict both targets</b><span>held-out description</span></header>
+                                <div class="dg-row dg-row-pair">
+                                    <div class="dg-node">Brain &middot; fMRI<small>200 parcels, r = .07&ndash;.09</small></div>
+                                    <div class="dg-node">Model &middot; LM hidden state<small>prediction transfers</small></div>
+                                </div>
+                                <div class="dg-verdict">
+                                    <span>Same features, same order?</span>
+                                    <b>&rho; = &minus;.06</b>
+                                    <em>no better than a temporal null</em>
+                                </div>
                             </div>
                         </div>
-                        <p>Prediction transfers. Feature-importance ordering does not.</p>
                     </div>
                 </article>
 
@@ -200,8 +229,8 @@
                         <h3>TC_ACC Documentary Studio</h3>
                         <p class="flagship-lede">A multi-stage production system that turns a case reference into a researched, narrated, rendered documentary episode.</p>
                         <dl class="flagship-facts">
-                            <div><dt>29</dt><dd>stages</dd></div>
-                            <div><dt>6</dt><dd>departments</dd></div>
+                            <div><dt>28</dt><dd>stages</dd></div>
+                            <div><dt>5</dt><dd>departments</dd></div>
                             <div><dt>2</dt><dd>review gates</dd></div>
                         </dl>
                         <div class="project-actions flagship-actions" aria-label="TC_ACC Documentary Studio links">
@@ -211,9 +240,15 @@
                     </div>
                     <div class="flagship-visual tcacc-visual">
                         <img src="images/tcacc-episode-stills.jpg" alt="A montage of documentary imagery produced for a TC_ACC episode" loading="lazy" width="1280" height="720">
-                        <div class="pipeline-strip" aria-label="TC_ACC production pipeline">
-                            <span>Research</span><i aria-hidden="true"></i><span>Story</span><i aria-hidden="true"></i><span>Assets</span><i aria-hidden="true"></i><span>Sound</span><i aria-hidden="true"></i><span>Animation</span><i aria-hidden="true"></i><span>Finish</span>
-                        </div>
+                        <ol class="pipeline-strip" aria-label="TC_ACC production pipeline: research, story, assets, preproduction review gate, animation, edit review gate, publishing">
+                            <li>Research<small>5 stages</small></li>
+                            <li>Story<small>4 stages</small></li>
+                            <li>Assets<small>7 stages</small></li>
+                            <li class="pipeline-gate" title="Showrunner review gate"><span>Gate</span></li>
+                            <li>Animation<small>2 stages</small></li>
+                            <li class="pipeline-gate" title="Showrunner review gate"><span>Gate</span></li>
+                            <li>Publish<small>8 stages</small></li>
+                        </ol>
                     </div>
                 </article>
 

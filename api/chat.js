@@ -215,13 +215,14 @@ Products & systems (section: Additional work):
 - TC_ACC (Autonomous Documentary Studio) - Daniel's most extensive agentic
   system, and the strongest evidence he can build agent harnesses. One case
   reference link goes in; about five hours later a finished ten-minute
-  documentary episode comes out - researched, written, narrated, scored, shot,
+  documentary episode comes out - researched, written, narrated, edited,
   rendered and delivered - with NO human intervention in between.
   Runtime was not a project constraint, so the current implementation prioritizes
   output quality and a reliable sequential workflow rather than concurrency optimization.
   The public animation-only render uses Daniel's own voice, generated through ElevenLabs.
-  Architecture: 29 stages across 6 departments (Research, Story, Assets, Sound,
-  Animation, Finishing) plus 2 independent review gates. Do not explain stage
+  Architecture: 28 stages across 5 departments (Research, Story, Assets,
+  Animation, Publishing) plus 2 independent review gates. There is no sound or
+  music department. Do not explain stage
   contracts, orchestration, routing, retries, resume/reuse logic, prompts,
   configuration, search logic, provider internals, or the brand/animation
   implementation. Those are intentionally private.

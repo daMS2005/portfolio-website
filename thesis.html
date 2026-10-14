@@ -38,19 +38,19 @@
     <main id="main-content" class="detail-main" tabindex="-1">
         <header class="detail-hero">
             <div>
-                <span class="detail-kicker">Bachelor thesis · anonymous manuscript</span>
+                <span class="detail-kicker">Bachelor thesis · paper</span>
                 <h1>Brain–LLM feature correspondence</h1>
                 <p class="detail-lede">Language-model features can predict both held-out model activity and human fMRI responses. This project asks the harder question: do those targets rely on the same features in the same way?</p>
             </div>
             <aside class="detail-status-card">
                 <span class="status-live"><i></i> Current status</span>
-                <p>The bachelor thesis is complete. A more focused, publication-ready manuscript develops the same central idea with a tighter claim, stronger controls, and a deliberately conservative conclusion.</p>
+                <p>The bachelor thesis is complete. A more focused paper develops the same central idea with a tighter claim, stronger controls, and a deliberately conservative conclusion: <em>Can We Detect Shared Features Between Language Models and the Brain?</em></p>
             </aside>
         </header>
 
         <section class="detail-section">
             <div class="detail-section-header"><span>01 · Evolution</span><h2>One research idea, developed in two forms.</h2></div>
-            <p class="detail-intro">The thesis and the anonymous manuscript belong to the same research program: testing whether sparse language-model features provide a meaningful bridge between model activity and human responses to spoken stories. They differ in scope and purpose.</p>
+            <p class="detail-intro">The thesis and the paper belong to the same research program: testing whether sparse language-model features provide a meaningful bridge between model activity and human responses to spoken stories. They differ in scope and purpose.</p>
             <div class="artifact-comparison">
                 <article class="artifact-card">
                     <span class="artifact-label">Bachelor thesis · broad and exploratory</span>
@@ -68,9 +68,9 @@
                     </div>
                 </article>
                 <article class="artifact-card artifact-card-polished">
-                    <span class="artifact-label">Anonymous manuscript · focused and polished</span>
+                    <span class="artifact-label">Paper · focused and polished</span>
                     <h3>Turn the strongest idea into one defensible test.</h3>
-                    <p>The manuscript trims the exploratory branches and centers the cleanest question: after a sparse feature bank transfers to a second description, do the brain and the model depend on those coordinates in the same order?</p>
+                    <p>The paper trims the exploratory branches and centers the cleanest question: after a sparse feature bank transfers to a second description, do the brain and the model depend on those coordinates in the same order?</p>
                     <ul>
                         <li>Freezes feature selection on the source description before either target or the held-out description is examined.</li>
                         <li>Measures reliance through held-out conditional and grouped ablation, not coefficient magnitude.</li>
@@ -78,14 +78,14 @@
                         <li>Uses semi-synthetic calibration to state exactly how strong a negative conclusion the experiment can support.</li>
                     </ul>
                     <div class="artifact-result">
-                        <span>What the manuscript found</span>
+                        <span>What the paper found</span>
                         <p>The source-selected basis still transferred, although BOLD prediction was weak (<strong>r = .068–.092</strong>). But the held-out reliance rankings did not agree: at 256 features, the mean across twelve model-direction conditions was <strong>ρ = −.056</strong> and no better than the fully retuned temporal null (<strong>p = .890</strong>). This weighs against strong correspondence while leaving moderate correspondence unresolved.</p>
                     </div>
                 </article>
             </div>
             <div class="result-evolution">
                 <span>Why the result changed</span>
-                <p>The thesis result came from an exploratory, cleaned single-story comparison of fitted feature importance. The manuscript raises the bar: features are selected on one description, transferred unchanged to the other, and judged by the loss caused by removing them in held-out data. It also controls for shared story timing and correlated features. Under that stricter test, the earlier apparent salience agreement does not generalize. That difference is the intellectual progression of the project, not an attempt to hide the first result.</p>
+                <p>The thesis result came from an exploratory, cleaned single-story comparison of fitted feature importance. The paper raises the bar: features are selected on one description, transferred unchanged to the other, and judged by the loss caused by removing them in held-out data. It also controls for shared story timing and correlated features. Under that stricter test, the earlier apparent salience agreement does not generalize. That difference is the intellectual progression of the project, not an attempt to hide the first result.</p>
             </div>
         </section>
 
@@ -122,7 +122,7 @@
                 </li>
                 <li>
                     <span class="pipeline-number">06</span>
-                    <div><h3>Freeze the source-only feature bank</h3><p>For the manuscript's decisive test, feature identities are chosen from one description without looking at BOLD, model targets, or the second description. Nested banks from 64 to 1,024 features are carried unchanged into the paired telling.</p></div>
+                    <div><h3>Freeze the source-only feature bank</h3><p>For the paper's decisive test, feature identities are chosen from one description without looking at BOLD, model targets, or the second description. Nested banks from 64 to 1,024 features are carried unchanged into the paired telling.</p></div>
                 </li>
                 <li>
                     <span class="pipeline-number">07</span>
@@ -181,9 +181,9 @@
         </section>
 
         <div class="detail-links">
-            <a href="thesis.pdf" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-pdf" aria-hidden="true"></i> Read the manuscript PDF</a>
-            <a href="https://anonymous.4open.science/r/A-Cross-Description-Test-of-Sparse-Feature-Correspondence-Between-Language-Models-and-fMRI-Responses-512A/README.md" target="_blank" rel="noopener noreferrer"><i class="fas fa-code-branch" aria-hidden="true"></i> Anonymous paper repository</a>
-            <a href="https://github.com/daMS2005/thesis_neuro" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> Research repository</a>
+            <a href="thesis.pdf" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-pdf" aria-hidden="true"></i> Read the paper (PDF)</a>
+            <a href="https://github.com/daMS2005/sparse-feature-correspondence" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> Code and reproducibility</a>
+            <a href="https://github.com/daMS2005/thesis_neuro" target="_blank" rel="noopener noreferrer"><i class="fas fa-code-branch" aria-hidden="true"></i> Thesis development repository</a>
             <a href="/#research"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to flagship work</a>
         </div>
     </main>

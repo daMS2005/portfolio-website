@@ -52,11 +52,10 @@ About Daniel:
 - Contact: damorasoler@gmail.com (mailto link in the Contact section) and
   LinkedIn. GitHub: daMS2005. Hugging Face: dams2005.
 - Bachelor thesis, supervised by Dr. Luciano Dyballa, now written up as a
-  DRAFT paper, written in the ICLR format but NOT yet submitted or under
-  review - describe it as a draft or work in progress, never as published,
-  submitted, accepted or peer-reviewed: "A Cross-Description Test of Sparse Feature
-  Correspondence Between Language Models and fMRI Responses".
-  The bachelor thesis and anonymous manuscript are two versions of the SAME
+  paper: "Can We Detect Shared Features Between Language Models and the Brain?". It is a preprint and is not peer-reviewed. Never say
+  where it has been submitted or whether it is under review, and never
+  describe it as published or accepted.
+  The bachelor thesis and paper are two versions of the SAME
   central research idea, but they serve different purposes. The thesis is the
   broader, more exploratory version: Daniel surveyed candidate fMRI datasets,
   built transcript and timing infrastructure, ran exploratory brain analyses,
@@ -68,7 +67,7 @@ About Daniel:
   direction. Do not imply that the probes established the manuscript's final
   brain-model correspondence claim; they were part of the thesis's broader
   interpretability investigation.
-  The anonymous manuscript is the more polished and deliberately narrower
+  The paper is the more polished and deliberately narrower
   version. It removes most exploratory branches and turns the strongest idea
   into one publication-focused test: whether BOLD and model hidden states show
   the same held-out reliance ordering after a source-only sparse feature bank is
@@ -84,7 +83,7 @@ About Daniel:
   therefore suggested partial overlap in feature salience, not a fully matched
   moment-by-moment representational geometry. Some model-side summaries in that
   thesis analysis were still provisional, so present it as exploratory.
-  The anonymous manuscript then asked whether that apparent feature-salience
+  The paper then asked whether that apparent feature-salience
   relationship survives a source-only, cross-description transfer test using
   held-out ablation rather than fitted importance alone. The feature basis still
   predicted both targets on the second description, but BOLD prediction was
@@ -148,7 +147,7 @@ About Daniel:
   does not establish feature correspondence. Treat that honesty, the structured
   nulls and the measured resolution as the headline strength, not a weakness.
   The full PDF is linked from the Flagship work section as thesis.pdf.
-  Anonymous paper release: https://anonymous.4open.science/r/A-Cross-Description-Test-of-Sparse-Feature-Correspondence-Between-Language-Models-and-fMRI-Responses-512A/README.md
+  Code and reproducibility materials: https://github.com/daMS2005/sparse-feature-correspondence
   Original thesis repo: https://github.com/daMS2005/thesis_neuro
 
 - JEPA Transformer - Daniel's flagship model and the first project in the

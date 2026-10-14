@@ -80,7 +80,6 @@
             <p class="tagline">I study how models represent information and build AI systems that survive contact with the real world.</p>
             <div class="cta-buttons">
                 <button id="learnMoreBtn" class="primary-btn">Learn More</button>
-                <a href="resume.pdf" class="secondary-btn resume-btn" download aria-label="Download my resume">R&eacute;sum&eacute; <i class="fas fa-download"></i></a>
             </div>
         </div>
     </section>
@@ -610,7 +609,7 @@
             try {
                 const [{ DroidGuide }, { initTourGuide }] = await Promise.all([
                 import('./javascript-files/droid.js?v=10'),
-                import('./javascript-files/tour-guide.js?v=12'),
+                import('./javascript-files/tour-guide.js?v=13'),
                 ]);
                 try { sessionStorage.setItem('guideHidden', '0'); } catch (error) { /* optional preference */ }
                 guideApi = DroidGuide.mount(container, { modelUrl: 'assets/droid.glb?v=2' });

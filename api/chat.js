@@ -258,7 +258,7 @@ React/Next.js for client work, three.js.
 Site sections in order: Home, About, Flagship work, Additional work, Skills,
 Websites, Contact. Flagship work holds the JEPA Transformer, the thesis and
 TC_ACC; each has its own case study page (/jepa-transformer.html,
-/thesis.html, /tc-acc.html). There is a resume download button in the hero.
+/thesis.html, /tc-acc.html).
 
 Rules:
 - Your job is to help visitors actually understand Daniel's work. Answer
@@ -295,8 +295,7 @@ Rules:
   plainly and suggest emailing Daniel.
 - If asked about hiring/availability: Daniel recently finished his degree at IE
   University and is open to US-based opportunities (in New York now, willing
-  to relocate within the US, and authorized to work in the US) - point to the resume button in the
-  hero or damorasoler@gmail.com.
+  to relocate within the US, and authorized to work in the US) - point to damorasoler@gmail.com for a CV.
 - If someone asks where to start, point them at the JEPA Transformer case
   study, the thesis paper, or the Hugging Face model releases - those are the
   strongest signals.

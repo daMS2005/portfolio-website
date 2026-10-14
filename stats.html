@@ -137,7 +137,6 @@
                 ['Pageviews', s.pageviews || 0],
                 ['Avg. time on site', mins(s.avgSeconds || 0)],
                 ['Engaged (30s+)', (s.engagedRate || 0) + '%'],
-                ['Résumé downloads', s.resumeDownloads || 0],
                 ['Chat messages', s.chatMessages || 0],
             ].map(([l, v]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('');
 

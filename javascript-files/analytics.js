@@ -81,8 +81,7 @@
       .replace(/\s+/g, ' ').trim().slice(0, 50);
 
     let e = 'click';
-    if (el.classList.contains('resume-btn')) e = 'resume-download';
-    else if (el.id === 'learnMoreBtn') e = 'cta-learn-more';
+    if (el.id === 'learnMoreBtn') e = 'cta-learn-more';
     else if (el.classList.contains('guide-chat-btn')) e = 'chat-open';
     else if (el.closest('#droid-guide')) e = 'droid-click';
     else if (href.includes('huggingface.co')) e = 'outbound-hf';

@@ -102,7 +102,6 @@ export default async function handler(req, res) {
       avgSeconds: visits ? Math.round(Number(t.seconds || 0) / visits) : 0,
       engagedRate: visits ? Math.round((Number(t.engaged || 0) / visits) * 100) : 0,
       chatMessages: Number((data.ev_total || {})['chat-message'] || 0),
-      resumeDownloads: Number((data.ev_total || {})['resume-download'] || 0),
     };
 
     return res.status(200).json({

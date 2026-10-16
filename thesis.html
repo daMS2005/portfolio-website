@@ -12,7 +12,7 @@
     <meta property="og:image" content="/images/thesis-method.png">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="css-files/style.css?v=access-v2">
-    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=thesis-v5">
+    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=thesis-v6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="images/favicon.png" type="image/png">
 </head>
@@ -75,11 +75,11 @@
                         <li>Freezes feature selection on the source description before either target or the held-out description is examined.</li>
                         <li>Measures reliance through held-out conditional and grouped ablation, not coefficient magnitude.</li>
                         <li>Tests correspondence against temporal and feature-identity nulls.</li>
-                        <li>Uses semi-synthetic calibration to state exactly how strong a negative conclusion the experiment can support.</li>
+                        <li>Uses simulations with planted agreement to check whether the test can detect correspondence at all.</li>
                     </ul>
                     <div class="artifact-result">
                         <span>What the paper found</span>
-                        <p>The source-selected basis still transferred, although BOLD prediction was weak (<strong>r = .068–.092</strong>). But the held-out reliance rankings did not agree: at 256 features, the mean across twelve model-direction conditions was <strong>ρ = −.056</strong> and no better than the fully retuned temporal null (<strong>p = .890</strong>). This weighs against strong correspondence while leaving moderate correspondence unresolved.</p>
+                        <p>The source-selected basis still transferred, although BOLD prediction was weak (<strong>r = .068–.092</strong>). But the held-out reliance rankings did not agree: at 256 features, the mean across twelve model-direction conditions was <strong>ρ = −.056</strong> and no better than the fully retuned temporal null (<strong>p = .805</strong>). Simulations then show why this null is inconclusive: with 256 features, the test detects planted agreement in at most about 10% of runs, even when it is strong. The result cannot rule out shared organization between brain and model.</p>
                     </div>
                 </article>
             </div>
@@ -164,19 +164,20 @@
         </section>
 
         <section class="detail-section">
-            <div class="detail-section-header"><span>06 · Result</span><h2>Transfer survives; importance structure does not.</h2></div>
+            <div class="detail-section-header"><span>06 · Result</span><h2>Transfer survives; the comparison is inconclusive.</h2></div>
             <div class="result-band">
+                <div class="result-card"><strong>≤ 10%</strong><p class="detail-copy">Detection of planted agreement at 256 features, against an 80% target: the test is underpowered.</p></div>
                 <div class="result-card"><strong>r ≈ .07–.09</strong><p class="detail-copy">The frozen feature basis weakly predicts held-out BOLD responses.</p></div>
-                <div class="result-card"><strong>ρ = −.056</strong><p class="detail-copy">The observed BOLD–model feature-profile agreement is no better than the retuned temporal null (p = .89).</p></div>
+                <div class="result-card"><strong>ρ = −.056</strong><p class="detail-copy">The observed BOLD–model feature-profile agreement is no better than the temporal null (p = .805).</p></div>
             </div>
-            <a href="images/thesis-results.png" target="_blank" rel="noopener"><img class="research-figure" src="images/thesis-results.png" alt="Result plots comparing observed correspondence with temporal nulls, estimates across model and direction, and correspondence across feature-bank sizes" width="1253" height="447" loading="lazy" style="margin-top:1rem"></a>
+            <a href="images/thesis-detectability.png" target="_blank" rel="noopener"><img class="research-figure" src="images/thesis-detectability.png" alt="Simulation results: detection of planted correspondence stays near 5 to 10 percent at every planted strength, recovered correspondence stays near zero, and recovery improves only with much smaller feature banks" width="1600" height="828" loading="lazy" style="margin-top:1rem"></a>
         </section>
 
         <section class="detail-section">
             <div class="detail-section-header"><span>07 · Interpretation</span><h2>A narrower, more defensible conclusion.</h2></div>
             <div class="detail-grid">
                 <div class="detail-panel"><h3>What the work supports</h3><p>A feature basis selected from one description contains signal that transfers to another description for both targets.</p></div>
-                <div class="detail-panel"><h3>What it does not establish</h3><p>The evidence does not support a strong claim that brain responses and model hidden states organize their reliance on those features similarly. Power analysis bounds strong correspondence without claiming total absence.</p></div>
+                <div class="detail-panel"><h3>What it does not establish</h3><p>It does not show that brain and model rely on different features. Because the test rarely recovers planted agreement, the null cannot separate shared organization from its absence. A recovery check has to come before such a null is interpreted.</p></div>
             </div>
         </section>
 

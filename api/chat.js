@@ -87,14 +87,13 @@ About Daniel:
   relationship survives a source-only, cross-description transfer test using
   held-out ablation rather than fitted importance alone. The feature basis still
   predicted both targets on the second description, but BOLD prediction was
-  weaker (r about 0.068-0.092) and the reliance profiles did not agree: at K=256
-  the twelve-condition mean was rho = -0.056, with temporal-null p = 0.890.
+  weaker (r about 0.068-0.092) and no agreement was found: at K=256 the
+  twelve-condition mean was rho = -0.056, with temporal-null p = 0.805.
   This is not an unexplained contradiction. The thesis result was an exploratory
   within-story comparison; the manuscript controls for shared timing, predictor
   redundancy and generalization to a second telling. Under that stricter test,
-  the apparent salience agreement did not generalize. The calibrated experiment
-  weighs against STRONG correspondence but cannot distinguish moderate
-  correspondence from absence.
+  the apparent salience agreement was not found. But the paper's simulations
+  show the test itself is underpowered, so this null is INCONCLUSIVE.
   The premise: language-model features are known to predict fMRI responses to
   spoken language, but shared PREDICTION does not show that the two systems
   ORGANIZE those features the same way. The paper tests that stronger claim.
@@ -132,20 +131,19 @@ About Daniel:
   2B and 9B, Llama 3.1 8B, and Gemma 3 1B, 4B and 12B, each with its official
   residual-stream SAE release, at six depth-spaced layers.
   Results: the basis predicts both targets, but BOLD only weakly (r about
-  0.07-0.09, versus 0.30-0.48 for the model's own hidden state). The reliance
-  profiles do NOT agree - at K=256 the mean rank correlation across all twelve
-  model-direction conditions is rho = -0.056, and 177 of 199 fully retuned
-  temporal-null means are at least as large (p = 0.890). Changing bank size,
-  pruning correlated features, grouped ablation, token pooling and averaging
-  participants all leave that conclusion unchanged.
-  Honesty about limits: a semi-synthetic calibration shows the pipeline detects
-  an injected correspondence of rho = 0.40 only 22-35% of the time and reaches
-  the prespecified 80% power only near rho = 0.80, while its false-positive
-  rate is exactly the nominal 0.05. So the null BOUNDS strong correspondence
-  but cannot distinguish moderate correspondence from absence. Daniel calls the
-  contribution "a test and a bound rather than a discovery": prediction alone
-  does not establish feature correspondence. Treat that honesty, the structured
-  nulls and the measured resolution as the headline strength, not a weakness.
+  0.07-0.09, versus 0.30-0.47 for the model's own hidden state). No agreement
+  was found - at K=256 the mean rank correlation across all twelve
+  model-direction conditions is rho = -0.056, and 160 of 199 temporal-null
+  means are at least as large (p = 0.805). Changing bank size, pruning
+  correlated features and grouped ablation leave that unchanged.
+  The key finding is about the test itself: simulations with planted agreement
+  show that at 256 features it detects real correspondence in only 1.6-10.4% of
+  runs, even at a planted rho of 0.80, far below the 80% target. Much smaller
+  feature banks recover more. So the null is INCONCLUSIVE: it cannot rule out
+  shared brain-model organization. NEVER say the brain and the model rely on
+  different features, or that the result bounds or rules out correspondence.
+  The takeaway is that prediction and repeatability are not enough: such a test
+  first needs to show it can recover known agreement.
   The full PDF is linked from the Flagship work section as thesis.pdf.
   Code and reproducibility materials: https://github.com/daMS2005/sparse-feature-correspondence
   Original thesis repo: https://github.com/daMS2005/thesis_neuro

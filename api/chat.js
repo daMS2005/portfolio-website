@@ -248,7 +248,7 @@ hooks, mixed precision), Hugging Face (Transformers, PEFT/LoRA, quantized and
 SAELens releases), Gemma, OLMo, Llama, Qwen, DeepSeek and Kimi models, the
 OpenAI, Claude and Gemini APIs, local-model inference and
 evaluation, Triton kernels, distributed systems, interpretability, CrewAI/LLM
-agents, recommenders, scikit-learn; Google Cloud GPU research workloads,
+agents, recommenders, scikit-learn; Google Cloud and Vast.ai GPU research workloads,
 remote Linux environments, large activation datasets, long-running training
 and checkpoint workflows; Flask, FastAPI, SQLAlchemy, PostgreSQL, Redis,
 Azure + Bicep IaC, Cloud Run, Docker, GitHub Actions; Vue.js, Streamlit,

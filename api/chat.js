@@ -413,17 +413,21 @@ export default async function handler(req, res) {
   try {
     // low thinking keeps replies to seconds instead of a minute or more. The free
     // tier allows 20 requests/day per model, so fall through several models when
-    // one errors, is out of quota, or stalls past 25s.
+    // one errors, is out of quota, or stalls past 25s. Stay inside the 60s
+    // function limit (vercel.json) across the whole chain.
     let r;
+    const deadline = Date.now() + 50000;
     const low = { thinkingLevel: 'low' };
     for (const [model, thinking] of [['gemini-3.8-flash', low], ['gemini-3.6-flash', low], ['gemini-3.5-flash', low], ['gemini-flash-latest']]) {
+      const budget = Math.min(25000, deadline - Date.now());
+      if (budget < 3000) break;
       try {
         r = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            signal: AbortSignal.timeout(25000),
+            signal: AbortSignal.timeout(budget),
             body: JSON.stringify({
               systemInstruction: { parts: [{ text: KNOWLEDGE + extra }] },
               contents,

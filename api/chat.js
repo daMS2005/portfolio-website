@@ -359,6 +359,9 @@ async function retrieve(query, geminiKey) {
   }
 }
 
+// Gemini can take longer than the 10s default
+export const config = { maxDuration: 60 };
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

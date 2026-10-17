@@ -152,21 +152,21 @@ About Daniel:
   Flagship work section. A two-stage forecaster for US equities. Stage I,
   ArgusJEPA, is a self-supervised JEPA encoder: each asset-day is one
   point-in-time feature vector built from IBKR daily prices, SEC filings
-  (visible only after acceptance), FRED/ALFRED macro vintages and locally
-  scored news (FinBERT sentiment, GTE embeddings). Half the available features
-  are masked; a context encoder plus predictor must match an EMA teacher's
-  256-d embedding of the full view, with an L1 loss in latent space. ArgusJEPA
-  is then frozen, and its daily embeddings become the input sequence of Stage
-  II, CassaFormer: a ~2.05M-parameter causal decoder (6 blocks, width 128, 4
-  heads, RoPE, QK-RMSNorm, top-1 Mixture-of-Experts with 4 experts in the two
-  middle blocks, and a linear/MSE or Student-t/NLL head). CassaFormer
-  predicts next-day target values, not embeddings. The selected MoE gate is
-  deliberately not renormalized: with top-1 routing a renormalized gate is
-  always 1.0, which would cut the router off from the forecast loss; keeping
-  the raw softmax probability preserves that gradient. The two stages never
-  share gradients. Custom Triton kernels - a fused MoE expert MLP
-  and a fused JEPA first block - were kept only where they beat torch.compile
-  on an L4; the MoE kernel gives a 1.1-1.5x full-model speedup. Weights:
+  (fundamentals, 8-K events and business descriptions, visible only after
+  acceptance), FRED/ALFRED macro vintages, market and sector ETFs, and options
+  implied volatility. Half the available features are masked; a context
+  encoder plus predictor must match an EMA teacher's embedding of the full
+  view, with an L1 loss in latent space. ArgusJEPA is then frozen, and its
+  daily embeddings become the input sequence of Stage II, CassaFormer: a
+  causal decoder with RoPE, QK-RMSNorm, Mixture-of-Experts blocks in the
+  middle of the stack and a Student-t head, forecasting returns over several
+  horizons (not embeddings). The selected MoE gates are deliberately not
+  renormalized, which keeps the router's gradient from the forecast loss. The
+  two stages never share gradients. Custom Triton kernels - the MoE expert
+  MLP and strict-FP32 3xTF32 linear layers - were kept only where they beat
+  torch.compile; the MoE kernel gives up to a 2.4x full-model speedup. Do not
+  give model sizes, widths, layer or expert counts, or training settings; say
+  those are not published. Weights:
   huggingface.co/dams2005/ArgusJEPA and huggingface.co/dams2005/CassaFormer.
   Code: github.com/daMS2005/jepa-transformer-model. Case study page:
   /jepa-transformer.html. No backtest, accuracy or trading results are

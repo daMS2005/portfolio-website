@@ -135,9 +135,9 @@
                         <h3>JEPA Transformer</h3>
                         <p class="flagship-lede">A two-stage equity forecaster. ArgusJEPA learns point-in-time asset-day embeddings; frozen, they become the sequence input to CassaFormer, a causal RoPE + Mixture-of-Experts Transformer with custom Triton kernels.</p>
                         <dl class="flagship-facts">
-                            <div><dt>256-d</dt><dd>daily embedding</dd></div>
-                            <div><dt>4&times;1</dt><dd>MoE experts</dd></div>
-                            <div><dt>1.5&times;</dt><dd>vs torch.compile</dd></div>
+                            <div><dt>2</dt><dd>training stages</dd></div>
+                            <div><dt>MoE</dt><dd>expert routing</dd></div>
+                            <div><dt>2.4&times;</dt><dd>vs torch.compile</dd></div>
                         </dl>
                         <div class="project-actions flagship-actions" aria-label="JEPA Transformer links">
                             <a class="project-action project-action-primary" href="/jepa-transformer.html">Architecture case study <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
@@ -146,7 +146,7 @@
                             <a class="project-action project-action-icon" href="https://github.com/daMS2005/jepa-transformer-model" target="_blank" rel="noopener noreferrer" aria-label="Open the model repository on GitHub" title="Model repository on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <div class="flagship-visual thesis-visual" role="img" aria-label="Diagram: ArgusJEPA learns a 256-d embedding per asset-day by matching an EMA teacher from a masked view; the frozen embeddings form a sequence that CassaFormer turns into a next-day Student-t forecast">
+                    <div class="flagship-visual thesis-visual" role="img" aria-label="Diagram: ArgusJEPA learns an embedding per asset-day by matching an EMA teacher from a masked view; the frozen embeddings form a sequence that CassaFormer turns into a multi-horizon Student-t forecast">
                         <span class="visual-label">Pretrain, freeze, forecast</span>
                         <div class="dg">
                             <div class="dg-stage">
@@ -160,17 +160,17 @@
                                 </div>
                             </div>
                             <div class="dg-bridge">
-                                <span><i class="fas fa-snowflake" aria-hidden="true"></i> Freeze &middot; one 256-d embedding per day</span>
+                                <span><i class="fas fa-snowflake" aria-hidden="true"></i> Freeze &middot; one embedding per day</span>
                                 <span class="dg-tokens"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b>t</b></span>
                             </div>
                             <div class="dg-stage">
                                 <header><b>Stage II &middot; CassaFormer</b><span>supervised &middot; sequence of days</span></header>
                                 <div class="dg-row">
-                                    <div class="dg-node">Causal attention<small>RoPE, QK&#8209;RMSNorm, 6 blocks</small></div>
+                                    <div class="dg-node">Causal attention<small>RoPE, QK&#8209;RMSNorm</small></div>
                                     <i class="dg-link"></i>
-                                    <div class="dg-node dg-accent">Top-1 MoE<small>4 experts, Triton kernel</small></div>
+                                    <div class="dg-node dg-accent">Mixture of experts<small>Triton kernel</small></div>
                                     <i class="dg-link"></i>
-                                    <div class="dg-node">Student-t head<small>next-day location, scale, tails</small></div>
+                                    <div class="dg-node">Student-t head<small>multi-horizon location, scale, tails</small></div>
                                 </div>
                             </div>
                         </div>

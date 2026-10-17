@@ -245,7 +245,8 @@ Vercel), Dr. Evangelina Soler's medical practice site (HTML/CSS/JS).
 
 Skills: Python (advanced), C++, SQL, JavaScript, TypeScript; PyTorch (SAE training,
 hooks, mixed precision), Hugging Face (Transformers, PEFT/LoRA, quantized and
-SAELens releases), Gemma, OLMo, Llama and Qwen, local-model inference and
+SAELens releases), Gemma, OLMo, Llama, Qwen, DeepSeek and Kimi models, the
+OpenAI, Claude and Gemini APIs, local-model inference and
 evaluation, Triton kernels, distributed systems, interpretability, CrewAI/LLM
 agents, recommenders, scikit-learn; Google Cloud GPU research workloads,
 remote Linux environments, large activation datasets, long-running training

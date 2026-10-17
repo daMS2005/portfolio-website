@@ -41,15 +41,38 @@ html {
   height: 100%;
   overflow: hidden;
   z-index: -1;
-  opacity: 0.26;
-  background:
-    radial-gradient(circle at 16% 18%, rgba(255, 69, 0, 0.32), transparent 34%),
-    radial-gradient(circle at 82% 40%, rgba(255, 140, 0, 0.2), transparent 32%),
-    radial-gradient(circle at 48% 84%, rgba(255, 215, 0, 0.12), transparent 30%);
+  opacity: 0.3;
 }
 
+/* soft gradients instead of filter: blur, and only transform animates, so the
+   blobs stay on the compositor and never repaint while scrolling */
 .blob {
-  display: none;
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 69, 0, 0.7), transparent 70%);
+  animation: moveBlobs 10s infinite alternate ease-in-out;
+  will-change: transform;
+}
+
+.blob:nth-child(2) {
+  background: radial-gradient(circle, rgba(255, 140, 0, 0.7), transparent 70%);
+  animation-duration: 12s;
+}
+
+.blob:nth-child(3) {
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.7), transparent 70%);
+  animation-duration: 15s;
+}
+
+@keyframes moveBlobs {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(400px, 400px) scale(1.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob { animation: none; }
 }
 
 /* Navigation */

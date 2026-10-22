@@ -33,8 +33,9 @@
   const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 
   function load() {
-    fetch('assets/jepa-pca.json').then(r => r.json()).then(j => {
-      D = { dates: j.dates, counts: j.counts, id: new Uint16Array(b64(j.id).buffer), enc: {} };
+    fetch('assets/jepa-pca.json?v=2').then(r => r.json()).then(j => {
+      D = { dates: j.dates, counts: j.counts, id: new Uint16Array(b64(j.id).buffer), enc: {},
+        track: new Map(Object.entries(j.track).map(([sym, id]) => [id, sym])) };
       for (const k in j.enc) D.enc[k] = { p: b64(j.enc[k].p), c: b64(j.enc[k].c), v: j.enc[k].var };
       off = [0]; D.counts.forEach(n => off.push(off[off.length - 1] + n));
       range.max = D.dates.length - 1;
@@ -100,11 +101,24 @@
     ctx.clearRect(0, 0, W, H);
     ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = dpr;
     ctx.beginPath(); ctx.moveTo(W / 2, pad / 2); ctx.lineTo(W / 2, H - pad / 2); ctx.moveTo(pad / 2, H / 2); ctx.lineTo(W - pad / 2, H / 2); ctx.stroke();
-    const rad = (W < 700 * dpr ? 1.9 : 2.4) * dpr;
-    currentPositions().forEach(([x, y, a, col]) => {
+    const rad = (W < 700 * dpr ? 1.9 : 2.4) * dpr, pts = currentPositions(), named = [];
+    const px = x => pad + x * (W - 2 * pad), py = y => pad + y * (H - 2 * pad);
+    pts.forEach(([x, y, a, col], id) => {
       ctx.globalAlpha = 0.82 * a; ctx.fillStyle = col;
-      ctx.beginPath(); ctx.arc(pad + x * (W - 2 * pad), pad + y * (H - 2 * pad), rad, 0, 6.283); ctx.fill();
+      ctx.beginPath(); ctx.arc(px(x), py(y), rad, 0, 6.283); ctx.fill();
+      if (D.track.has(id)) named.push([px(x), py(y), a, col, D.track.get(id)]);
     });
+    // notable companies: ringed dot and ticker on top of the cloud
+    ctx.font = `700 ${11 * dpr}px system-ui, sans-serif`; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    for (const [x, y, a, col, sym] of named) {
+      ctx.globalAlpha = a;
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, rad * 1.9, 0, 6.283); ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * dpr; ctx.stroke();
+      const left = x > W - 70 * dpr, tx = left ? x - 7 * dpr : x + 7 * dpr;
+      ctx.textAlign = left ? 'right' : 'left';
+      ctx.strokeStyle = 'rgba(7,9,11,0.9)'; ctx.lineWidth = 3 * dpr; ctx.strokeText(sym, tx, y);
+      ctx.fillStyle = '#fff'; ctx.fillText(sym, tx, y);
+    }
     ctx.globalAlpha = 1;
     if (progress() < 1) requestAnimationFrame(draw);
   }

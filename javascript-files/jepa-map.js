@@ -33,7 +33,7 @@
   const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 
   function load() {
-    fetch('assets/jepa-pca.json?v=2').then(r => r.json()).then(j => {
+    fetch('assets/jepa-pca.json?v=3').then(r => r.json()).then(j => {
       D = { dates: j.dates, counts: j.counts, id: new Uint16Array(b64(j.id).buffer), enc: {},
         track: new Map(Object.entries(j.track).map(([sym, id]) => [id, sym])) };
       for (const k in j.enc) D.enc[k] = { p: b64(j.enc[k].p), c: b64(j.enc[k].c), v: j.enc[k].var };
@@ -110,14 +110,27 @@
     });
     // notable companies: ringed dot and ticker on top of the cloud
     ctx.font = `700 ${11 * dpr}px system-ui, sans-serif`; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    const placed = [], lh = 12 * dpr;
+    named.sort((p, q) => p[1] - q[1]);
     for (const [x, y, a, col, sym] of named) {
       ctx.globalAlpha = a;
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, rad * 1.9, 0, 6.283); ctx.fill();
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * dpr; ctx.stroke();
-      const left = x > W - 70 * dpr, tx = left ? x - 7 * dpr : x + 7 * dpr;
-      ctx.textAlign = left ? 'right' : 'left';
-      ctx.strokeStyle = 'rgba(7,9,11,0.9)'; ctx.lineWidth = 3 * dpr; ctx.strokeText(sym, tx, y);
-      ctx.fillStyle = '#fff'; ctx.fillText(sym, tx, y);
+      // first spot (right or left of the dot, nudged up or down) that clears earlier labels
+      const w = ctx.measureText(sym).width, prefer = x > W - 70 * dpr ? [-1, 1] : [1, -1];
+      let box = null;
+      for (const dy of [0, -lh, lh, -2 * lh, 2 * lh]) {
+        for (const side of prefer) {
+          const x0 = side > 0 ? x + 7 * dpr : x - 7 * dpr - w, b = [x0, y + dy - lh / 2, x0 + w, y + dy + lh / 2];
+          if (!placed.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1])) { box = b; break; }
+        }
+        if (box) break;
+      }
+      box = box || [x + 7 * dpr, y - lh / 2, x + 7 * dpr + w, y + lh / 2];
+      placed.push(box);
+      ctx.textAlign = 'left';
+      ctx.strokeStyle = 'rgba(7,9,11,0.9)'; ctx.lineWidth = 3 * dpr; ctx.strokeText(sym, box[0], (box[1] + box[3]) / 2);
+      ctx.fillStyle = '#fff'; ctx.fillText(sym, box[0], (box[1] + box[3]) / 2);
     }
     ctx.globalAlpha = 1;
     if (progress() < 1) requestAnimationFrame(draw);

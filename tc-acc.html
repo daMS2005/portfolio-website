@@ -350,6 +350,7 @@
           video.src = video.dataset.src;
           video.controls = true;
           button.remove();
+          video.load();
           video.play().catch(() => {});
           window.track && window.track('tcacc-video-play', video.dataset.src.split('/').pop());
         });

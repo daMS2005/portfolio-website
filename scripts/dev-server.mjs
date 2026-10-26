@@ -130,9 +130,11 @@ http.createServer(async (req, res) => {
   let p = url.pathname === '/' ? '/index.html' : url.pathname;
   if (p === '/stats') p = '/stats.html';
   try {
-    const filePath = join(process.cwd(), normalize(p).replace(/^\/+/, ''));
-    const info = await stat(filePath);
-    const contentType = MIME[extname(p)] || 'application/octet-stream';
+    let filePath = join(process.cwd(), normalize(p).replace(/^\/+/, ''));
+    let info = await stat(filePath);
+    // a folder serves its index.html (reading a folder as a file crashed the server)
+    if (info.isDirectory()) { filePath = join(filePath, 'index.html'); info = await stat(filePath); }
+    const contentType = MIME[extname(filePath)] || 'application/octet-stream';
     const range = req.headers.range;
 
     if (range) {

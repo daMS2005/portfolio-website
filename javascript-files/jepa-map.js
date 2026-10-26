@@ -28,8 +28,14 @@
   const canvas = $('jtMapCanvas'), ctx = canvas.getContext('2d');
   const playBtn = $('jtMapPlay'), range = $('jtMapRange'), dateEl = $('jtMapDate');
   const segBtns = [...root.querySelectorAll('.jt-seg button')];
+  const legend = $('jtMapLegend');
 
   let D = null, off = [], enc = 'vicreg', frame = 0, playing = false, timer = 0, visible = false, anim = null, spacing = 0.01;
+  let raf = 0, userPaused = false;
+  const STEP = 330; // ms per month during playback
+  const controls = [playBtn, range, ...segBtns];
+  controls.forEach(c => { c.disabled = true; });
+  const kick = () => { if (!raf) raf = requestAnimationFrame(draw); };
 
   const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 
@@ -48,11 +54,13 @@
       }
       spacing = 0.19 / Math.sqrt(most);
       range.max = D.dates.length - 1;
+      controls.forEach(c => { c.disabled = false; });
+      $('jtMapLegend').innerHTML = ENC[enc].CL.map(([n, c]) => `<li><i style="background:${c}"></i>${n}</li>`).join('');
       $('jtMapStatus').remove();
       setEnc(enc, false);
       show(0, false);
       if (visible && !reduced) play(true);
-    }).catch(() => { $('jtMapStatus').textContent = 'The map could not be loaded.'; });
+    }).catch(() => { const st = $('jtMapStatus'); if (st) st.textContent = 'The map could not be loaded.'; });
   }
 
   // Island layout for frame f: biggest companies at the centre, a sunflower spiral outwards.
@@ -74,7 +82,7 @@
     return { pos: out, islands };
   }
 
-  function target(f, e, ms) {
+  function target(f, e, ms, linear = false) {
     const prev = anim ? currentPositions() : null, L = layout(f, e), items = [];
     for (let r = off[f]; r < off[f + 1]; r++) {
       const [x, y, col] = L.pos.get(r), from = prev && prev.get(D.id[r]);
@@ -84,11 +92,13 @@
       const here = new Set(items.map(i => i.id));
       prev.forEach((p, id) => { if (!here.has(id)) items.push({ id, from: p, to: p, a0: p[2], a1: 0, col: p[3] }); });
     }
-    anim = { items, islands: L.islands, e, t0: performance.now(), ms: reduced ? 0 : ms };
-    requestAnimationFrame(draw);
+    const fadeLabels = !anim || anim.e !== e;
+    anim = { items, islands: L.islands, e, t0: performance.now(), ms: reduced ? 0 : ms, linear, fadeLabels };
+    kick();
   }
 
-  const ease = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+  const inOut = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const ease = t => (anim && anim.linear ? t : inOut(t));
   const progress = () => (anim.ms ? Math.min(1, (performance.now() - anim.t0) / anim.ms) : 1);
 
   function currentPositions() {
@@ -107,6 +117,7 @@
   }
 
   function draw() {
+    raf = 0;
     if (!anim) return;
     const dpr = resize(), W = canvas.width, H = canvas.height, padX = 34 * dpr, padY = 30 * dpr;
     const px = x => padX + x * (W - 2 * padX), py = y => padY + y * (H - 2 * padY);
@@ -119,13 +130,20 @@
     });
 
     // cluster names above their islands, fading in once a switch or month change settles
-    const placed = [], lh = 12 * dpr, k = ease(progress());
+    const placed = [], lh = 12 * dpr, k = anim.fadeLabels ? inOut(progress()) : 1;
     ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
     ctx.font = `700 ${11 * dpr}px system-ui, sans-serif`;
-    for (const [c, cx, cy, r] of anim.islands) {
+    const showNames = canvas.clientWidth >= 560;
+    legend.hidden = showNames; // small screens get a legend instead of names on the canvas
+    for (const [c, cx, cy, r] of showNames ? anim.islands : []) {
       const [name, col] = ENC[anim.e].CL[c], w = ctx.measureText(name).width;
-      const x = Math.min(Math.max(px(cx) - w / 2, 4 * dpr), W - w - 4 * dpr), y = Math.max(py(cy - r) - 9 * dpr, lh);
-      placed.push([x, y - lh / 2, x + w, y + lh / 2]);
+      const x = Math.min(Math.max(px(cx) - w / 2, padX), W - w - 4 * dpr);
+      let y = null;
+      for (const dy of [0, -lh, -2 * lh, lh]) {
+        const yy = Math.max(py(cy - r) - 9 * dpr + dy, lh), b = [x, yy - lh / 2, x + w, yy + lh / 2];
+        if (!placed.some(o => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1])) { y = yy; placed.push(b); break; }
+      }
+      if (y === null) continue;
       ctx.globalAlpha = 0.95 * k; ctx.textAlign = 'left';
       ctx.strokeStyle = 'rgba(7,9,11,0.85)'; ctx.lineWidth = 3 * dpr; ctx.strokeText(name, x, y);
       ctx.fillStyle = col; ctx.fillText(name, x, y);
@@ -155,21 +173,25 @@
       ctx.fillStyle = '#fff'; ctx.fillText(sym, box[0], (box[1] + box[3]) / 2);
     }
     ctx.globalAlpha = 1;
-    if (progress() < 1) requestAnimationFrame(draw);
+    if (progress() < 1) kick();
   }
 
   function label(f) { const [y, m] = D.dates[f].split('-'); return `${MONTHS[+m - 1]} ${y}`; }
 
   function show(f, tween = true) {
     frame = f; range.value = f; dateEl.textContent = label(f);
-    target(f, enc, tween ? 300 : 0);
+    range.setAttribute('aria-valuetext', label(f));
+    target(f, enc, tween ? (playing ? STEP : 300) : 0, playing);
   }
 
   function setEnc(e, tween = true) {
     enc = e;
     segBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.enc === e)));
     $('jtMapNote').innerHTML = ENC[e].note;
+    $('jtMapLegend').innerHTML = ENC[e].CL.map(([n, c]) => `<li><i style="background:${c}"></i>${n}</li>`).join('');
     if (tween) target(frame, enc, 1000);
+    // let the encoder morph finish before playback moves on
+    if (playing) { clearTimeout(timer); timer = setTimeout(tick, 1100); }
   }
 
   function play(on) {
@@ -184,11 +206,11 @@
     if (!playing) return;
     const last = frame >= D.dates.length - 1;
     show(last ? 0 : frame + 1, !last);
-    timer = setTimeout(tick, last ? 1400 : 330);
+    timer = setTimeout(tick, last ? 1400 : STEP);
   }
 
-  playBtn.addEventListener('click', () => { if (D) play(!playing); });
-  range.addEventListener('input', () => { if (!D) return; play(false); show(+range.value, false); });
+  playBtn.addEventListener('click', () => { if (!D) return; userPaused = playing; play(!playing); });
+  range.addEventListener('input', () => { if (!D) return; userPaused = true; play(false); show(+range.value, false); });
   segBtns.forEach(b => b.addEventListener('click', () => { if (D && b.dataset.enc !== enc) setEnc(b.dataset.enc); }));
   addEventListener('resize', () => { if (D) target(frame, enc, 0); });
 
@@ -198,6 +220,6 @@
     visible = e.isIntersecting;
     if (!D || reduced) return;
     if (!visible && playing) play(false);
-    else if (visible && !playing && frame === 0) play(true);
+    else if (visible && !playing && !userPaused) play(true);
   }, { threshold: 0.35 }).observe(root);
 })();

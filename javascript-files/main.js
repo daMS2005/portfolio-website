@@ -10,10 +10,6 @@ function scrollToSection(sectionId) {
     });
 }
 
-document.getElementById('learnMoreBtn')?.addEventListener('click', () => {
-    scrollToSection('aboutMe');
-});
-
 const skipLink = document.querySelector('.skip-link');
 const mainContent = document.getElementById('main-content');
 
@@ -22,13 +18,6 @@ skipLink?.addEventListener('click', event => {
     if (!mainContent) return;
     mainContent.focus({ preventScroll: true });
     scrollToSection('main-content');
-});
-
-document.querySelectorAll('a[href^="#"]:not(.skip-link)').forEach(anchor => {
-    anchor.addEventListener('click', event => {
-        event.preventDefault();
-        scrollToSection(anchor.getAttribute('href').slice(1));
-    });
 });
 
 const navToggle = document.querySelector('.nav-toggle');
@@ -72,43 +61,28 @@ window.matchMedia('(min-width: 1001px)').addEventListener('change', event => {
     if (event.matches) setNavigationOpen(false);
 });
 
-const navbar = document.querySelector('.navbar');
-let navbarFrame = null;
-function updateNavbar() {
-    if (!navbar) return;
-    navbar.style.background = window.scrollY > 50
-        ? 'rgba(0, 0, 0, 0.9)'
-        : 'rgba(0, 0, 0, 0.8)';
-    navbarFrame = null;
-}
-window.addEventListener('scroll', () => {
-    if (navbarFrame === null) navbarFrame = window.requestAnimationFrame(updateNavbar);
-}, { passive: true });
-updateNavbar();
-
+// Fade groups in once, slightly staggered. The classes come off afterwards so
+// each element's own hover and colour transitions keep working.
 const animatedElements = document.querySelectorAll('.detail-item, .skill-category, .contact-item');
-animatedElements.forEach(element => {
-    element.style.opacity = '0';
-    element.style.transform = 'translateY(20px)';
-    element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-});
-
-if ('IntersectionObserver' in window) {
+if ('IntersectionObserver' in window && !prefersReducedMotion) {
+    animatedElements.forEach(element => {
+        element.classList.add('reveal');
+        const siblings = [...element.parentElement.children];
+        element.style.setProperty('--i', Math.min(siblings.indexOf(element), 5));
+    });
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
             const element = entry.target;
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
+            element.classList.add('is-in');
+            element.addEventListener('transitionend', () => {
+                element.classList.remove('reveal', 'is-in');
+                element.style.removeProperty('--i');
+            }, { once: true });
             observer.unobserve(element);
         });
     }, { rootMargin: '0px 0px -8% 0px' });
     animatedElements.forEach(element => revealObserver.observe(element));
-} else {
-    animatedElements.forEach(element => {
-        element.style.opacity = '1';
-        element.style.transform = 'translateY(0)';
-    });
 }
 
 const projectDisclosures = [...document.querySelectorAll('.project-disclosure')];
@@ -133,17 +107,6 @@ projectDisclosures.forEach(disclosure => {
     disclosure.addEventListener('toggle', syncProjectDetailsToggle);
 });
 
-const tagline = document.querySelector('.tagline');
-if (tagline && !prefersReducedMotion) {
-    const text = tagline.textContent;
-    tagline.textContent = '';
-
-    [...text].forEach((character, index) => {
-        window.setTimeout(() => {
-            tagline.textContent += character;
-        }, index * 35);
-    });
-}
 
 document.querySelectorAll('.project-card .card-inner').forEach((inner, index) => {
     const card = inner.closest('.project-card');

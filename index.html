@@ -12,8 +12,8 @@
     <meta property="og:description" content="Interpretability research, trained models, and autonomous AI systems - with MORA-01 as an optional guide.">
     <meta property="og:image" content="/images/og-robot.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="css-files/style.css?v=lava-v1">
-    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=flagship-v12">
+    <link rel="stylesheet" href="css-files/style.css?v=audit-v1">
+    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=audit-v1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script type="importmap">
     {
@@ -79,7 +79,8 @@
             <h2>AI Systems &amp; Research Engineer</h2>
             <p class="tagline">I study how models represent information and build AI systems that survive contact with the real world.</p>
             <div class="cta-buttons">
-                <button id="learnMoreBtn" class="primary-btn">Learn More</button>
+                <a id="heroWorkBtn" class="primary-btn" href="#research">See my work</a>
+                <a class="secondary-btn" href="#contact">Get in touch</a>
             </div>
         </div>
     </section>
@@ -583,7 +584,7 @@
     </button>
     <div id="droid-guide" role="button" tabindex="-1" aria-label="MORA-01, an optional interactive portfolio guide"></div>
 
-    <script src="javascript-files/main.js?v=access-v2"></script>
+    <script src="javascript-files/main.js?v=access-v3"></script>
     <script src="javascript-files/analytics.js" defer></script>
     <script src="/_vercel/insights/script.js" defer></script>
     <script type="module">
@@ -606,10 +607,13 @@
             if (guideLoading) return;
             guideLoading = true;
             entry.disabled = true;
+            const label = entry.innerHTML;
+            entry.setAttribute('aria-busy', 'true');
+            entry.innerHTML = '<i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Waking MORA-01…';
             try {
                 const [{ DroidGuide }, { initTourGuide }] = await Promise.all([
-                import('./javascript-files/droid.js?v=10'),
-                import('./javascript-files/tour-guide.js?v=13'),
+                import('./javascript-files/droid.js?v=11'),
+                import('./javascript-files/tour-guide.js?v=14'),
                 ]);
                 try { sessionStorage.setItem('guideHidden', '0'); } catch (error) { /* optional preference */ }
                 guideApi = DroidGuide.mount(container, { modelUrl: 'assets/droid.glb?v=2' });
@@ -622,6 +626,8 @@
             } finally {
                 guideLoading = false;
                 entry.disabled = false;
+                entry.removeAttribute('aria-busy');
+                if (guideApi) entry.innerHTML = label;
             }
         }
 

@@ -3,6 +3,7 @@
 export function initTourGuide({ container, api, immediate = false, entry = null }) {
   const bubble = document.createElement('div');
   bubble.className = 'guide-bubble';
+  bubble.setAttribute('role', 'status');
   document.body.appendChild(bubble);
 
   let bubbleTimer = null;
@@ -15,7 +16,8 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
 
   // entrance: hop in after the page has had a beat to breathe
   let arrived = false;
-  window.setTimeout(() => {
+  const modelReady = api.ready || Promise.resolve();
+  window.setTimeout(() => modelReady.then(() => {
     container.classList.add('arrived');
     api.resize();
     window.setTimeout(() => {
@@ -23,7 +25,7 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
       api.react?.('wave');
       say("I'm MORA-01. Ask me about the JEPA Transformer, the thesis, or TC_ACC.");
     }, immediate ? 280 : 750);
-  }, immediate ? 60 : 2200);
+  }), immediate ? 60 : 2200);
 
   // section commentary (scroll-position based; robust everywhere)
   const LINES = {
@@ -35,6 +37,7 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
     contact: 'Like me? Daniel builds things like this. Say hi.',
   };
   let currentSection = 'home';
+  const commented = new Set();
   function checkSection() {
     if (!arrived) return;
     const mid = window.scrollY + window.innerHeight * 0.45;
@@ -45,14 +48,14 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
     }
     if (active !== currentSection) {
       currentSection = active;
-      if (LINES[active]) {
+      if (LINES[active] && !commented.has(active) && !panel.classList.contains('open')) {
+        commented.add(active);
         api.react?.('nod');
         say(LINES[active]);
       }
     }
   }
   window.addEventListener('scroll', checkSection, { passive: true });
-  window.setInterval(checkSection, 350);
 
   // click: spin + quip
   const QUIPS = [
@@ -202,28 +205,48 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
     chatBtn.focus();
   });
 
+  let busy = false;
+  function setBusy(on) {
+    busy = on;
+    input.disabled = on;
+    form.querySelector('button').disabled = on;
+    suggestions.querySelectorAll('button').forEach((b) => { b.disabled = on; });
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const q = input.value.trim();
-    if (!q) return;
+    if (!q || busy) return;
     input.value = '';
     addMsg('user', q, true);
     window.track && window.track('chat-message');
     api.react?.('happy');
+    setBusy(true);
     const pending = addMsg('model', 'Thinking...', true);
+    pending.classList.add('pending');
+    const slow = window.setTimeout(() => { pending.textContent = 'Still thinking, this one takes a moment...'; }, 8000);
     try {
       const r = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: q, history: history.slice(-4) }),
+        signal: AbortSignal.timeout ? AbortSignal.timeout(55000) : undefined,
       });
-      if (!r.ok) throw new Error('bad status ' + r.status);
-      const data = await r.json();
+      const data = await r.json().catch(() => ({}));
+      if (!data.reply) throw new Error('bad status ' + r.status);
       pending.innerHTML = mdToHtml(data.reply);
-      suggestions.style.display = 'none';
-      history.push({ role: 'user', text: q }, { role: 'model', text: data.reply });
+      if (r.ok) {
+        suggestions.style.display = 'none';
+        history.push({ role: 'user', text: q }, { role: 'model', text: data.reply });
+      }
     } catch (err) {
-      pending.innerHTML = mdToHtml("I can't reach my brain from here - but Daniel answers email quickly: **damorasoler@gmail.com**");
+      pending.innerHTML = mdToHtml("I couldn't get an answer just now. You can email Daniel at **damorasoler@gmail.com**.");
+      input.value = q;
+    } finally {
+      window.clearTimeout(slow);
+      pending.classList.remove('pending');
+      setBusy(false);
+      input.focus();
     }
   });
   // ---- hide / restore the droid ----

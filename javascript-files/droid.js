@@ -53,6 +53,9 @@ export const DroidGuide = {
     let droid = null;
     let innerRoot = null;
     const eyes = [];
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let markReady;
+    const ready = new Promise((resolve) => { markReady = resolve; });
     new GLTFLoader().load(modelUrl, (gltf) => {
       const root = gltf.scene;
       root.traverse((o) => {
@@ -103,7 +106,8 @@ export const DroidGuide = {
       droid = holder;
       innerRoot = root;
       window.__droid = { scene, holder, root, THREE };
-    });
+      markReady();
+    }, undefined, () => markReady());
 
     const pointer = new THREE.Vector2(0, 0);
     window.addEventListener('pointermove', (e) => {
@@ -124,21 +128,21 @@ export const DroidGuide = {
     function animate() {
       requestAnimationFrame(animate);
       // don't burn GPU/battery re-rendering a droid nobody can see
-      if (document.hidden) return;
+      if (document.hidden || document.body.classList.contains('guide-hidden')) return;
       const t = clock.getElapsedTime();
 
       if (droid) {
         // the widget sits bottom-right, so bias the gaze toward the page
-        lookTarget.set(pointer.x * 1.4 - 0.35, 1.35 + pointer.y * 0.9, 2.0);
+        if (!reduce) lookTarget.set(pointer.x * 1.4 - 0.35, 1.35 + pointer.y * 0.9, 2.0);
         currentQuat.copy(droid.quaternion);
         droid.lookAt(lookTarget);
         desiredQuat.copy(droid.quaternion);
         droid.quaternion.copy(currentQuat).slerp(desiredQuat, 0.10);
 
         // Idle sway plus distinct reactions for clicks, section changes, and chat.
-        let y = 1.32 + Math.sin(t * 1.3) * 0.03;
+        let y = reduce ? 1.32 : 1.32 + Math.sin(t * 1.3) * 0.03;
         const rt = t - reactionStart;
-        if (innerRoot) {
+        if (innerRoot && !reduce) {
           innerRoot.rotation.y = Math.sin(t * 0.55) * 0.055;
           innerRoot.rotation.x = 0;
           innerRoot.rotation.z = Math.sin(t * 0.8) * 0.018;
@@ -196,6 +200,7 @@ export const DroidGuide = {
     });
 
     return {
+      ready,
       resize,
       spin() { reaction = 'spin'; reactionStart = clock.getElapsedTime(); },
       react(kind = 'nod') { reaction = kind; reactionStart = clock.getElapsedTime(); },

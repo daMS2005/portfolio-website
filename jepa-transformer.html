@@ -9,8 +9,8 @@
     <meta property="og:type" content="article">
     <meta property="og:title" content="JEPA Transformer · Daniel Mora">
     <meta property="og:description" content="ArgusJEPA pretraining, frozen embeddings, and the CassaFormer causal MoE Transformer, with custom Triton kernels.">
-    <link rel="stylesheet" href="css-files/style.css?v=lava-v1">
-    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=jepa-v1">
+    <link rel="stylesheet" href="css-files/style.css?v=audit-v1">
+    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=audit-v1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="images/favicon.png" type="image/png">
     <style>
@@ -105,9 +105,13 @@
         .jt-map-status { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 0.9rem; }
         .jt-map-note { margin: 0.8rem 0 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
         .jt-map-note b { color: #fff; }
+        .jt-map-legend[hidden] { display: none; }
         .jt-map-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0.35rem 1rem; margin: 0.9rem 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 0.8rem; }
         .jt-map-legend i { display: inline-block; width: 9px; height: 9px; margin-right: 0.45rem; border-radius: 50%; vertical-align: 0; }
         @media (max-width: 640px) { .jt-map-stage { aspect-ratio: 1 / 1; } .jt-map-date { margin-left: 0; width: 100%; } }
+        #jtMapPlay { min-width: 6.5em; }
+        .jt-map-bar button:disabled, .jt-seg button:disabled, .jt-map-range:disabled { opacity: 0.5; cursor: progress; }
+        .jt-map-bar button:active:not(:disabled), .jt-seg button:active:not(:disabled) { transform: scale(0.97); }
     </style>
 </head>
 <body class="case-study-page">
@@ -509,6 +513,7 @@
                     <div class="jt-map-status" id="jtMapStatus">Loading the map…</div>
                 </div>
                 <p class="jt-map-note" id="jtMapNote"></p>
+                <ul class="jt-map-legend" id="jtMapLegend" hidden></ul>
             </div>
             <p class="detail-intro" style="margin-top:1rem">The encoders capture strong risk and volatility structure, and it holds for companies kept out of training. On their own they are a map of the market, not a trading signal.</p>
         </section>
@@ -523,7 +528,7 @@
 
     <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
     <script src="javascript-files/main.js?v=access-v2"></script>
-    <script src="javascript-files/jepa-map.js?v=8" defer></script>
+    <script src="javascript-files/jepa-map.js?v=10" defer></script>
     <script src="javascript-files/analytics.js" defer></script>
 </body>
 </html>

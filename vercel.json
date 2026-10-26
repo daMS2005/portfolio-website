@@ -36,7 +36,9 @@
     {
       "src": "api/*.js",
       "use": "@vercel/node",
-      "config": { "maxDuration": 60 }
+      "config": {
+        "maxDuration": 60
+      }
     },
     {
       "src": "robots.txt",
@@ -137,8 +139,12 @@
       "dest": "/personal.html"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/$1"
+      "status": 404,
+      "dest": "/404.html"
     }
   ]
 }

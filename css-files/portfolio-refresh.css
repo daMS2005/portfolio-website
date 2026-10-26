@@ -324,7 +324,7 @@
 }
 
 .interest-card dt {
-  color: #77736e;
+  color: #8f8b85;
   font-size: 0.72rem;
   font-weight: 720;
   letter-spacing: 0.08em;
@@ -1165,7 +1165,7 @@
 }
 
 .project-action:focus-visible {
-  outline: 2px solid rgba(255, 92, 42, 0.45);
+  outline: 2px solid var(--orange);
   outline-offset: 2px;
 }
 
@@ -1232,7 +1232,7 @@
 }
 
 .project-view-options button:focus-visible {
-  outline: 2px solid rgba(255, 92, 42, 0.45);
+  outline: 2px solid var(--orange);
   outline-offset: 2px;
 }
 
@@ -1300,7 +1300,7 @@
 }
 
 .project-disclosure summary:focus-visible {
-  outline: 2px solid rgba(255, 92, 42, 0.45);
+  outline: 2px solid var(--orange);
   outline-offset: 3px;
 }
 
@@ -1501,7 +1501,7 @@
 }
 
 #websites .website-card:focus-visible {
-  outline: 2px solid rgba(255, 92, 42, 0.55);
+  outline: 2px solid var(--orange);
   outline-offset: 3px;
 }
 
@@ -2078,7 +2078,7 @@
 .video-request input:focus,
 .video-request textarea:focus {
   border-color: rgba(255,92,42,.7);
-  outline: 2px solid rgba(255,92,42,.25);
+  outline: 2px solid var(--orange);
   outline-offset: 2px;
 }
 
@@ -2088,7 +2088,7 @@
   border: 0;
   border-radius: 8px;
   background: var(--orange);
-  color: #fff;
+  color: #0a0a0a;
   font: inherit;
   font-weight: 750;
   cursor: pointer;

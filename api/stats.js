@@ -1,5 +1,9 @@
-// Password-gated analytics readout. The password lives ONLY in the Vercel
-// env var STATS_PASSWORD (never in this public repo).
+// Gated analytics readout. Opens with Daniel's private link (its key's SHA-256 is
+// below; the key itself is never in this public repo) or the Vercel env var STATS_PASSWORD.
+import { createHash } from 'node:crypto';
+
+const KEY_SHA256 = '0e130498da689896131ff87d6f8d50f604eef3d59f3db2df3a7db37053b86b40';
+
 // Vercel's marketplace integrations inject Redis credentials under several
 // different names depending on the integration version - accept them all.
 function redisCreds() {
@@ -15,8 +19,10 @@ const failures = globalThis.__mora_stats_fails || (globalThis.__mora_stats_fails
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
+  const key = String((req.body && req.body.key) || '');
+  const keyOk = key.length > 20 && createHash('sha256').update(key).digest('hex') === KEY_SHA256;
   const expected = (process.env.STATS_PASSWORD || '').trim();
-  if (!expected) {
+  if (!keyOk && !expected) {
     return res.status(503).json({ error: 'Stats are not available' });
   }
 
@@ -24,7 +30,7 @@ export default async function handler(req, res) {
   const ip = String(req.headers['x-forwarded-for'] || 'unknown').split(',')[0].trim();
   const now = Date.now();
   const fails = (failures.get(ip) || []).filter((t) => now - t < 15 * 60_000);
-  if (fails.length >= 8) return res.status(429).json({ error: 'Too many attempts - try again later' });
+  if (!keyOk && fails.length >= 8) return res.status(429).json({ error: 'Too many attempts - try again later' });
 
   const given = String((req.body && req.body.password) || '').trim();
   // constant-ish time compare
@@ -32,13 +38,13 @@ export default async function handler(req, res) {
   for (let i = 0; i < expected.length; i++) {
     ok = (given.charCodeAt(i) === expected.charCodeAt(i)) && ok;
   }
-  if (!ok) {
+  if (!ok && !keyOk) {
     failures.set(ip, [...fails, now]);
     return res.status(401).json({ error: 'wrong password' });
   }
 
   const { url: rurl, token: rtok } = redisCreds();
-  // password was correct - if storage isn't wired yet, show an empty dashboard
+  // access granted - if storage isn't wired yet, show an empty dashboard
   // with a notice rather than an error that looks like a failed login
   if (!rurl || !rtok) {
     return res.status(200).json({
@@ -127,6 +133,6 @@ export default async function handler(req, res) {
     });
   } catch (e) {
     console.error('stats error', e);
-    return res.status(502).json({ error: 'stats unavailable' });
+    return res.status(502).json({ error: `stats storage unreachable (${e.message})` });
   }
 }

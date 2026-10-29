@@ -105,10 +105,13 @@
         const err = document.getElementById('err');
         const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
 
-        async function load(pw) {
+        // the private link carries its key in the #fragment, which never reaches the server logs
+        const key = new URLSearchParams(location.hash.slice(1)).get('k');
+
+        async function load(cred) {
             const r = await fetch('/api/stats', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: pw }),
+                body: JSON.stringify(cred),
             });
             const data = await r.json().catch(() => ({}));
             if (!r.ok) throw new Error(r.status === 401 ? 'Wrong password' : (data.error || 'Stats unavailable (' + r.status + ')'));
@@ -192,8 +195,8 @@
             btn.textContent = inDash ? 'Refreshing…' : 'Checking…';
             try {
                 const pw = document.getElementById('pw').value;
-                const data = await load(pw);
-                sessionStorage.setItem('statsPw', pw);
+                const data = await load(key ? { key } : { password: pw });
+                if (!key) sessionStorage.setItem('statsPw', pw);
                 render(data);
             } catch (e) { out.textContent = e.message; }
             finally { btn.disabled = false; btn.textContent = label; }
@@ -202,7 +205,8 @@
         document.getElementById('refresh').addEventListener('click', attempt);
 
         const saved = sessionStorage.getItem('statsPw');
-        if (saved) { document.getElementById('pw').value = saved; attempt(); }
+        if (key) attempt();
+        else if (saved) { document.getElementById('pw').value = saved; attempt(); }
     </script>
 </body>
 </html>

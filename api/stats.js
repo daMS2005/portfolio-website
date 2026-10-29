@@ -73,71 +73,87 @@ export default async function handler(req, res) {
   }
 
   try {
+    // optional date range: from/to (YYYY-MM-DD) pick the per-day counters, fromTs/toTs (the
+    // visitor's local day bounds) pick the visits and questions; no range means all time
+    const body = req.body || {}, isDay = (d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
+    const ranged = isDay(body.from) && isDay(body.to) && body.from <= body.to;
     const days = [];
-    for (let i = 13; i >= 0; i--) {
-      days.push(new Date(Date.now() - i * 86400000).toISOString().slice(0, 10));
+    if (ranged) {
+      for (let d = Date.parse(`${body.from}T00:00:00Z`); d <= Date.parse(`${body.to}T00:00:00Z`) && days.length < 62; d += 86400000) {
+        days.push(new Date(d).toISOString().slice(0, 10));
+      }
+    } else {
+      for (let i = 13; i >= 0; i--) days.push(new Date(Date.now() - i * 86400000).toISOString().slice(0, 10));
     }
+    const fromTs = ranged ? Number(body.fromTs) || Date.parse(`${body.from}T00:00:00Z`) : 0;
+    const toTs = ranged ? Number(body.toTs) || Date.parse(`${body.to}T00:00:00Z`) + 86400000 : Infinity;
+
     const KEYS = [
-      'ev:total', 'geo:total', 'city:total', 'src:total', 'browser:total',
-      'os:total', 'device:total', 'lang:total', 'scroll:total',
-      'section:views', 'section:seconds', 'time:total', 'visits:day',
-      'campaign:total', 'pages:total', 'clicks:total', 'ref:total',
+      'geo:total', 'city:total', 'src:total', 'browser:total', 'os:total', 'device:total', 'lang:total',
+      'scroll:total', 'section:views', 'section:seconds', 'time:total', 'campaign:total', 'pages:total',
+      'clicks:total', 'ref:total',
     ];
-    const cmds = [
-      ...KEYS.map((k) => ['HGETALL', k]),
-      ['LRANGE', 'chat:recent', '0', '49'],
-      ['LRANGE', 'visits:recent', '0', '99'],
-      ...days.map((d) => ['HGETALL', `ev:${d}`]),
+    const groups = [
+      ...KEYS.map((k) => (ranged ? days.map((d) => ['HGETALL', `${k}@${d}`]) : [['HGETALL', k]])),
+      ranged ? [] : [['HGETALL', 'ev:total']],
+      days.map((d) => ['HGETALL', `ev:${d}`]),
+      [['LRANGE', 'chat:recent', '0', '199']],
+      [['LRANGE', 'visits:recent', '0', '999']],
       // whoever opens the dashboard is Daniel: api/track.js skips this network for 30 days
-      ['HSET', 'owner:ips', ipHash(ip), String(now)],
+      [['HSET', 'owner:ips', ipHash(ip), String(now)]],
     ];
-    const out = await redis(cmds);
+    const flat = await redis(groups.flat());
+    let at = 0;
+    const out = groups.map((g) => flat.slice(at, (at += g.length)));
+    const sum = (objs) => objs.reduce((acc, o) => { for (const [k, v] of Object.entries(o)) acc[k] = (acc[k] || 0) + v; return acc; }, {});
 
     const data = {};
-    KEYS.forEach((k, i) => { data[k.replace(/[:.]/g, '_')] = toObj(out[i]); });
+    KEYS.forEach((k, i) => { data[k] = sum(out[i].map(toObj)); });
+    const evDays = out[KEYS.length + 1].map(toObj);
+    const ev = ranged ? sum(evDays) : toObj(out[KEYS.length][0]);
+    const daily = Object.fromEntries(days.map((d, i) => [d, evDays[i]]));
 
     const parseList = (arr) => (arr || [])
       .map((x) => { try { return JSON.parse(x); } catch { return null; } })
       .filter(Boolean);
+    const inRange = (x) => x.t >= fromTs && x.t < toTs;
+    const recentQuestions = parseList(out[KEYS.length + 2][0]).filter(inRange);
 
-    // each recent visit's timeline: pages, sections, clicks and time on page
-    const recentVisits = parseList(out[KEYS.length + 1]);
+    // each visit's timeline: pages, sections, clicks and time on page (newest 200 in the range)
+    const recentVisits = parseList(out[KEYS.length + 3][0]).filter(inRange).slice(0, 200);
     const steps = recentVisits.length ? await redis(recentVisits.map((v) => ['LRANGE', `s:${v.sid}`, '0', '-1'])) : [];
     recentVisits.forEach((v, i) => { v.steps = parseList(steps[i]); });
 
-    const daily = {};
-    days.forEach((d, i) => { daily[d] = toObj(out[KEYS.length + 2 + i]); });
-
-    const t = data.time_total || {};
+    const t = data['time:total'];
     const visits = Number(t.visits || 0);
     const summary = {
-      pageviews: Number((data.ev_total || {}).pageview || 0),
+      pageviews: Number(ev.pageview || 0),
       visitsEnded: visits,
       avgSeconds: visits ? Math.round(Number(t.seconds || 0) / visits) : 0,
       engagedRate: visits ? Math.round((Number(t.engaged || 0) / visits) * 100) : 0,
-      chatMessages: Number((data.ev_total || {})['chat-message'] || 0),
+      chatMessages: Number(ev['chat-message'] || 0),
     };
 
     return res.status(200).json({
+      range: ranged ? { from: days[0], to: days[days.length - 1] } : null,
       summary,
-      totals: data.ev_total,
-      countries: data.geo_total,
-      cities: data.city_total,
-      sources: data.src_total,
-      browsers: data.browser_total,
-      os: data.os_total,
-      devices: data.device_total,
-      languages: data.lang_total,
-      campaigns: data.campaign_total,
-      pages: data.pages_total,
-      clicks: data.clicks_total,
-      referrers: data.ref_total,
-      scroll: data.scroll_total,
-      sectionViews: data.section_views,
-      sectionSeconds: data.section_seconds,
-      visitsPerDay: data.visits_day,
+      totals: ev,
+      countries: data['geo:total'],
+      cities: data['city:total'],
+      sources: data['src:total'],
+      browsers: data['browser:total'],
+      os: data['os:total'],
+      devices: data['device:total'],
+      languages: data['lang:total'],
+      campaigns: data['campaign:total'],
+      pages: data['pages:total'],
+      clicks: data['clicks:total'],
+      referrers: data['ref:total'],
+      scroll: data['scroll:total'],
+      sectionViews: data['section:views'],
+      sectionSeconds: data['section:seconds'],
       daily,
-      recentQuestions: parseList(out[KEYS.length]),
+      recentQuestions,
       recentVisits,
     });
   } catch (e) {

@@ -131,7 +131,7 @@ export default async function handler(req, res) {
         page: String(m || '').slice(0, 60), vw: b.vw, vh: b.vh, lang: b.lang, tz: b.tz,
         ref: refPage, scr: b.sw && b.sh ? `${b.sw}x${b.sh}` : undefined, dpr: b.dpr, dark: b.dark, reduced: b.reduced,
       })],
-      ['LTRIM', 'visits:recent', '0', '99'],
+      ['LTRIM', 'visits:recent', '0', '999'],
     );
   }
 
@@ -165,6 +165,11 @@ export default async function handler(req, res) {
         if (v > 0) cmds.push(['HINCRBY', 'section:seconds', String(sec).slice(0, 40), String(v)]);
       }
     }
+  }
+
+  // every all-time counter also gets a per-day copy, kept 400 days, so the dashboard can filter by date
+  for (const [, key, field, n] of cmds.filter((c) => c[0] === 'HINCRBY' && /:(total|views|seconds)$/.test(c[1]) && c[1] !== 'ev:total')) {
+    cmds.push(['HINCRBY', `${key}@${day}`, field, n], ['EXPIRE', `${key}@${day}`, '34560000']);
   }
 
   try { await redis(cmds); } catch (err) { /* analytics never blocks */ }

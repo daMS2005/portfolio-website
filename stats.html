@@ -42,6 +42,9 @@
         .trail span { color: #7a7a7a; }
         .steps { margin: 0.25rem 0 0.4rem 0.2rem; padding: 0; list-style: none; color: #9a9a9a; font-size: 0.76rem; }
         .steps li { margin: 0.12rem 0; }
+        .range { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: -0.6rem 0 1.2rem; }
+        .range select, .range input { padding: 0.45rem 0.7rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.18); background: #17171a; color: #fff; font-size: 0.85rem; color-scheme: dark; }
+        .range span { color: #8a8a8a; font-size: 0.8rem; }
         .vfilter { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; }
         .vfilter input { flex: 1; min-width: 0; padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.85rem; }
         .vfilter button, button.vid { border: 1px solid rgba(255,255,255,0.2); background: none; color: #bbb; border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.8rem; cursor: pointer; }
@@ -70,8 +73,21 @@
         <div id="dash">
             <button class="refresh" id="refresh">Refresh</button>
             <h1>Site Stats</h1>
-            <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; last 14 days &middot; this browser and your network aren't counted</p>
+            <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; this browser and your network aren't counted</p>
             <p class="dash-err" id="dashErr" aria-live="polite"></p>
+            <div class="range">
+                <select id="preset" aria-label="Date range">
+                    <option value="all">All time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="7">Last 7 days</option>
+                    <option value="30">Last 30 days</option>
+                    <option value="custom">Custom dates</option>
+                </select>
+                <input type="date" id="from" aria-label="From" hidden>
+                <input type="date" id="to" aria-label="To" hidden>
+                <span id="rangeNote"></span>
+            </div>
 
             <div class="kpis" id="kpis"></div>
 
@@ -147,6 +163,11 @@
             gate.style.display = 'none';
             dash.style.display = 'block';
             if (d.notice) document.getElementById('notice').textContent = d.notice;
+
+            const day = (x) => new Date(`${x}T00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+            document.getElementById('rangeNote').textContent = d.range
+                ? (d.range.from === d.range.to ? day(d.range.from) : `${day(d.range.from)} – ${day(d.range.to)}`) + (d.range.from < '2026-10-29' ? ' · daily counts start Oct 29, 2026, so earlier days only show in All time' : '')
+                : 'Everything recorded so far';
 
             const s = d.summary || {};
             const mins = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + (n % 60) + 's' : n + 's';
@@ -273,13 +294,35 @@
             btn.textContent = inDash ? 'Refreshing…' : 'Checking…';
             try {
                 const pw = document.getElementById('pw').value;
-                const data = await load(key ? { key } : { password: pw });
+                const data = await load({ ...(key ? { key } : { password: pw }), ...range() });
                 if (!key) sessionStorage.setItem('statsPw', pw);
                 try { localStorage.setItem('mora-notrack', '1'); } catch (e) { /* private mode */ }
                 render(data);
             } catch (e) { out.textContent = e.message; }
             finally { btn.disabled = false; btn.textContent = label; }
         }
+        // date range from the presets, in the viewer's local time; no range means all time
+        const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        function range() {
+            const p = document.getElementById('preset').value, now = new Date();
+            const back = (n) => ymd(new Date(now.getFullYear(), now.getMonth(), now.getDate() - n));
+            let from = '', to = ymd(now);
+            if (p === 'today') from = to;
+            else if (p === 'yesterday') from = to = back(1);
+            else if (p === '7') from = back(6);
+            else if (p === '30') from = back(29);
+            else if (p === 'custom') { from = document.getElementById('from').value; to = document.getElementById('to').value || to; }
+            if (!from || from > to) return {};
+            return { from, to, fromTs: new Date(`${from}T00:00`).getTime(), toTs: new Date(`${to}T00:00`).getTime() + 86400000 };
+        }
+        const preset = document.getElementById('preset');
+        preset.addEventListener('change', () => {
+            const custom = preset.value === 'custom';
+            document.getElementById('from').hidden = document.getElementById('to').hidden = !custom;
+            if (!custom || document.getElementById('from').value) attempt();
+        });
+        ['from', 'to'].forEach((id) => document.getElementById(id).addEventListener('change', () => document.getElementById('from').value && attempt()));
+
         document.getElementById('login').addEventListener('submit', (e) => { e.preventDefault(); attempt(); });
         document.getElementById('refresh').addEventListener('click', attempt);
 

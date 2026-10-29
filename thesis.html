@@ -15,6 +15,12 @@
     <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=audit-v1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="images/favicon.png" type="image/png">
+    <style>
+        .brain-data-figure canvas { display: block; width: calc(100% - 2.5rem); margin: 1.25rem 1.25rem 0; }
+        #thesisStory { aspect-ratio: 2 / 1; touch-action: pan-y; cursor: crosshair; }
+        #thesisMaps { aspect-ratio: 9 / 5; }
+        @media (max-width: 599px) { #thesisStory { aspect-ratio: 3 / 4; } #thesisMaps { aspect-ratio: 2 / 5; } }
+    </style>
 </head>
 <body class="case-study-page">
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -141,12 +147,12 @@
             <p class="detail-intro">The analysis does not treat “the brain” as one score. It begins with quality-controlled time series, preserves the full story timeline through censoring, and models responses across a 200-parcel cortical atlas.</p>
             <div class="brain-data-grid">
                 <figure class="brain-data-figure brain-data-figure-wide">
-                    <a href="images/thesis-brain-data.webp" target="_blank" rel="noopener"><img src="images/thesis-brain-data.webp" alt="Three-part fMRI data figure showing head-motion censoring for one run, a cleaned standardized BOLD response matrix across 200 cortical parcels, and cortical maps of leave-one-participant-out inter-subject correlation" width="1113" height="667" loading="lazy"></a>
-                    <figcaption><strong>From raw movement to usable signal.</strong> The top panels show motion-based quality control and the cleaned parcel-by-time BOLD matrix. The cortical views show where participants share a reliable stimulus-locked response, with the strongest consistency around superior temporal regions.</figcaption>
+                    <canvas id="thesisStory" role="img" aria-label="Two heatmaps over the 7 minute 38 second shapessocial story, on one time axis. Top: the cleaned BOLD response averaged over 59 listeners, one row per cortical parcel, 200 parcels grouped into seven networks. Bottom: the activity of 256 sparse-autoencoder features of Gemma 2 2B, grouped by model layer, dark where no words are spoken."></canvas>
+                    <figcaption><strong>The story as the brain and the model heard it.</strong> The full 7:38 <em>shapessocial</em> description on one time axis. Top: the cleaned BOLD response averaged over 59 listeners, one row per cortical parcel, grouped into seven networks and z-scored per parcel. Each scan averages the listeners whose data passed quality control; the first two scans have too few and stay blank, marked in orange on the axis. Bottom: the 256 sparse-autoencoder features of Gemma 2 2B that were selected on the other description, grouped by layer and scaled per feature; dark columns are moments with no speech. Point at the figure to read the time.</figcaption>
                 </figure>
                 <figure class="brain-data-figure">
-                    <a href="images/thesis-brain-encoding.webp" target="_blank" rel="noopener"><img src="images/thesis-brain-encoding.webp" alt="Cortical maps and histogram showing held-out cross-description prediction correlation across 200 brain parcels" width="1067" height="513" loading="lazy"></a>
-                    <figcaption><strong>Where the transferred feature bank predicts.</strong> Held-out prediction is weak overall but not spatially uniform. The cortical maps and parcel distribution show where the source-selected sparse basis carries predictive signal on the second description.</figcaption>
+                    <canvas id="thesisMaps" role="img" aria-label="Brain maps on one colour scale from 0 to .75, each seen from the left and right side and from the midline. Left: leave-one-out inter-subject correlation, mean .215 across 200 parcels. Right: held-out prediction r of the transferred feature bank, mean .077. Both are brightest along the superior temporal cortex. A histogram under each map shows the 200 parcel values."></canvas>
+                    <figcaption><strong>Where listeners agree, and where the features predict.</strong> Left: leave-one-out inter-subject correlation, how closely each listener's response follows the average of the other 58 (mean .215 over 200 parcels). Right: held-out prediction r of ridge models fit on the other description and applied unchanged to this one, averaged over listeners and six model systems (mean .077). Top row: left and right hemisphere from the side; bottom row: from the midline. Maps and histograms share one scale from 0 to .75; the white line marks each mean. Prediction is weak overall and strongest where listeners agree most, along the superior temporal cortex.</figcaption>
                 </figure>
                 <aside class="brain-data-note">
                     <span>How to read this</span>
@@ -191,6 +197,7 @@
 
     <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
     <script src="javascript-files/main.js?v=access-v2"></script>
+    <script src="javascript-files/thesis-figures.js?v=1" defer></script>
     <script src="javascript-files/analytics.js" defer></script>
 </body>
 </html>

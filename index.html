@@ -384,7 +384,7 @@
                         <div><span class="work-type">C++ systems &middot; game</span><h3>Alien Invasion</h3></div>
                         <div class="project-actions"><a class="project-action project-action-icon" href="https://github.com/daMS2005/alieninvasion" target="_blank" rel="noopener noreferrer" aria-label="Open Alien Invasion on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a></div>
                     </header>
-                    <img src="alieninvasionpics/gameplay.webp" alt="Alien Invasion game screen" loading="lazy" decoding="async" width="1280" height="720">
+                    <img src="alieninvasionpics/gameplay.webp?v=2" alt="Alien Invasion game screen" loading="lazy" decoding="async" width="1280" height="720">
                     <div class="project-record-content">
                         <p class="project-summary">A Space Invaders-style SFML game used to practice real-time state, rendering, testing, and native build tooling.</p>
                         <details class="project-disclosure">
@@ -578,7 +578,8 @@
     </button>
     <div id="droid-guide" role="button" tabindex="-1" aria-label="MORA-01, an optional interactive portfolio guide"></div>
 
-    <script src="javascript-files/main.js?v=access-v2"></script>
+    <script src="javascript-files/background.js?v=1"></script>
+    <script src="javascript-files/main.js?v=access-v3"></script>
     <script src="javascript-files/analytics.js" defer></script>
     <script src="/_vercel/insights/script.js" defer></script>
     <script type="module">
@@ -603,8 +604,8 @@
             entry.disabled = true;
             try {
                 const [{ DroidGuide }, { initTourGuide }] = await Promise.all([
-                import('./javascript-files/droid.js?v=11'),
-                import('./javascript-files/tour-guide.js?v=13'),
+                import('./javascript-files/droid.js?v=12'),
+                import('./javascript-files/tour-guide.js?v=14'),
                 ]);
                 try { sessionStorage.setItem('guideHidden', '0'); } catch (error) { /* optional preference */ }
                 guideApi = DroidGuide.mount(container, { modelUrl: 'assets/droid.glb?v=3' });

@@ -124,8 +124,8 @@ export const DroidGuide = {
 
     function animate() {
       requestAnimationFrame(animate);
-      // don't burn GPU/battery re-rendering a droid nobody can see
-      if (document.hidden) return;
+      // don't burn GPU/battery re-rendering a droid nobody can see (tab in the background or guide closed)
+      if (document.hidden || document.body.classList.contains('guide-hidden')) return;
       const t = clock.getElapsedTime();
 
       if (droid) {

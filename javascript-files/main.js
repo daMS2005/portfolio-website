@@ -74,12 +74,13 @@ window.matchMedia('(min-width: 1001px)').addEventListener('change', event => {
 
 const navbar = document.querySelector('.navbar');
 let navbarFrame = null;
+let navbarSolid = null;
 function updateNavbar() {
-    if (!navbar) return;
-    navbar.style.background = window.scrollY > 50
-        ? 'rgba(0, 0, 0, 0.9)'
-        : 'rgba(0, 0, 0, 0.8)';
     navbarFrame = null;
+    const solid = window.scrollY > 50;
+    if (!navbar || solid === navbarSolid) return; // restyle only when crossing the threshold
+    navbarSolid = solid;
+    navbar.style.background = solid ? 'rgba(0, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.8)';
 }
 window.addEventListener('scroll', () => {
     if (navbarFrame === null) navbarFrame = window.requestAnimationFrame(updateNavbar);

@@ -7,10 +7,11 @@
   const sid = Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const start = Date.now();
   const params = new URLSearchParams(location.search);
+  const bg = document.documentElement.dataset.bg; // homepage background A/B variant, see background.js
 
   function send(e, m, extra) {
     try {
-      const body = JSON.stringify(Object.assign({ e, m, sid }, extra || {}));
+      const body = JSON.stringify(Object.assign({ e, m, sid, bg }, extra || {}));
       if (navigator.sendBeacon) {
         navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));
       } else {
@@ -49,7 +50,8 @@
       if (pct >= m && !hit.has(m)) { hit.add(m); send('scroll', String(m)); }
     }
   }
-  addEventListener('scroll', onScroll, { passive: true });
+  let scrollFrame = 0; // at most once per frame: scroll events can fire 120 times a second
+  addEventListener('scroll', () => { scrollFrame ||= requestAnimationFrame(() => { scrollFrame = 0; onScroll(); }); }, { passive: true });
 
   // ---- which sections people actually look at, and for how long ----
   const dwell = {};

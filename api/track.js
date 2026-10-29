@@ -76,6 +76,7 @@ export default async function handler(req, res) {
   let city = null;
   try { city = req.headers['x-vercel-ip-city'] ? decodeURIComponent(req.headers['x-vercel-ip-city']) : null; } catch { /* malformed header */ }
   const day = new Date().toISOString().slice(0, 10);
+  const bg = typeof b.bg === 'string' && /^[a-z]{2,12}$/.test(b.bg) ? b.bg : ''; // homepage background A/B variant
   const device = b.touch ? (Number(b.vw) < 768 ? 'mobile' : 'tablet') : 'desktop';
 
   console.log('[track]', JSON.stringify({ e: ev, m, sid, country, city, ...ua }));
@@ -126,7 +127,7 @@ export default async function handler(req, res) {
     if (b.campaign) cmds.push(['HINCRBY', 'campaign:total', String(b.campaign).slice(0, 40), '1']);
     cmds.push(
       ['LPUSH', 'visits:recent', JSON.stringify({
-        t: now, sid, vid, country, city, source,
+        t: now, sid, vid, bg: bg || undefined, country, city, source,
         browser: ua.browser, os: ua.os, device,
         page: String(m || '').slice(0, 60), vw: b.vw, vh: b.vh, lang: b.lang, tz: b.tz,
         ref: refPage, scr: b.sw && b.sh ? `${b.sw}x${b.sh}` : undefined, dpr: b.dpr, dark: b.dark, reduced: b.reduced,
@@ -164,6 +165,19 @@ export default async function handler(req, res) {
         const v = Math.max(0, Math.min(1800, Number(val) || 0));
         if (v > 0) cmds.push(['HINCRBY', 'section:seconds', String(sec).slice(0, 40), String(v)]);
       }
+    }
+  }
+
+  // A/B test: views, clicks and finished visits per background variant
+  if (bg) {
+    const ab = (field, n = 1) => cmds.push(['HINCRBY', 'ab:bg', `${bg}:${field}`, String(n)]);
+    if (ev === 'pageview') ab('views');
+    if (typeof b.label === 'string' && b.label) ab('clicks');
+    if (ev === 'visit-end') {
+      const secs = Math.max(0, Math.min(3600, Number(m) || 0));
+      ab('ended'); ab('seconds', secs);
+      if (secs >= 30) ab('engaged');
+      if (Number.isFinite(Number(b.depth))) ab('depth', Math.max(0, Math.min(100, Math.round(Number(b.depth)))));
     }
   }
 

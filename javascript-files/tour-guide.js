@@ -51,7 +51,8 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
       }
     }
   }
-  window.addEventListener('scroll', checkSection, { passive: true });
+  let scrollFrame = 0;
+  window.addEventListener('scroll', () => { scrollFrame ||= requestAnimationFrame(() => { scrollFrame = 0; checkSection(); }); }, { passive: true });
   window.setInterval(checkSection, 350);
 
   // click: spin + quip

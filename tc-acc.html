@@ -40,6 +40,21 @@
       .stat .v { font-size: 1.5rem; color: #ff8a50; font-variant-numeric: tabular-nums; line-height: 1.1; }
       .stat .l { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a8a; margin-top: 0.25rem; }
 
+      /* ---- the October 2026 cut, shot by shot ---- */
+      .tcacc-cut { background: #08090a; }
+      .tcacc-cut-frame { position: relative; aspect-ratio: 16 / 9; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .tcacc-cut-frame canvas { display: block; width: 100%; height: 100%; }
+      .tcacc-cut-status { position: absolute; inset: 0; display: grid; place-items: center; color: #8f8b85; font-size: 0.8rem; }
+      .tcacc-cut-track { display: block; width: 100%; height: 104px; margin-top: 0.5rem; cursor: ew-resize; touch-action: pan-y; }
+      .tcacc-cut-track:focus-visible { outline: 2px solid #ff8a50; outline-offset: -2px; }
+      .tcacc-cut-meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem 1.4rem; padding: 0.3rem 1rem 0; }
+      .tcacc-cut-now { min-height: 1.5em; color: #e8e4de; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+      .tcacc-cut-now span { white-space: nowrap; }
+      .tcacc-cut-now b { padding: 0.05rem 0.4rem; border: 1px solid rgba(255,138,80,0.45); border-radius: 999px; color: #ffb08f; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+      .tcacc-cut-legend { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; margin: 0; padding: 0; list-style: none; color: #8f8b85; font-size: 0.7rem; }
+      .tcacc-cut-legend i { display: inline-block; width: 9px; height: 9px; margin-right: 0.4rem; border-radius: 2px; vertical-align: -1px; }
+      .tcacc-cut-legend .withheld { background: radial-gradient(circle, #ff6a3d 0 1px, transparent 1.5px) 0 0 / 4px 4px, rgba(255,106,61,0.3); }
+
       /* ---- episode archive ---- */
       .episodes { display: grid; gap: 1.4rem; margin-top: 1.4rem; }
       @media (min-width: 760px) { .episodes { grid-template-columns: 1fr 1fr; } }
@@ -168,9 +183,26 @@
             <div class="stat"><div class="v">0</div><div class="l">Human steps</div></div>
         </div>
 
-        <figure class="tcacc-case-image">
-            <img src="/images/tcacc-episode-stills.jpg" alt="A montage of documentary imagery used in a TC_ACC episode: coastline, archival surveillance, document research, and a harbor" width="1280" height="720">
-            <figcaption>Representative episode imagery &middot; research, archival material, documents, and location context assembled into one edit.</figcaption>
+        <figure class="tcacc-case-image tcacc-cut" id="tcCut">
+            <div class="tcacc-cut-frame">
+                <canvas id="tcCutFrame" role="img" aria-label="Halftone render of the selected shot from the October 2026 TC_ACC episode"></canvas>
+                <div class="tcacc-cut-status" id="tcCutStatus">Loading the cut…</div>
+            </div>
+            <div>
+                <canvas class="tcacc-cut-track" id="tcCutTrack" tabindex="0" role="slider" aria-label="Episode timeline, shot by shot" aria-valuemin="1" aria-valuemax="71"></canvas>
+                <div class="tcacc-cut-meta">
+                    <div class="tcacc-cut-now" id="tcCutNow"></div>
+                    <ul class="tcacc-cut-legend" aria-label="V1 colours">
+                        <li><i style="background:#ff6a3d"></i>case photo</li>
+                        <li><i style="background:#d7a25e"></i>archival</li>
+                        <li><i style="background:#7d766c"></i>stock</li>
+                        <li><i style="background:#f5f3ef"></i>map</li>
+                        <li><i style="background:#46423d"></i>titles</li>
+                        <li><i class="withheld"></i>withheld</li>
+                    </ul>
+                </div>
+            </div>
+            <figcaption>The October 2026 episode, shot by shot: 69 shots plus title ident and end card on V1, coloured by source, the soundtrack on A1, and the eight acts above. The 24 shots that show an identifiable person are withheld and drawn as a 16 &times; 9 dot average. Hover, drag or tap the timeline, or use the arrow keys, to step through the cut.</figcaption>
         </figure>
 
         <h2>What it produces</h2>
@@ -398,6 +430,7 @@
         }
       });
     </script>
+    <script src="/javascript-files/tcacc-episode.js?v=1" defer></script>
     <script src="/javascript-files/main.js?v=access-v2"></script>
     <script src="/javascript-files/analytics.js" defer></script>
 </body>

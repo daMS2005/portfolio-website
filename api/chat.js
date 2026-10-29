@@ -1,6 +1,7 @@
 // MORA-01 chat endpoint (Vercel serverless function).
 // The Gemini API key lives ONLY in a Vercel environment variable
 // (GEMINI_API_KEY) - never in this repo.
+import { createHash } from 'node:crypto';
 
 const KNOWLEDGE = `
 You are MORA-01, the small friendly droid tour guide on Daniel Mora's portfolio
@@ -50,7 +51,8 @@ About Daniel:
   Never give financial advice or reveal private holdings,
   returns or account details on his behalf.
 - Contact: damorasoler@gmail.com (mailto link in the Contact section) and
-  LinkedIn. GitHub: daMS2005. Hugging Face: dams2005.
+  LinkedIn at https://www.linkedin.com/in/daniel-arturo-mora-00747524b/.
+  GitHub: daMS2005. Hugging Face: dams2005.
 - Bachelor thesis, supervised by Dr. Luciano Dyballa, now written up as a
   paper: "Can We Detect Shared Features Between Language Models and the Brain?". It is a preprint and is not peer-reviewed. Never say
   where it has been submitted or whether it is under review, and never
@@ -290,8 +292,9 @@ Rules:
   The chat panel renders plain text, so write symbols out directly: "rho =
   -0.056", "r is about 0.07-0.09", "p = 0.89", "80% power".
 - Never invent facts not in this document, including small specifics it
-  leaves out (a chess site, a file type, a date). If you don't know, say so
-  plainly and suggest emailing Daniel.
+  leaves out (a chess site, a file type, a date, what someone did on a team).
+  Only link to URLs written in this document; never build or guess one. If you
+  don't know, say so plainly and suggest emailing Daniel.
 - If asked about hiring/availability: Daniel recently finished his degree at IE
   University and is open to US-based opportunities (in New York now, willing
   to relocate within the US, and authorized to work in the US) - point to damorasoler@gmail.com for a CV.
@@ -400,60 +403,53 @@ export default async function handler(req, res) {
     city: (() => { try { return decodeURIComponent(req.headers['x-vercel-ip-city'] || '') || null; } catch { return null; } })(),
   };
   console.log('[chat]', JSON.stringify({ q: userMsg.slice(0, 120), ...geo }));
+  const extra = await retrieve(userMsg, key);
+
+  // The flash models are often overloaded or stall, so ask them all at once and keep
+  // the first good answer; the rest are cancelled. Stays inside the 60s function limit.
+  const started = Date.now(), stop = new AbortController();
+  const ask = async ([model, thinking]) => {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: AbortSignal.any([stop.signal, AbortSignal.timeout(45000)]),
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: KNOWLEDGE + extra }] },
+        contents,
+        generationConfig: { temperature: 0.75, maxOutputTokens: 1200, ...(thinking && { thinkingConfig: { thinkingLevel: thinking } }) },
+      }),
+    });
+    if (!r.ok) throw new Error(`${model} ${r.status}`);
+    const text = (await r.json())?.candidates?.[0]?.content?.parts?.map((p) => p.text).join('').trim();
+    if (!text) throw new Error(`${model} empty`);
+    return { model, text };
+  };
+  let answer = null;
+  try {
+    answer = await Promise.any([['gemini-3.8-flash', 'low'], ['gemini-3.6-flash', 'low'], ['gemini-3.5-flash', 'minimal'], ['gemini-flash-latest']].map(ask));
+  } catch (e) {
+    console.error('gemini: every model failed', (e.errors || [e]).map((x) => x.message).join('; '));
+  } finally {
+    stop.abort();
+  }
+
+  // question and answer log for the stats page; Daniel's own network (registered by
+  // opening the stats page) stays out of it
   const { url: rurl, token: rtok } = redisCreds();
   if (rurl && rtok) {
-    fetch(`${rurl}/pipeline`, {
+    const redis = (cmds) => fetch(`${rurl}/pipeline`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${rtok}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify([
-        ['LPUSH', 'chat:recent', JSON.stringify({ q: userMsg.slice(0, 160), ...geo, t: Date.now() })],
-        ['LTRIM', 'chat:recent', '0', '199'],
-      ]),
+      body: JSON.stringify(cmds),
+    }).then((r) => r.json());
+    const ipHash = createHash('sha256').update(ip).digest('hex').slice(0, 32);
+    const entry = { q: userMsg.slice(0, 160), a: answer ? answer.text.slice(0, 700) : null, model: answer?.model, ms: Date.now() - started, ...geo, t: Date.now() };
+    await redis([['HGET', 'owner:ips', ipHash]]).then(([own]) => {
+      if (own && own.result && Date.now() - Number(own.result) < 30 * 86400_000) return null;
+      return redis([['LPUSH', 'chat:recent', JSON.stringify(entry)], ['LTRIM', 'chat:recent', '0', '199']]);
     }).catch(() => {});
   }
 
-  const extra = await retrieve(userMsg, key);
-
-  try {
-    // low thinking keeps replies to seconds instead of a minute or more. The free
-    // tier allows 20 requests/day per model, so fall through several models when
-    // one errors, is out of quota, or stalls past 12s. Stay inside the 60s
-    // function limit (vercel.json) across the whole chain.
-    let r;
-    const deadline = Date.now() + 50000;
-    const low = { thinkingLevel: 'low' };
-    for (const [model, thinking] of [['gemini-3.8-flash', low], ['gemini-3.6-flash', low], ['gemini-3.5-flash', low], ['gemini-flash-latest']]) {
-      const budget = Math.min(12000, deadline - Date.now());
-      if (budget < 3000) break;
-      try {
-        r = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: AbortSignal.timeout(budget),
-            body: JSON.stringify({
-              systemInstruction: { parts: [{ text: KNOWLEDGE + extra }] },
-              contents,
-              generationConfig: { temperature: 0.75, maxOutputTokens: 1200, ...(thinking && { thinkingConfig: thinking }) },
-            }),
-          }
-        );
-      } catch (e) {
-        console.error('gemini timeout', model, e.name);
-        r = null;
-        continue;
-      }
-      if (r.ok) break;
-      console.error('gemini error', model, r.status, (await r.text()).slice(0, 300));
-    }
-    if (!r?.ok) return res.status(502).json({ error: 'brain hiccup' });
-    const data = await r.json();
-    const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join('')
-      || "I lost my train of thought there - mind asking again?";
-    return res.status(200).json({ reply: text.trim() });
-  } catch (e) {
-    console.error('chat error', e);
-    return res.status(502).json({ error: 'brain hiccup' });
-  }
+  if (!answer) return res.status(502).json({ error: 'brain hiccup' });
+  return res.status(200).json({ reply: answer.text });
 }

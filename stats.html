@@ -40,6 +40,8 @@
         .trail { margin: 0.45rem 0 0 1.1rem; padding: 0; color: #bdbdbd; font-size: 0.8rem; }
         .trail li { margin: 0.2rem 0; }
         .trail span { color: #7a7a7a; }
+        .q summary { cursor: pointer; color: #9a9a9a; font-size: 0.75rem; margin-top: 4px; }
+        .q .ans { white-space: pre-wrap; color: #cfcfcf; font-size: 0.8rem; margin: 0.4rem 0 0; }
         #dash { display: none; }
         .refresh { float: right; background: none; border: 1px solid rgba(255,255,255,0.2); color: #bbb; border-radius: 8px; padding: 0.5rem 0.9rem; min-height: 36px; font-size: 0.8rem; cursor: pointer; }
         .dash-err { color: #ff7a5c; font-size: 0.85rem; margin: -1rem 0 1.2rem; min-height: 0; }
@@ -97,7 +99,7 @@
                 <div id="visits"></div>
             </div>
             <div class="panel">
-                <h2>Recent droid questions</h2>
+                <h2>Recent droid questions and answers</h2>
                 <div id="questions"></div>
             </div>
         </div>
@@ -186,7 +188,7 @@
             }).join('') || '<p class="sub">No visits recorded yet.</p>';
 
             document.getElementById('questions').innerHTML = (d.recentQuestions || []).map((q) =>
-                `<div class="q">${esc(q.q)}<div class="meta">${esc(q.country || '?')}${q.city ? ' · ' + esc(safeDecode(q.city)) : ''} · ${new Date(q.t).toLocaleString()}</div></div>`
+                `<div class="q">${esc(q.q)}${'a' in q ? `<details><summary>${q.a ? 'Answer' : 'No answer: every model failed'}${q.ms ? ' &middot; ' + (q.ms / 1000).toFixed(1) + 's' : ''}</summary><p class="ans">${esc(q.a || '')}</p></details>` : ''}<div class="meta">${esc(q.country || '?')}${q.city ? ' · ' + esc(safeDecode(q.city)) : ''} · ${new Date(q.t).toLocaleString()}</div></div>`
             ).join('') || '<p class="sub">No questions yet.</p>';
         }
 

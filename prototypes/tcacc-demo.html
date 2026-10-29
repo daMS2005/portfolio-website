@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TC_ACC art</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Instrument+Serif&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #08090a; --ink: #f5f3ef; --muted: #9b968f; --w: min(calc(100vw - 32px), calc((100vh - 150px) * 1.6)); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+  .tag { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 9; white-space: nowrap; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: rgba(0,0,0,.65); padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); }
+  .tag a { color: var(--ink); }
+  header, .still { width: var(--w); margin: 0 auto; }
+  header { padding: 22vh 0 10vh; }
+  .kicker { font: 12px 'IBM Plex Mono', monospace; color: #ff6a3d; letter-spacing: .08em; margin: 0 0 12px; }
+  h1, h2 { font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: -0.01em; margin: 0; }
+  h1 { font-size: clamp(38px, 6vw, 76px); line-height: 1; max-width: 16ch; }
+  h2 { font-size: 36px; margin-bottom: 18px; }
+  header p:last-child { color: var(--muted); line-height: 1.6; max-width: 56ch; margin: 18px 0 0; }
+  .film { height: 720vh; }
+  .stage { position: sticky; top: 0; height: 100vh; display: grid; place-content: center; gap: 14px; }
+  .frame { width: var(--w); aspect-ratio: 16 / 10; }
+  canvas { display: block; width: 100%; height: 100%; }
+  .cap { width: var(--w); min-height: 3.2em; margin: 0; font: 12.5px/1.6 'IBM Plex Mono', monospace; color: var(--muted); }
+  .still { padding: 18vh 0 22vh; }
+  .still .cap { margin-top: 14px; }
+  @media (max-width: 700px) {
+    :root { --w: calc(100vw - 32px); }
+    .frame { aspect-ratio: 1; }
+    .cap { font-size: 11.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .film { height: auto; } .stage { position: static; height: auto; padding: 4vh 0; } }
+</style>
+</head>
+<body>
+<div class="tag">TC_ACC art · module demo · <a href="index.html">all prototypes</a></div>
+<header>
+  <p class="kicker">TC_ACC</p>
+  <h1>One case in, a finished episode out.</h1>
+  <p>Drawn from one real run. First its 28 stages, each bar the time the stage actually took. Then the cut it rendered, scrubbed shot by shot from the finished episode.</p>
+</header>
+
+<section class="film" id="film">
+  <div class="stage">
+    <div class="frame"><canvas id="chapter" aria-hidden="true"></canvas></div>
+    <p class="cap" id="cap"></p>
+  </div>
+</section>
+
+<section class="still">
+  <h2>Still</h2>
+  <div class="frame"><canvas id="still" aria-hidden="true"></canvas></div>
+  <p class="cap">Episode, Oct 2026 · the whole cut: 69 shots plus title ident and end card on V1, the soundtrack on A1 · shot 10 on the monitor</p>
+</section>
+
+<script type="module">
+import { mountFilm } from './film.js';
+import { load, drawChapter, drawStill, caption } from './tcacc-art.js';
+
+const $ = id => document.getElementById(id), state = await load();
+const cap = $('cap'), still = $('still');
+const setCap = t => { const s = caption(state, t); if (cap.textContent !== s) cap.textContent = s; };
+
+function fit(canvas) {
+  const dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  return dpr;
+}
+function paintStill() { const dpr = fit(still); drawStill(still.getContext('2d'), state, { dpr }); }
+
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const c = $('chapter'), paint = () => { const dpr = fit(c); drawChapter(c.getContext('2d'), state, 0.62, { dpr }); setCap(0.62); };
+  paint(); addEventListener('resize', paint);
+} else {
+  mountFilm($('film'), $('chapter'), (ctx, t, dpr) => { drawChapter(ctx, state, t, { dpr }); setCap(t); });
+}
+paintStill(); addEventListener('resize', paintStill);
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype C · The work as art, no film</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #f5f3ef; --muted: #9b968f; --orange: #ff5c2a; --bg: #08090a; --line: rgba(255,255,255,.09); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .proto-tag { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 9; font: 500 10.5px/1 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: rgba(0,0,0,.7); padding: 7px 11px; border-radius: 999px; border: 1px solid var(--line); }
+  .proto-tag a { color: var(--ink); }
+  nav { position: absolute; inset: 0 0 auto; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 22px 4vw; font-size: 13px; }
+  nav b { font: 400 22px/1 'Instrument Serif', serif; }
+  nav span { display: flex; gap: 24px; } nav a { color: var(--muted); text-decoration: none; }
+  .hero { min-height: 100svh; padding: 110px 4vw 7vh; display: grid; grid-template-rows: auto 1fr; gap: 6vh; }
+  .hero-top { display: flex; justify-content: space-between; align-items: end; gap: 4vw; flex-wrap: wrap; }
+  .hero h1 { margin: 0; font: 400 clamp(72px, 10vw, 160px)/0.86 'Instrument Serif', serif; letter-spacing: -0.015em; }
+  .hero-lede { max-width: 38ch; color: var(--muted); line-height: 1.6; margin: 0 0 6px; }
+  .hero-lede a { display: inline-block; margin-top: 16px; padding: 11px 18px; border-radius: 999px; background: var(--orange); color: #0a0a0a; font-weight: 600; font-size: 14px; text-decoration: none; }
+  .triptych { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; min-height: 340px; }
+  .triptych a { position: relative; display: grid; grid-template-rows: 1fr auto; gap: 10px; color: inherit; text-decoration: none; }
+  .triptych canvas { width: 100%; height: 100%; min-height: 0; display: block; border-radius: 3px; background: #08090a; }
+  .tlabel { display: flex; justify-content: space-between; font: 400 11px/1.4 'IBM Plex Mono', monospace; color: var(--muted); }
+  .tlabel b { font: 400 18px/1 'Instrument Serif', serif; color: var(--ink); letter-spacing: 0; }
+  .row { display: grid; grid-template-columns: minmax(280px, 0.8fr) 1.6fr; gap: 4vw; padding: 12vh 4vw; border-top: 1px solid var(--line); }
+  .row:nth-of-type(even) { grid-template-columns: 1.6fr minmax(280px, 0.8fr); } .row:nth-of-type(even) .copy { order: 2; }
+  .copy { align-self: end; }
+  .meta { font: 500 11px/1 'IBM Plex Mono', monospace; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  .copy h2 { font: 400 clamp(44px, 5vw, 80px)/0.95 'Instrument Serif', serif; margin: 14px 0 16px; }
+  .copy p { color: var(--muted); line-height: 1.6; max-width: 40ch; margin: 0 0 20px; }
+  .copy a { color: var(--ink); font-weight: 600; font-size: 14px; text-decoration: none; border-bottom: 1px solid var(--orange); padding-bottom: 3px; }
+  figure { margin: 0; display: grid; gap: 10px; }
+  figure canvas { width: 100%; aspect-ratio: 16 / 10; display: block; border-radius: 3px; background: #08090a; }
+  figcaption { font: 400 11px/1.5 'IBM Plex Mono', monospace; color: var(--muted); }
+  @media (max-width: 1000px) { nav span { display: none; } }
+  @media (max-width: 640px) {
+    .triptych { grid-template-columns: 1fr; } .triptych a { min-height: 240px; }
+    .row, .row:nth-of-type(even) { grid-template-columns: 1fr; padding: 9vh 5vw; } .row:nth-of-type(even) .copy { order: 0; }
+    figure canvas { aspect-ratio: 1 / 1; } nav span { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="proto-tag">Prototype C · the work as art, no film · real data · <a href="index.html">all prototypes</a></div>
+<nav><b>Daniel Mora</b><span><a href="#work">Work</a><a href="#">About</a><a href="#">Contact</a></span></nav>
+
+<header class="hero">
+  <div class="hero-top">
+    <h1>Daniel Mora</h1>
+    <p class="hero-lede">I study how language models represent information, and I build the systems around them: training runs, data pipelines and model releases.<br><a href="#work">See the work</a></p>
+  </div>
+  <div class="triptych">
+    <a href="#jepa"><canvas data-i="0" aria-hidden="true"></canvas><span class="tlabel"><b>JEPA Transformer</b><span>01</span></span></a>
+    <a href="#thesis"><canvas data-i="1" aria-hidden="true"></canvas><span class="tlabel"><b>Language models and the brain</b><span>02</span></span></a>
+    <a href="#tcacc"><canvas data-i="2" aria-hidden="true"></canvas><span class="tlabel"><b>TC_ACC</b><span>03</span></span></a>
+  </div>
+</header>
+
+<main id="work">
+  <article class="row" id="jepa">
+    <div class="copy"><span class="meta">01 · Model · weights released</span><h2>JEPA Transformer</h2><p>A self-supervised encoder turns each company's trading day into an embedding; a causal Transformer with mixture-of-experts layers reads sequences of them.</p><a href="../jepa-transformer.html">Case study</a></div>
+    <figure><canvas data-i="0" aria-hidden="true"></canvas><figcaption data-cap="0"></figcaption></figure>
+  </article>
+  <article class="row" id="thesis">
+    <div class="copy"><span class="meta">02 · Thesis · paper</span><h2>Language models and the brain</h2><p>Sparse language-model features predict brain responses to a second telling of a story. Whether the brain and the model rely on the same features is still an open question.</p><a href="../thesis.html">Case study</a></div>
+    <figure><canvas data-i="1" aria-hidden="true"></canvas><figcaption data-cap="1"></figcaption></figure>
+  </article>
+  <article class="row" id="tcacc">
+    <div class="copy"><span class="meta">03 · Agent pipeline · video</span><h2>TC_ACC</h2><p>Give it a link to a case, and it returns a finished, narrated documentary with no human steps in between.</p><a href="../tc-acc.html">Case study</a></div>
+    <figure><canvas data-i="2" aria-hidden="true"></canvas><figcaption data-cap="2"></figcaption></figure>
+  </article>
+</main>
+
+<script type="module">
+import { makeDissolver } from './film.js';
+const mods = await Promise.all([import('./jepa-art.js'), import('./thesis-art.js'), import('./tcacc-art.js')]);
+const states = await Promise.all(mods.map(m => m.load()));
+
+// render each still once into an offscreen canvas, then dither it in when it scrolls into view
+function mount(canvas) {
+  const i = +canvas.dataset.i, dpr = Math.min(devicePixelRatio || 1, 2);
+  canvas.width = Math.round(canvas.clientWidth * dpr); canvas.height = Math.round(canvas.clientHeight * dpr);
+  const art = document.createElement('canvas'); art.width = canvas.width; art.height = canvas.height;
+  mods[i].drawStill(art.getContext('2d'), states[i], { dpr });
+  const ctx = canvas.getContext('2d'), dissolve = makeDissolver(Math.round(5 * dpr));
+  const blank = c => { c.fillStyle = '#08090a'; c.fillRect(0, 0, canvas.width, canvas.height); };
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return ctx.drawImage(art, 0, 0);
+  let t0 = 0;
+  const run = now => { t0 ||= now; const t = Math.min(1, (now - t0) / 900); dissolve(ctx, blank, c => c.drawImage(art, 0, 0), t); if (t < 1) requestAnimationFrame(run); };
+  blank(ctx);
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); requestAnimationFrame(run); } }, { threshold: 0.3 }).observe(canvas);
+}
+document.querySelectorAll('canvas[data-i]').forEach(mount);
+document.querySelectorAll('[data-cap]').forEach(el => { const i = +el.dataset.cap; el.textContent = mods[i].caption(states[i], 1); });
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype B · JEPA intro film</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #f5f3ef; --muted: #9b968f; --dim: #6f6a63; --bg: #08090a; --serif: 'Instrument Serif', Georgia, serif; --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .proto-tag { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 9; white-space: nowrap; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: rgba(0,0,0,.6); padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); }
+  .proto-tag a { color: var(--ink); }
+
+  .film { position: relative; height: 820vh; }
+  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; grid-template-columns: minmax(300px, 32%) 1fr; gap: 4vw; padding: 72px 5vw 28px; }
+  .copy { position: relative; min-height: 0; }
+  .kicker { margin: 0; font: 500 11px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .when { margin-top: 3vh; display: flex; align-items: baseline; gap: 14px; }
+  .year { font: 400 clamp(88px, 9.5vw, 148px)/.86 var(--serif); letter-spacing: -.01em; font-variant-numeric: lining-nums; }
+  .month { font: 400 13px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .beats { position: relative; margin-top: 4.5vh; }
+  .beat { position: absolute; inset: 0 auto auto 0; margin: 0; max-width: 21ch; font: 400 clamp(26px, 2.35vw, 36px)/1.12 var(--serif); text-wrap: balance; opacity: 0; }
+  .beat small { display: block; margin-top: 14px; max-width: 34ch; font: 400 14px/1.6 Inter, sans-serif; color: var(--muted); text-wrap: pretty; }
+  .beat b { font-weight: 500; }
+  .end { position: absolute; left: 0; right: 0; bottom: 0; opacity: 0; }
+  .end h1 { margin: 0; font: 400 clamp(64px, 6.6vw, 112px)/.92 var(--serif); letter-spacing: -.01em; }
+  .end p { margin: 18px 0 0; max-width: 34ch; font-size: 16px; line-height: 1.6; color: var(--muted); }
+
+  figure { margin: 0; min-height: 0; display: flex; flex-direction: column; }
+  canvas { display: block; flex: 1; width: 100%; min-height: 0; }
+  figcaption { flex: none; height: 22px; padding-top: 8px; font: 400 11px/1 var(--mono); letter-spacing: .04em; color: var(--dim); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .after { padding: 16vh 7vw; max-width: 900px; color: var(--muted); line-height: 1.6; }
+  .after h2 { color: var(--ink); font: 400 44px/1.1 var(--serif); margin: 0 0 10px; }
+
+  @media (max-width: 1000px) { .stage { grid-template-columns: minmax(250px, 36%) 1fr; gap: 24px; padding: 64px 4vw 20px; } .year { font-size: 72px; } .beat { font-size: 24px; } }
+  @media (max-width: 640px) {
+    .stage { grid-template-columns: 1fr; grid-template-rows: 248px 1fr; gap: 10px; padding: 56px 16px 12px; }
+    .when { margin-top: 10px; gap: 10px; }
+    .year { font-size: 52px; }
+    .beats { margin-top: 12px; }
+    .beat { max-width: 30ch; font-size: 22px; line-height: 1.14; }
+    .beat small { margin-top: 8px; font-size: 13px; line-height: 1.5; max-width: none; }
+    .end { top: 26px; bottom: auto; }
+    .end h1 { font-size: 50px; }
+    .end p { margin-top: 12px; font-size: 14px; line-height: 1.55; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .film { height: auto; }
+    .stage { position: relative; }
+  }
+</style>
+</head>
+<body>
+<div class="proto-tag">Prototype B · JEPA intro · <a href="index.html">all prototypes</a></div>
+<section class="film" id="film">
+  <div class="stage">
+    <div class="copy">
+      <p class="kicker">Sixteen years, as the encoder saw it</p>
+      <div id="when">
+        <div class="when"><span class="year" id="year">2010</span><span class="month" id="month">Jan</span></div>
+        <div class="beats">
+          <p class="beat" data-a="0" data-b="16">Every month-end, about 1,000 US companies, as one self-supervised encoder sees them.<small>Its strongest direction is risk: calm companies left, volatile ones right. Bright: this month. Grey: every month before. In colour: <b style="color:#75d69c">Walmart</b>, <b style="color:#ff5fa2">GameStop</b>, <b style="color:#ff8a3d">Carnival</b>, <b style="color:#72b8ff">Intel</b>.</small></p>
+          <p class="beat" data-a="18" data-b="30">October 2011: the whole market slides toward volatile.<small>No month-end sits further right until 2020.</small></p>
+          <p class="beat" data-a="34" data-b="92">Then calmer years. Walmart barely leaves the calm edge.<small>From 2012 to 2017 its month-end dots stay almost entirely on the far left.</small></p>
+          <p class="beat" data-a="94" data-b="118">Early 2018: GameStop moves to the volatile edge, three years before the squeeze.<small>It stays there into 2025.</small></p>
+          <p class="beat" data-a="119" data-b="136">February 2020: Carnival crosses the map. In March, nearly every company follows.<small>March and April 2020 are the most volatile month-ends in sixteen years. Carnival stays on the volatile side into 2024.</small></p>
+          <p class="beat" data-a="144" data-b="158">2022: a slower slide that lasts the whole year.<small>Every month-end of 2022 sits right of the sixteen-year average.</small></p>
+          <p class="beat" data-a="170" data-b="199">Intel, a calm large cap in 2014, now sits with the volatile.<small>The map is a UMAP of the encoder's embeddings, rotated so risk runs left to right.</small></p>
+        </div>
+      </div>
+      <div class="end" id="end"><h1>JEPA Transformer</h1><p>A self-supervised encoder of 191 daily point-in-time features that learned the market's risk structure, not its returns.</p></div>
+    </div>
+    <figure>
+      <canvas id="c" role="img" aria-label="Map of about 1,000 US companies per month-end from 2010 to 2026, placed by the JEPA encoder's embedding; calm companies on the left, volatile on the right."></canvas>
+      <figcaption id="cap">VICReg encoder · UMAP</figcaption>
+    </figure>
+  </div>
+</section>
+<section class="after"><h2>01 · Inputs</h2><p>The case study continues here exactly as it is today.</p></section>
+
+<script type="module">
+import { mountFilm, seg, monthLabel } from './film.js';
+import { load, drawChapter, caption } from './jepa-art.js';
+const $ = id => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const s = await load();
+const fade = 0.012, tEnd = s.tAt(s.M - 1);
+const parts = [...document.querySelectorAll('.beat')].map(el => {
+  const a = +el.dataset.a, b = +el.dataset.b, ta = a ? s.tAt(a) : -1, tb = s.tAt(b);
+  return { el, v: -1, at: t => Math.min(seg(t, ta - fade, ta), 1 - seg(t, tb, tb + fade)) };
+});
+parts.push({ el: $('when'), v: -1, at: t => 1 - seg(t, tEnd + 0.004, tEnd + 0.03) }, { el: $('end'), v: -1, at: t => seg(t, tEnd + 0.01, tEnd + 0.045) });
+let shown = '';
+const kick = mountFilm($('film'), $('c'), (ctx, p, dpr) => {
+  const t = reduce ? 1 : p;
+  drawChapter(ctx, s, t, { dpr });
+  const d = s.dates[Math.round(s.monthAt(t))];
+  if (d !== shown) { shown = d; $('year').textContent = d.slice(0, 4); $('month').textContent = monthLabel(d).slice(0, 3); $('cap').textContent = caption(s, t); }
+  for (const P of parts) {
+    const v = Math.round(P.at(t) * 100) / 100;
+    if (v !== P.v) { P.v = v; P.el.style.opacity = v; P.el.style.visibility = v ? 'visible' : 'hidden'; }
+  }
+});
+document.fonts.ready.then(kick);
+</script>
+</body>
+</html>

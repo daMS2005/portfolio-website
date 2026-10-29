@@ -7,11 +7,10 @@
   const sid = Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const start = Date.now();
   const params = new URLSearchParams(location.search);
-  const bg = document.documentElement.dataset.bg; // homepage background A/B variant, see background.js
 
   function send(e, m, extra) {
     try {
-      const body = JSON.stringify(Object.assign({ e, m, sid, bg }, extra || {}));
+      const body = JSON.stringify(Object.assign({ e, m, sid }, extra || {}));
       if (navigator.sendBeacon) {
         navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));
       } else {

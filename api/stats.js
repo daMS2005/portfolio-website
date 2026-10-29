@@ -101,7 +101,6 @@ export default async function handler(req, res) {
       [['LRANGE', 'visits:recent', '0', '999']],
       // whoever opens the dashboard is Daniel: api/track.js skips this network for 30 days
       [['HSET', 'owner:ips', ipHash(ip), String(now)]],
-      [['HGETALL', 'ab:bg']],
     ];
     const flat = await redis(groups.flat());
     let at = 0;
@@ -154,7 +153,6 @@ export default async function handler(req, res) {
       sectionViews: data['section:views'],
       sectionSeconds: data['section:seconds'],
       daily,
-      ab: toObj(out[KEYS.length + 5][0]),
       recentQuestions,
       recentVisits,
     });

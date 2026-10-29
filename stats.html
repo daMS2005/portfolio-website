@@ -92,11 +92,6 @@
             <div class="kpis" id="kpis"></div>
 
             <div class="panel">
-                <h2>A/B test: homepage background (all time)</h2>
-                <table id="ab"></table>
-            </div>
-
-            <div class="panel">
                 <h2>Events per day</h2>
                 <div class="days" id="days"></div>
             </div>
@@ -183,14 +178,6 @@
                 ['Chat messages', s.chatMessages || 0],
             ].map(([l, v]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('');
 
-            // per variant: averages over finished visits, clicks per view
-            const ab = d.ab || {}, n = (k) => Number(ab[k] || 0);
-            document.getElementById('ab').innerHTML = '<tr><td></td><td class="num">Views</td><td class="num">Time</td><td class="num">30s+</td><td class="num">Scroll</td><td class="num">Clicks/view</td></tr>'
-                + [['blobs', 'Lava blobs (live site)'], ['embers', 'Embers']].map(([k, label]) => {
-                    const views = n(k + ':views'), ended = Math.max(1, n(k + ':ended'));
-                    return `<tr><td>${label}</td><td class="num">${views}</td><td class="num">${mins(Math.round(n(k + ':seconds') / ended))}</td><td class="num">${Math.round((n(k + ':engaged') / ended) * 100)}%</td><td class="num">${Math.round(n(k + ':depth') / ended)}%</td><td class="num">${views ? (n(k + ':clicks') / views).toFixed(2) : '0'}</td></tr>`;
-                }).join('');
-
             fillTable('pages', d.pages);
             fillTable('clicks', d.clicks, null, 40);
             fillTable('sources', d.sources);
@@ -234,7 +221,7 @@
             document.getElementById('visits').innerHTML = visitors(d.recentVisits || []).filter((g) => !f || (g.vid || '').startsWith(f)).map((g) => {
                 const v = g.pages[0], secs = g.pages.reduce((n, p) => n + pageInfo(p).secs, 0);
                 return `<div class="q">${chip(g.vid)}<b>${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')}</b> &middot; via ${esc(v.ref || v.source)} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)} &middot; ${g.pages.length} page${g.pages.length > 1 ? 's' : ''} &middot; ${g.pages.some((p) => (p.steps || []).length) ? dur(secs) : 'no detail'}
-                    <div class="meta">${[v.vw + '×' + v.vh + (v.scr ? ' (screen ' + v.scr + ')' : ''), v.lang, v.tz, v.dark && 'dark mode', v.bg && v.bg + ' background', new Date(v.t).toLocaleString()].filter(Boolean).map(esc).join(' &middot; ')}</div>
+                    <div class="meta">${[v.vw + '×' + v.vh + (v.scr ? ' (screen ' + v.scr + ')' : ''), v.lang, v.tz, v.dark && 'dark mode', new Date(v.t).toLocaleString()].filter(Boolean).map(esc).join(' &middot; ')}</div>
                     <ol class="trail">${g.pages.map((p) => { const i = pageInfo(p); return `<li>${esc(p.page || '/')} <span>&middot; ${i.known ? dur(i.secs) + (i.ended ? '' : '+') + (i.depth ? ' &middot; reached ' + i.depth + '% of the page' : '') : 'no step-by-step record (visited before Oct 29)'}</span>${i.actions.length ? `<ol class="steps">${i.actions.map((x) => `<li><b>+${dur(x.at)}</b>${esc(x.text)}</li>`).join('')}</ol>` : ''}</li>`; }).join('')}</ol></div>`;
             }).join('') || `<p class="sub">${f ? 'No visits for that visitor code.' : 'No visits recorded yet.'}</p>`;
 

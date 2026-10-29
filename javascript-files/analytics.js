@@ -40,9 +40,11 @@
   // ---- scroll depth funnel ----
   const marks = [25, 50, 75, 100];
   const hit = new Set();
+  let maxDepth = 0; // deepest point reached, sent with the end of the visit
   function onScroll() {
     const h = document.documentElement.scrollHeight - innerHeight;
     const pct = h > 0 ? Math.min(100, Math.round((scrollY / h) * 100)) : 100;
+    maxDepth = Math.max(maxDepth, pct);
     for (const m of marks) {
       if (pct >= m && !hit.has(m)) { hit.add(m); send('scroll', String(m)); }
     }
@@ -53,12 +55,15 @@
   const dwell = {};
   let currentSection = null;
   let sectionEnter = Date.now();
-  const sections = [...document.querySelectorAll('section[id]')];
+  // homepage sections by id, case-study sections by their numbered label ("01 · Inputs")
+  const sections = [...document.querySelectorAll('section[id], .detail-section')];
+  const nameOf = (s) => s.id || (s.querySelector('.detail-section-header span, h2') || {}).textContent?.trim().slice(0, 40) || 'section';
   if ('IntersectionObserver' in window) {
+    // a section counts once it crosses the middle of the screen, however tall it is
     const io = new IntersectionObserver((entries) => {
       for (const en of entries) {
-        if (en.isIntersecting && en.intersectionRatio > 0.4) {
-          const id = en.target.id;
+        if (en.isIntersecting) {
+          const id = nameOf(en.target);
           if (id !== currentSection) {
             if (currentSection) {
               dwell[currentSection] = (dwell[currentSection] || 0) + Math.round((Date.now() - sectionEnter) / 1000);
@@ -69,7 +74,7 @@
           }
         }
       }
-    }, { threshold: [0.4] });
+    }, { rootMargin: '-45% 0px -54% 0px' });
     sections.forEach((s) => io.observe(s));
   }
 
@@ -108,7 +113,7 @@
     if (currentSection) {
       dwell[currentSection] = (dwell[currentSection] || 0) + Math.round((Date.now() - sectionEnter) / 1000);
     }
-    send('visit-end', String(Math.round((Date.now() - start) / 1000)), { dwell });
+    send('visit-end', String(Math.round((Date.now() - start) / 1000)), { dwell, depth: maxDepth });
   }
   addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') finish(); });
   addEventListener('pagehide', finish);

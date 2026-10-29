@@ -208,7 +208,7 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
     if (!q) return;
     input.value = '';
     addMsg('user', q, true);
-    window.track && window.track('chat-message');
+    window.track && window.track('chat-message', '', { q: q.slice(0, 160) });
     api.react?.('happy');
     const pending = addMsg('model', 'Thinking...', true);
     try {

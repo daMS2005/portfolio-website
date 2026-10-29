@@ -131,6 +131,8 @@ export default async function handler(req, res) {
     const step = { t: now, e: ev };
     if (m != null && m !== '') step.m = String(m).slice(0, 60);
     if (typeof b.label === 'string' && b.label) step.l = b.label.slice(0, 50);
+    if (typeof b.q === 'string' && b.q) step.q = b.q.slice(0, 160); // a question asked to MORA-01
+    if (ev === 'visit-end' && Number.isFinite(Number(b.depth))) step.d = Math.max(0, Math.min(100, Math.round(Number(b.depth))));
     cmds.push(['RPUSH', `s:${sid}`, JSON.stringify(step)], ['LTRIM', `s:${sid}`, '-200', '-1'], ['EXPIRE', `s:${sid}`, '2592000']);
   }
 
@@ -140,7 +142,7 @@ export default async function handler(req, res) {
     cmds.push(['HINCRBY', 'clicks:total', target, '1']);
   }
   if (ev === 'scroll' && m) cmds.push(['HINCRBY', 'scroll:total', String(m), '1']);
-  if (ev === 'section' && m) cmds.push(['HINCRBY', 'section:views', String(m).slice(0, 24), '1']);
+  if (ev === 'section' && m) cmds.push(['HINCRBY', 'section:views', String(m).slice(0, 40), '1']);
 
   if (ev === 'visit-end') {
     const secs = Math.max(0, Math.min(3600, Number(m) || 0));
@@ -152,7 +154,7 @@ export default async function handler(req, res) {
     if (b.dwell && typeof b.dwell === 'object') {
       for (const [sec, val] of Object.entries(b.dwell).slice(0, 12)) {
         const v = Math.max(0, Math.min(1800, Number(val) || 0));
-        if (v > 0) cmds.push(['HINCRBY', 'section:seconds', String(sec).slice(0, 24), String(v)]);
+        if (v > 0) cmds.push(['HINCRBY', 'section:seconds', String(sec).slice(0, 40), String(v)]);
       }
     }
   }

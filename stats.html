@@ -40,6 +40,9 @@
         .trail { margin: 0.45rem 0 0 1.1rem; padding: 0; color: #bdbdbd; font-size: 0.8rem; }
         .trail li { margin: 0.2rem 0; }
         .trail span { color: #7a7a7a; }
+        .steps { margin: 0.25rem 0 0.4rem 0.2rem; padding: 0; list-style: none; color: #9a9a9a; font-size: 0.76rem; }
+        .steps li { margin: 0.12rem 0; }
+        .steps b { display: inline-block; min-width: 3.6em; color: #6f6f6f; font-weight: 400; font-variant-numeric: tabular-nums; }
         .q summary { cursor: pointer; color: #9a9a9a; font-size: 0.75rem; margin-top: 4px; }
         .q .ans { white-space: pre-wrap; color: #cfcfcf; font-size: 0.8rem; margin: 0.4rem 0 0; }
         #dash { display: none; }
@@ -182,9 +185,9 @@
 
             document.getElementById('visits').innerHTML = visitors(d.recentVisits || []).map((g) => {
                 const v = g.pages[0], secs = g.pages.reduce((n, p) => n + pageInfo(p).secs, 0);
-                return `<div class="q"><b>${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')}</b> &middot; via ${esc(v.ref || v.source)} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)} &middot; ${g.pages.length} page${g.pages.length > 1 ? 's' : ''} &middot; ${dur(secs)}
+                return `<div class="q"><b>${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')}</b> &middot; via ${esc(v.ref || v.source)} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)} &middot; ${g.pages.length} page${g.pages.length > 1 ? 's' : ''} &middot; ${g.pages.some((p) => (p.steps || []).length) ? dur(secs) : 'no detail'}
                     <div class="meta">${[v.vw + '×' + v.vh + (v.scr ? ' (screen ' + v.scr + ')' : ''), v.lang, v.tz, v.dark && 'dark mode', new Date(v.t).toLocaleString()].filter(Boolean).map(esc).join(' &middot; ')}</div>
-                    <ol class="trail">${g.pages.map((p) => { const i = pageInfo(p); return `<li>${esc(p.page || '/')} <span>&middot; ${dur(i.secs)}${i.scroll ? ' &middot; scrolled ' + i.scroll + '%' : ''}${i.sections.length ? ' &middot; saw ' + esc(i.sections.join(', ')) : ''}${i.clicks.length ? ' &middot; clicked ' + esc(i.clicks.join(', ')) : ''}</span></li>`; }).join('')}</ol></div>`;
+                    <ol class="trail">${g.pages.map((p) => { const i = pageInfo(p); return `<li>${esc(p.page || '/')} <span>&middot; ${i.known ? dur(i.secs) + (i.ended ? '' : '+') + (i.depth ? ' &middot; reached ' + i.depth + '% of the page' : '') : 'no step-by-step record (visited before Oct 29)'}</span>${i.actions.length ? `<ol class="steps">${i.actions.map((x) => `<li><b>+${dur(x.at)}</b>${esc(x.text)}</li>`).join('')}</ol>` : ''}</li>`; }).join('')}</ol></div>`;
             }).join('') || '<p class="sub">No visits recorded yet.</p>';
 
             document.getElementById('questions').innerHTML = (d.recentQuestions || []).map((q) =>
@@ -205,15 +208,31 @@
             return groups.reverse();
         }
 
-        // one page load's timeline: time on page, deepest scroll, sections seen, what was clicked
+        // one page load, step by step: what the visitor reached, clicked, asked and when they left
+        const SECTION = { home: 'the intro', aboutMe: 'About', research: 'Flagship work', projects: 'Additional work', skills: 'Skills', websites: 'Websites', contact: 'Contact' };
+        const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+        function describe(x) {
+            switch (x.e) {
+                case 'pageview': return null;
+                case 'section': return 'reached ' + (SECTION[x.m] || x.m);
+                case 'scroll': return 'scrolled past ' + x.m + '%';
+                case 'chat-open': return 'opened MORA-01';
+                case 'chat-message': return 'asked MORA-01: "' + (x.q || '…') + '"';
+                case 'tcacc-video-play': return 'played the video ' + x.m;
+                case 'video-request-sent': return 'sent a documentary request';
+                case 'visit-end': return 'left' + (x.d != null ? ' at ' + x.d + '% of the page' : '');
+                default: return x.l ? 'clicked "' + x.l + '"' + (host(x.m) ? ' (' + host(x.m) + ')' : '') : x.e + (x.m ? ' ' + x.m : '');
+            }
+        }
         function pageInfo(v) {
-            const st = v.steps || [], end = st.find((x) => x.e === 'visit-end');
-            const skip = ['pageview', 'section', 'scroll', 'visit-end'];
+            const st = v.steps || [], end = st.find((x) => x.e === 'visit-end'), t0 = st.length ? st[0].t : v.t;
+            const last = st.length ? Math.round((st[st.length - 1].t - t0) / 1000) : 0;
             return {
-                secs: end ? Number(end.m) || 0 : 0,
-                scroll: Math.max(0, ...st.filter((x) => x.e === 'scroll').map((x) => Number(x.m) || 0)),
-                sections: [...new Set(st.filter((x) => x.e === 'section').map((x) => x.m))],
-                clicks: st.filter((x) => !skip.includes(x.e) && x.l).map((x) => x.l),
+                known: st.length > 0,
+                ended: Boolean(end), // no end signal when a phone browser is closed abruptly
+                secs: end ? Number(end.m) || 0 : last,
+                depth: end && end.d != null ? end.d : Math.max(0, ...st.filter((x) => x.e === 'scroll').map((x) => Number(x.m) || 0)),
+                actions: st.map((x) => ({ at: Math.max(0, Math.round((x.t - t0) / 1000)), text: describe(x) })).filter((x) => x.text),
             };
         }
 

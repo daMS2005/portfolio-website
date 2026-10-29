@@ -58,7 +58,7 @@
         <div id="dash">
             <button class="refresh" id="refresh">Refresh</button>
             <h1>Site Stats</h1>
-            <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; last 14 days</p>
+            <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; last 14 days &middot; this browser isn't counted</p>
             <p class="dash-err" id="dashErr" aria-live="polite"></p>
 
             <div class="kpis" id="kpis"></div>
@@ -197,6 +197,7 @@
                 const pw = document.getElementById('pw').value;
                 const data = await load(key ? { key } : { password: pw });
                 if (!key) sessionStorage.setItem('statsPw', pw);
+                try { localStorage.setItem('mora-notrack', '1'); } catch (e) { /* private mode */ }
                 render(data);
             } catch (e) { out.textContent = e.message; }
             finally { btn.disabled = false; btn.textContent = label; }

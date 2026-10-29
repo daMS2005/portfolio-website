@@ -97,18 +97,28 @@
         .jt-seg button[aria-pressed="true"] { border-color: var(--green); background: rgba(117,214,156,0.14); color: #fff; }
         .jt-map-date { margin-left: auto; color: #fff; font-size: 1.35rem; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
         .jt-map-range { width: 100%; margin: 0 0 0.8rem; accent-color: var(--green); }
-        .jt-map-stage { position: relative; aspect-ratio: 16 / 10; max-height: 540px; width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #07090b; overflow: hidden; }
-        .jt-map-stage canvas { display: block; width: 100%; height: 100%; }
-        .jt-map-axis { position: absolute; white-space: nowrap; color: rgba(245,243,239,0.55); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; pointer-events: none; }
-        .jt-map-axis.x { left: 50%; bottom: 0.5rem; transform: translateX(-50%); }
-        .jt-map-axis.y { left: 0.4rem; top: 50%; writing-mode: vertical-rl; transform: translateY(-50%) rotate(180deg); }
+        .jt-map-body { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 0.8rem; }
+        .jt-map-stage { position: relative; height: min(72vh, 620px); min-height: 380px; border: 1px solid var(--line); border-radius: 8px; background: #07090b; overflow: hidden; }
+        .jt-map-stage canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
         .jt-map-status { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 0.9rem; }
         .jt-map-note { margin: 0.8rem 0 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
         .jt-map-note b { color: #fff; }
-        .jt-map-legend[hidden] { display: none; }
         .jt-map-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0.35rem 1rem; margin: 0.9rem 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 0.8rem; }
         .jt-map-legend i { display: inline-block; width: 9px; height: 9px; margin-right: 0.45rem; border-radius: 50%; vertical-align: 0; }
-        @media (max-width: 640px) { .jt-map-stage { aspect-ratio: 1 / 1; } .jt-map-date { margin-left: 0; width: 100%; } }
+        .jt-map-cos { display: flex; flex-direction: column; gap: 0.25rem; margin: 0; padding: 0; list-style: none; max-height: min(72vh, 620px); overflow-y: auto; }
+        .jt-map-cos button { width: 100%; padding: 0.3rem 0.55rem; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--muted); font: inherit; font-size: 0.8rem; text-align: left; cursor: pointer; }
+        .jt-map-cos button b { display: inline-block; min-width: 3.4em; color: #f5f3ef; font-weight: 700; }
+        .jt-map-cos button:hover, .jt-map-cos button:focus-visible { border-color: var(--line); color: #f5f3ef; }
+        .jt-map-cos button[aria-pressed="true"] { border-color: var(--green); background: rgba(117,214,156,0.12); color: #fff; }
+        .jt-map-cos button[aria-pressed="true"] b { color: var(--green); }
+        @media (max-width: 760px) {
+            .jt-map-body { grid-template-columns: 1fr; }
+            .jt-map-stage { height: auto; aspect-ratio: 5 / 6; min-height: 0; }
+            .jt-map-cos { flex-direction: row; flex-wrap: wrap; max-height: none; }
+            .jt-map-cos button { width: auto; } .jt-map-cos button b { min-width: 0; } .jt-map-cos button span { display: none; }
+            .jt-map-legend { grid-template-columns: 1fr 1fr; font-size: 0.75rem; }
+            .jt-map-date { margin-left: 0; width: 100%; }
+        }
         #jtMapPlay { min-width: 6.5em; }
         .jt-map-bar button:disabled, .jt-seg button:disabled, .jt-map-range:disabled { opacity: 0.5; cursor: progress; }
         .jt-map-bar button:active:not(:disabled), .jt-seg button:active:not(:disabled) { transform: scale(0.97); }
@@ -494,7 +504,7 @@
 
         <section class="detail-section">
             <div class="detail-section-header"><span>07 · Embedding space</span><h2>What the encoder learned, month by month</h2></div>
-            <p class="detail-intro">Each dot is one company on the last trading day of a month, from 2010 to 2026: 1,000 a month, sampled from roughly 2,500 US-listed stocks. The encoder sorts them into twelve clusters, drawn as islands placed by forecast volatility (calmer left, riskier right) and 12-month momentum (winners up, losers down). Inside an island the biggest companies sit at the centre. Play it and watch companies move between islands: the stress clusters swell in early 2020 and again in 2022.</p>
+            <p class="detail-intro">Each dot is one company on the last trading day of a month, from 2010 to 2026: 1,000 a month, sampled from roughly 2,500 US-listed stocks. Positions come straight from the encoder, a UMAP of its embeddings turned so volatility runs left to right, and colour shows which of its twelve clusters a company falls into that month. Bright dots are the current month; the grey haze is every month before it. Play it to watch the whole market slide right in late 2011, March 2020 and through 2022, and pick a company to trace its path.</p>
 
             <div class="jt-panel jt-map" id="jtMap">
                 <div class="jt-map-bar">
@@ -506,14 +516,15 @@
                     <span class="jt-map-date" id="jtMapDate" aria-live="off">—</span>
                 </div>
                 <input class="jt-map-range" id="jtMapRange" type="range" min="0" max="201" value="0" step="1" aria-label="Month">
-                <div class="jt-map-stage">
-                    <canvas id="jtMapCanvas" role="img" aria-label="Animated map of twelve company clusters, placed by volatility and momentum, month by month from 2010 to 2026"></canvas>
-                    <span class="jt-map-axis x">← calmer · forecast volatility · riskier →</span>
-                    <span class="jt-map-axis y">← losers · 12-month momentum · winners →</span>
-                    <div class="jt-map-status" id="jtMapStatus">Loading the map…</div>
+                <div class="jt-map-body">
+                    <div class="jt-map-stage">
+                        <canvas id="jtMapCanvas" role="img" aria-label="Map of about 1,000 US companies per month-end from 2010 to 2026, placed by the encoder's embedding, calmer on the left and more volatile on the right, with well-known companies labelled and the market's average position below"></canvas>
+                        <div class="jt-map-status" id="jtMapStatus">Loading the map…</div>
+                    </div>
+                    <ul class="jt-map-cos" id="jtMapCos" aria-label="Trace a company"></ul>
                 </div>
+                <ul class="jt-map-legend" id="jtMapLegend" aria-label="Clusters"></ul>
                 <p class="jt-map-note" id="jtMapNote"></p>
-                <ul class="jt-map-legend" id="jtMapLegend" hidden></ul>
             </div>
             <p class="detail-intro" style="margin-top:1rem">The encoders capture strong risk and volatility structure, and it holds for companies kept out of training. On their own they are a map of the market, not a trading signal.</p>
         </section>
@@ -528,7 +539,7 @@
 
     <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
     <script src="javascript-files/main.js?v=access-v2"></script>
-    <script src="javascript-files/jepa-map.js?v=10" defer></script>
+    <script src="javascript-files/jepa-map.js?v=15" defer></script>
     <script src="javascript-files/analytics.js" defer></script>
 </body>
 </html>

@@ -2,6 +2,8 @@
 // A session id lives in a JS variable for the life of the tab - it is never
 // written to cookies/localStorage, so no consent banner is required.
 (function () {
+  // Daniel's own browsers opt out: opening the stats page sets this flag on that device only.
+  try { if (localStorage.getItem('mora-notrack')) return; } catch (err) { /* storage blocked: count as usual */ }
   const sid = Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const start = Date.now();
   const params = new URLSearchParams(location.search);

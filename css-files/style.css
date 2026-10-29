@@ -1165,11 +1165,6 @@ footer {
     gap: 0.65rem;
   }
 
-  .github-link {
-    width: 34px;
-    height: 34px;
-  }
-
   .nav-toggle span {
     position: absolute;
     width: 1px;
@@ -1357,28 +1352,7 @@ footer {
     gap: 1rem;
 }
 
-.github-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.github-profile-pic {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.github-link:hover {
-    transform: scale(1.1);
-}
-
+.github-nav,
 .linkedin-nav,
 .hf-nav {
     color: #fff;
@@ -1404,6 +1378,7 @@ footer {
     transform: scale(1.55);
 }
 
+.github-nav:hover,
 .linkedin-nav:hover,
 .hf-nav:hover {
     color: #ff4500;
@@ -1415,11 +1390,7 @@ footer {
         gap: 0.5rem;
     }
     
-    .github-link {
-        width: 32px;
-        height: 32px;
-    }
-    
+    .github-nav,
     .linkedin-nav,
     .hf-nav {
         font-size: 1.2rem;

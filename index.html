@@ -13,7 +13,7 @@
     <meta property="og:image" content="/images/og-robot.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="css-files/style.css?v=audit-v1">
-    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=art-v1">
+    <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=art-v2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script type="importmap">
     {
@@ -147,10 +147,39 @@
                             <a class="project-action project-action-icon" href="https://github.com/daMS2005/jepa-transformer-model" target="_blank" rel="noopener noreferrer" aria-label="Open the model repository on GitHub" title="Model repository on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <figure class="flagship-visual flagship-art">
-                        <img src="images/flagship-jepa.webp" alt="Every company-month from 2010 to 2026 placed where the JEPA encoder puts it, calm companies on the left and volatile ones on the right; the calmest month, August 2014, is marked in blue and the most volatile, April 2020, in orange" width="1320" height="1320" loading="lazy">
-                        <figcaption>VICReg encoder &middot; UMAP of 201,560 company-months, 2010&ndash;2026</figcaption>
-                    </figure>
+                    <div class="flagship-visual thesis-visual">
+                        <span class="visual-label">Pretrain, freeze, forecast</span>
+                        <div class="dg" role="img" aria-label="Diagram: ArgusJEPA learns an embedding per asset-day by matching an EMA teacher from a masked view; the frozen embeddings form a sequence that CassaFormer turns into a multi-horizon Student-t forecast; between the stages, a map of every company-month the frozen encoder embedded from 2010 to 2026, coloured by its twelve clusters, calmer companies on the left">
+                            <div class="dg-stage">
+                                <header><b>Stage I &middot; ArgusJEPA</b><span>self-supervised &middot; one day</span></header>
+                                <div class="dg-row">
+                                    <div class="dg-node">Asset-day features<small>prices, filings, macro, news</small></div>
+                                    <i class="dg-link"></i>
+                                    <div class="dg-node dg-accent">Context encoder<small>half the features masked</small></div>
+                                    <i class="dg-link dg-link-loss"><em>L1</em></i>
+                                    <div class="dg-node">EMA teacher<small>full view, latent target</small></div>
+                                </div>
+                            </div>
+                            <div class="dg-bridge dg-bridge-art">
+                                <img class="dg-art" src="images/dg-jepa-map.webp" alt="" width="624" height="561" loading="lazy">
+                                <div>
+                                <span><i class="fas fa-snowflake" aria-hidden="true"></i> Freeze &middot; one embedding per day</span>
+                                <small>Every company-month, 2010&ndash;2026, as the frozen encoder places it, coloured by its 12 clusters. Calmer left, more volatile right.</small>
+                                <span class="dg-tokens"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b>t</b></span>
+                                </div>
+                            </div>
+                            <div class="dg-stage">
+                                <header><b>Stage II &middot; CassaFormer</b><span>supervised &middot; sequence of days</span></header>
+                                <div class="dg-row">
+                                    <div class="dg-node">Causal attention<small>RoPE, QK&#8209;RMSNorm</small></div>
+                                    <i class="dg-link"></i>
+                                    <div class="dg-node dg-accent">Mixture of experts<small>Triton kernel</small></div>
+                                    <i class="dg-link"></i>
+                                    <div class="dg-node">Student-t head<small>multi-horizon location, scale, tails</small></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </article>
                 <article class="flagship-card flagship-thesis">
                     <div class="flagship-copy">
@@ -168,10 +197,35 @@
                             <a class="project-action project-action-icon" href="https://github.com/daMS2005/sparse-feature-correspondence" target="_blank" rel="noopener noreferrer" aria-label="Open the code and reproducibility materials on GitHub" title="Code and reproducibility materials on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <figure class="flagship-visual flagship-art">
-                        <img src="images/flagship-thesis.webp" alt="The group-mean brain response of 59 listeners across 200 cortical parcels, in orange, above the 256 sparse-autoencoder features of Gemma 2 2B, in blue, on the same 7:38 story timeline" width="1320" height="1320" loading="lazy">
-                        <figcaption>Top: cleaned BOLD, 59 listeners, 200 parcels &middot; bottom: 256 Gemma 2 2B SAE features &middot; one 7:38 story</figcaption>
-                    </figure>
+                    <div class="flagship-visual thesis-visual">
+                        <span class="visual-label">Cross-description transfer</span>
+                        <div class="dg" role="img" aria-label="Diagram: a sparse feature bank selected on one spoken description is frozen and transferred to a second description; it still predicts both fMRI and the language model, but the comparison of how each relies on the features is inconclusive. The feature bank box shows the 256 features over the story, the fMRI box the brain response of 200 parcels, and the verdict the observed agreement among 199 retimed refits">
+                            <div class="dg-stage">
+                                <header><b>Select, then freeze</b><span>source description only</span></header>
+                                <div class="dg-row dg-row-2">
+                                    <div class="dg-node">Description A<small>spoken story, 59 listeners</small></div>
+                                    <i class="dg-link"></i>
+                                    <div class="dg-node dg-accent">SAE feature bank<img class="dg-art" src="images/dg-thesis-features.webp" alt="" width="440" height="116" loading="lazy"><small>256 feature IDs, locked</small></div>
+                                </div>
+                            </div>
+                            <div class="dg-bridge">
+                                <span><i class="fas fa-right-left" aria-hidden="true"></i> Transfer unchanged to description B: same events, new words</span>
+                            </div>
+                            <div class="dg-stage">
+                                <header><b>Predict both targets</b><span>held-out description</span></header>
+                                <div class="dg-row dg-row-pair">
+                                    <div class="dg-node">Brain &middot; fMRI<img class="dg-art" src="images/dg-thesis-bold.webp" alt="" width="440" height="116" loading="lazy"><small>200 parcels, r = .07&ndash;.09</small></div>
+                                    <div class="dg-node">Model &middot; LM hidden state<small>prediction transfers</small></div>
+                                </div>
+                                <div class="dg-verdict">
+                                    <span>Same features, same order?</span>
+                                    <b>&rho; = &minus;.06</b>
+                                    <img class="dg-art" src="images/dg-thesis-null.webp" alt="" width="880" height="150" loading="lazy">
+                                    <em>Orange: observed. Grey: 199 retimed refits, 160 of them at least as high. Inconclusive: the test rarely detects planted agreement.</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </article>
 
                 <article class="flagship-card flagship-tcacc">
@@ -189,8 +243,7 @@
                             <a class="project-action project-action-icon" href="https://github.com/daMS2005/TC_ACC_PUBLIC" target="_blank" rel="noopener noreferrer" aria-label="Open the TC_ACC public excerpt on GitHub" title="Public excerpt on GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <figure class="flagship-visual flagship-art">
-                        <img src="images/flagship-tcacc.webp" alt="A frame of the October 2026 episode as an orange halftone, above the episode's 69 shots on one timeline, coloured by source, and its audio track" width="1320" height="950" loading="lazy">
+                    <div class="flagship-visual thesis-visual">
                         <ol class="pipeline-strip" aria-label="TC_ACC production pipeline: research, story, assets, preproduction review gate, animation, edit review gate, publishing">
                             <li>Research<small>5 stages</small></li>
                             <li>Story<small>4 stages</small></li>
@@ -200,8 +253,11 @@
                             <li class="pipeline-gate" title="Showrunner review gate"><span>Gate</span></li>
                             <li>Publish<small>8 stages</small></li>
                         </ol>
-                        <figcaption>October 2026 episode &middot; 69 shots on one timeline, coloured by source</figcaption>
-                    </figure>
+                        <figure class="flagship-art">
+                            <img src="images/flagship-tcacc.webp" alt="A frame of the October 2026 episode as an orange halftone, above the episode's 69 shots on one timeline, coloured by source, and its audio track" width="1320" height="950" loading="lazy">
+                            <figcaption>Output &middot; the October 2026 episode &middot; 69 shots on one timeline, coloured by source</figcaption>
+                        </figure>
+                    </div>
                 </article>
 
             </div>

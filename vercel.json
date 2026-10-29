@@ -48,6 +48,8 @@
     }
   ],
   "routes": [
+    { "src": "/(.*)\\.(png|jpe?g|webp|gif|svg|ico|mp4|glb|json)", "headers": { "cache-control": "public, max-age=86400, stale-while-revalidate=604800" }, "continue": true },
+    { "src": "/(css-files/.*|javascript-files/(?!analytics\\.js$).*)", "headers": { "cache-control": "public, max-age=86400, stale-while-revalidate=604800" }, "continue": true },
     {
       "src": "/stats/",
       "dest": "/stats.html"

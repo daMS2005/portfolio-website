@@ -14,11 +14,11 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="css-files/style.css?v=lava-v1">
     <link rel="stylesheet" href="css-files/portfolio-refresh.css?v=flagship-v12">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css-files/icons.css?v=1">
     <script type="importmap">
     {
       "imports": {
-        "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+        "three": "https://unpkg.com/three@0.180.0/build/three.module.min.js",
         "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
       }
     }
@@ -44,7 +44,7 @@
                 <div class="logo">DM</div>
                 <div class="social-nav">
                     <a href="https://github.com/daMS2005" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="GitHub profile">
-                        <img src="images/88565349.jpeg" alt="GitHub Profile" class="github-profile-pic">
+                        <img src="images/88565349.webp" alt="GitHub Profile" class="github-profile-pic">
                     </a>
                     <a href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" rel="noopener noreferrer" class="linkedin-nav" aria-label="LinkedIn profile">
                         <i class="fab fa-linkedin"></i>
@@ -112,7 +112,7 @@
                     </div>
                 </div>
                 <div class="about-image">
-                    <img src="images/profile.webp" alt="Daniel Mora - AI Systems and Research Engineer" class="profile-image" width="800" height="1066" loading="lazy">
+                    <img src="images/profile.webp" alt="Daniel Mora - AI Systems and Research Engineer" class="profile-image" width="800" height="1066" loading="lazy" decoding="async">
                     <div class="image-backdrop"></div>
                 </div>
             </div>
@@ -238,7 +238,7 @@
                         </div>
                     </div>
                     <div class="flagship-visual tcacc-visual">
-                        <img src="images/tcacc-episode-stills.jpg" alt="A montage of documentary imagery produced for a TC_ACC episode" loading="lazy" width="1280" height="720">
+                        <img src="images/tcacc-episode-stills.jpg" alt="A montage of documentary imagery produced for a TC_ACC episode" loading="lazy" decoding="async" width="1280" height="720">
                         <ol class="pipeline-strip" aria-label="TC_ACC production pipeline: research, story, assets, preproduction review gate, animation, edit review gate, publishing">
                             <li>Research<small>5 stages</small></li>
                             <li>Story<small>4 stages</small></li>
@@ -386,7 +386,7 @@
                         <div><span class="work-type">C++ systems &middot; game</span><h3>Alien Invasion</h3></div>
                         <div class="project-actions"><a class="project-action project-action-icon" href="https://github.com/daMS2005/alieninvasion" target="_blank" rel="noopener noreferrer" aria-label="Open Alien Invasion on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a></div>
                     </header>
-                    <img src="alieninvasionpics/gameplay.png" alt="Alien Invasion game screen" loading="lazy" width="1280" height="720">
+                    <img src="alieninvasionpics/gameplay.webp" alt="Alien Invasion game screen" loading="lazy" decoding="async" width="1280" height="720">
                     <div class="project-record-content">
                         <p class="project-summary">A Space Invaders-style SFML game used to practice real-time state, rendering, testing, and native build tooling.</p>
                         <details class="project-disclosure">
@@ -608,11 +608,11 @@
             entry.disabled = true;
             try {
                 const [{ DroidGuide }, { initTourGuide }] = await Promise.all([
-                import('./javascript-files/droid.js?v=10'),
+                import('./javascript-files/droid.js?v=11'),
                 import('./javascript-files/tour-guide.js?v=13'),
                 ]);
                 try { sessionStorage.setItem('guideHidden', '0'); } catch (error) { /* optional preference */ }
-                guideApi = DroidGuide.mount(container, { modelUrl: 'assets/droid.glb?v=2' });
+                guideApi = DroidGuide.mount(container, { modelUrl: 'assets/droid.glb?v=3' });
                 document.body.classList.add('guide-ready');
                 container.tabIndex = 0;
                 entry.setAttribute('aria-expanded', 'true');

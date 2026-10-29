@@ -4,6 +4,7 @@
 // Spline's GLTF export drops materials, so we reassign them by node name.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 export const DroidGuide = {
@@ -53,7 +54,7 @@ export const DroidGuide = {
     let droid = null;
     let innerRoot = null;
     const eyes = [];
-    new GLTFLoader().load(modelUrl, (gltf) => {
+    new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(modelUrl, (gltf) => {
       const root = gltf.scene;
       root.traverse((o) => {
         if (o.isLight) o.visible = false;
@@ -163,15 +164,16 @@ export const DroidGuide = {
         }
         droid.position.y = y;
 
-        // blink: squash the eyes every few seconds
+        // blink: squash the eyes every few seconds (relative to scale.x: the
+        // compressed model keeps each eye's size in its node scale)
         if (t > nextBlink) {
           const phase = (t - nextBlink) / 0.16;
           if (phase >= 1) {
-            eyes.forEach((e) => { e.scale.y = 1; });
+            eyes.forEach((e) => { e.scale.y = e.scale.x; });
             nextBlink = t + 2.4 + Math.random() * 3.2;
           } else {
             const k = 1 - Math.sin(phase * Math.PI) * 0.85;
-            eyes.forEach((e) => { e.scale.y = k; });
+            eyes.forEach((e) => { e.scale.y = e.scale.x * k; });
           }
         }
       }

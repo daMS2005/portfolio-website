@@ -1,7 +1,7 @@
 // Cookieless event tracker. Enriches each event server-side with coarse geo
 // (Vercel edge headers) and a parsed user-agent, then aggregates into Redis.
 // Nothing is stored on the visitor's device; no persistent identifiers.
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 
 // Vercel's marketplace integrations inject Redis credentials under several
 // different names depending on the integration version - accept them all.
@@ -90,8 +90,16 @@ export default async function handler(req, res) {
     });
     return (await r.json()).map((x) => x.result);
   };
-  const [ownerAt] = await redis([['HGET', 'owner:ips', ipHash(ip)]]).catch(() => [null]);
+  // one round trip: is this Daniel's network, and today's salt for the visitor code
+  const [ownerAt, , salt] = await redis([
+    ['HGET', 'owner:ips', ipHash(ip)],
+    ['SET', `salt:${day}`, randomBytes(16).toString('hex'), 'NX', 'EX', '172800'],
+    ['GET', `salt:${day}`],
+  ]).catch(() => []);
   if (ownerAt && Date.now() - Number(ownerAt) < 30 * 86400_000) return res.status(204).end();
+  // visitor code: groups one person's pages for a day. A hash of the IP and browser with a salt
+  // that is deleted after two days, so it can't be reversed or linked across days.
+  const vid = salt ? createHash('sha256').update(`${salt}|${ip}|${req.headers['user-agent'] || ''}`).digest('hex').slice(0, 8) : undefined;
 
   const cmds = [
     ['HINCRBY', `ev:${day}`, ev, '1'],
@@ -118,7 +126,7 @@ export default async function handler(req, res) {
     if (b.campaign) cmds.push(['HINCRBY', 'campaign:total', String(b.campaign).slice(0, 40), '1']);
     cmds.push(
       ['LPUSH', 'visits:recent', JSON.stringify({
-        t: now, sid, country, city, source,
+        t: now, sid, vid, country, city, source,
         browser: ua.browser, os: ua.os, device,
         page: String(m || '').slice(0, 60), vw: b.vw, vh: b.vh, lang: b.lang, tz: b.tz,
         ref: refPage, scr: b.sw && b.sh ? `${b.sw}x${b.sh}` : undefined, dpr: b.dpr, dark: b.dark, reduced: b.reduced,

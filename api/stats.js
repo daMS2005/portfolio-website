@@ -86,7 +86,7 @@ export default async function handler(req, res) {
     const cmds = [
       ...KEYS.map((k) => ['HGETALL', k]),
       ['LRANGE', 'chat:recent', '0', '49'],
-      ['LRANGE', 'visits:recent', '0', '49'],
+      ['LRANGE', 'visits:recent', '0', '99'],
       ...days.map((d) => ['HGETALL', `ev:${d}`]),
       // whoever opens the dashboard is Daniel: api/track.js skips this network for 30 days
       ['HSET', 'owner:ips', ipHash(ip), String(now)],

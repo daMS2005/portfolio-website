@@ -42,6 +42,10 @@
         .trail span { color: #7a7a7a; }
         .steps { margin: 0.25rem 0 0.4rem 0.2rem; padding: 0; list-style: none; color: #9a9a9a; font-size: 0.76rem; }
         .steps li { margin: 0.12rem 0; }
+        .vfilter { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; }
+        .vfilter input { flex: 1; min-width: 0; padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.85rem; }
+        .vfilter button, button.vid { border: 1px solid rgba(255,255,255,0.2); background: none; color: #bbb; border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.8rem; cursor: pointer; }
+        button.vid { padding: 0 0.4rem; border-color: rgba(255,92,31,0.4); background: rgba(255,92,31,0.1); color: #ffb08f; font-family: ui-monospace, Menlo, monospace; font-size: 0.72rem; }
         .steps b { display: inline-block; min-width: 3.6em; color: #6f6f6f; font-weight: 400; font-variant-numeric: tabular-nums; }
         .q summary { cursor: pointer; color: #9a9a9a; font-size: 0.75rem; margin-top: 4px; }
         .q .ans { white-space: pre-wrap; color: #cfcfcf; font-size: 0.8rem; margin: 0.4rem 0 0; }
@@ -99,6 +103,7 @@
             </div>
             <div class="panel">
                 <h2>Recent visitors</h2>
+                <div class="vfilter"><input id="vfilter" placeholder="Filter by visitor code" aria-label="Filter by visitor code" autocomplete="off"><button id="vclear" type="button">Show all</button></div>
                 <div id="visits"></div>
             </div>
             <div class="panel">
@@ -183,30 +188,50 @@
                 `<div class="day" style="height:${(sums[i] / max) * 100}%" title="${day}: ${sums[i]} events"><span>${day.slice(8)}</span></div>`
             ).join('');
 
-            document.getElementById('visits').innerHTML = visitors(d.recentVisits || []).map((g) => {
+            last = d;
+            renderVisits();
+        }
+
+        // recent visitors and questions, optionally narrowed to one visitor code
+        let last = null;
+        function renderVisits() {
+            const f = document.getElementById('vfilter').value.trim().toLowerCase(), d = last || {};
+            const chip = (vid) => vid ? `<button class="vid" type="button" data-vid="${esc(vid)}" title="Show only this visitor">${esc(vid)}</button> ` : '';
+            document.getElementById('visits').innerHTML = visitors(d.recentVisits || []).filter((g) => !f || (g.vid || '').startsWith(f)).map((g) => {
                 const v = g.pages[0], secs = g.pages.reduce((n, p) => n + pageInfo(p).secs, 0);
-                return `<div class="q"><b>${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')}</b> &middot; via ${esc(v.ref || v.source)} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)} &middot; ${g.pages.length} page${g.pages.length > 1 ? 's' : ''} &middot; ${g.pages.some((p) => (p.steps || []).length) ? dur(secs) : 'no detail'}
+                return `<div class="q">${chip(g.vid)}<b>${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')}</b> &middot; via ${esc(v.ref || v.source)} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)} &middot; ${g.pages.length} page${g.pages.length > 1 ? 's' : ''} &middot; ${g.pages.some((p) => (p.steps || []).length) ? dur(secs) : 'no detail'}
                     <div class="meta">${[v.vw + '×' + v.vh + (v.scr ? ' (screen ' + v.scr + ')' : ''), v.lang, v.tz, v.dark && 'dark mode', new Date(v.t).toLocaleString()].filter(Boolean).map(esc).join(' &middot; ')}</div>
                     <ol class="trail">${g.pages.map((p) => { const i = pageInfo(p); return `<li>${esc(p.page || '/')} <span>&middot; ${i.known ? dur(i.secs) + (i.ended ? '' : '+') + (i.depth ? ' &middot; reached ' + i.depth + '% of the page' : '') : 'no step-by-step record (visited before Oct 29)'}</span>${i.actions.length ? `<ol class="steps">${i.actions.map((x) => `<li><b>+${dur(x.at)}</b>${esc(x.text)}</li>`).join('')}</ol>` : ''}</li>`; }).join('')}</ol></div>`;
-            }).join('') || '<p class="sub">No visits recorded yet.</p>';
+            }).join('') || `<p class="sub">${f ? 'No visits for that visitor code.' : 'No visits recorded yet.'}</p>`;
 
-            document.getElementById('questions').innerHTML = (d.recentQuestions || []).map((q) =>
-                `<div class="q">${esc(q.q)}${'a' in q ? `<details><summary>${q.a ? 'Answer' : 'No answer: every model failed'}${q.ms ? ' &middot; ' + (q.ms / 1000).toFixed(1) + 's' : ''}</summary><p class="ans">${esc(q.a || '')}</p></details>` : ''}<div class="meta">${esc(q.country || '?')}${q.city ? ' · ' + esc(safeDecode(q.city)) : ''} · ${new Date(q.t).toLocaleString()}</div></div>`
+            document.getElementById('questions').innerHTML = (d.recentQuestions || []).filter((q) => !f || (q.vid || '').startsWith(f)).map((q) =>
+                `<div class="q">${chip(q.vid)}${esc(q.q)}${'a' in q ? `<details><summary>${q.a ? 'Answer' : 'No answer: every model failed'}${q.ms ? ' &middot; ' + (q.ms / 1000).toFixed(1) + 's' : ''}</summary><p class="ans">${esc(q.a || '')}</p></details>` : ''}<div class="meta">${esc(q.country || '?')}${q.city ? ' · ' + esc(safeDecode(q.city)) : ''} · ${new Date(q.t).toLocaleString()}</div></div>`
             ).join('') || '<p class="sub">No questions yet.</p>';
         }
 
         const dur = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + (n % 60) + 's' : n + 's';
 
-        // page loads from the same place, browser, time zone and window within 30 minutes are one visitor
+        // one visitor = one visitor code (same person, same day); older visits without a code fall back
+        // to page loads from the same place, browser, time zone and window within 30 minutes
         function visitors(list) {
             const groups = [];
             for (const v of [...list].sort((a, b) => a.t - b.t)) {
-                const k = [v.country, v.city, v.browser, v.os, v.tz, v.vw, v.vh].join('|');
-                const g = groups.find((x) => x.k === k && v.t - x.end < 30 * 60000);
-                if (g) { g.pages.push(v); g.end = v.t; } else groups.push({ k, end: v.t, pages: [v] });
+                const k = v.vid || [v.country, v.city, v.browser, v.os, v.tz, v.vw, v.vh].join('|');
+                const g = groups.find((x) => x.k === k && (v.vid || v.t - x.end < 30 * 60000));
+                if (g) { g.pages.push(v); g.end = v.t; } else groups.push({ k, vid: v.vid, end: v.t, pages: [v] });
             }
-            return groups.reverse();
+            return groups.sort((x, y) => y.end - x.end);
         }
+
+        document.getElementById('vfilter').addEventListener('input', () => last && renderVisits());
+        document.getElementById('vclear').addEventListener('click', () => { document.getElementById('vfilter').value = ''; renderVisits(); });
+        document.addEventListener('click', (e) => {
+            const b = e.target.closest('button.vid');
+            if (!b) return;
+            document.getElementById('vfilter').value = b.dataset.vid;
+            renderVisits();
+            document.getElementById('visits').closest('.panel').scrollIntoView({ behavior: 'smooth' });
+        });
 
         // one page load, step by step: what the visitor reached, clicked, asked and when they left
         const SECTION = { home: 'the intro', aboutMe: 'About', research: 'Flagship work', projects: 'Additional work', skills: 'Skills', websites: 'Websites', contact: 'Contact' };

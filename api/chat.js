@@ -1,7 +1,7 @@
 // MORA-01 chat endpoint (Vercel serverless function).
 // The Gemini API key lives ONLY in a Vercel environment variable
 // (GEMINI_API_KEY) - never in this repo.
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 
 const KNOWLEDGE = `
 You are MORA-01, the small friendly droid tour guide on Daniel Mora's portfolio
@@ -405,14 +405,17 @@ export default async function handler(req, res) {
   console.log('[chat]', JSON.stringify({ q: userMsg.slice(0, 120), ...geo }));
   const extra = await retrieve(userMsg, key);
 
-  // The flash models are often overloaded or stall, so ask them all at once and keep
-  // the first good answer; the rest are cancelled. Stays inside the 60s function limit.
+  // The flash models are often overloaded or stall, so ask several at once and keep the first
+  // good answer; the rest are cancelled. The lighter, less congested models join only if nothing
+  // has answered after 5 seconds. Stays inside the 60s function limit.
   const started = Date.now(), stop = new AbortController();
-  const ask = async ([model, thinking]) => {
+  const ask = async ([model, thinking, delay]) => {
+    if (delay) await new Promise((ok) => setTimeout(ok, delay));
+    if (stop.signal.aborted) throw new Error(`${model} not needed`);
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      signal: AbortSignal.any([stop.signal, AbortSignal.timeout(45000)]),
+      signal: AbortSignal.any([stop.signal, AbortSignal.timeout(25000)]),
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: KNOWLEDGE + extra }] },
         contents,
@@ -426,7 +429,10 @@ export default async function handler(req, res) {
   };
   let answer = null;
   try {
-    answer = await Promise.any([['gemini-3.8-flash', 'low'], ['gemini-3.6-flash', 'low'], ['gemini-3.5-flash', 'minimal'], ['gemini-flash-latest']].map(ask));
+    answer = await Promise.any([
+      ['gemini-3.6-flash', 'low'], ['gemini-3.5-flash', 'minimal'], ['gemini-flash-latest'],
+      ['gemini-3.1-flash-lite', null, 5000], ['gemini-3.5-flash-lite', null, 5000],
+    ].map(ask));
   } catch (e) {
     console.error('gemini: every model failed', (e.errors || [e]).map((x) => x.message).join('; '));
   } finally {
@@ -442,10 +448,16 @@ export default async function handler(req, res) {
       headers: { Authorization: `Bearer ${rtok}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(cmds),
     }).then((r) => r.json());
-    const ipHash = createHash('sha256').update(ip).digest('hex').slice(0, 32);
-    const entry = { q: userMsg.slice(0, 160), a: answer ? answer.text.slice(0, 700) : null, model: answer?.model, ms: Date.now() - started, ...geo, t: Date.now() };
-    await redis([['HGET', 'owner:ips', ipHash]]).then(([own]) => {
+    const ipHash = createHash('sha256').update(ip).digest('hex').slice(0, 32), day = new Date().toISOString().slice(0, 10);
+    await redis([
+      ['HGET', 'owner:ips', ipHash],
+      ['SET', `salt:${day}`, randomBytes(16).toString('hex'), 'NX', 'EX', '172800'],
+      ['GET', `salt:${day}`],
+    ]).then(([own, , s]) => {
       if (own && own.result && Date.now() - Number(own.result) < 30 * 86400_000) return null;
+      // the same visitor code api/track.js gives this person today, so questions link to their visit
+      const vid = s && s.result ? createHash('sha256').update(`${s.result}|${ip}|${req.headers['user-agent'] || ''}`).digest('hex').slice(0, 8) : undefined;
+      const entry = { q: userMsg.slice(0, 160), a: answer ? answer.text.slice(0, 700) : null, model: answer?.model, ms: Date.now() - started, vid, ...geo, t: Date.now() };
       return redis([['LPUSH', 'chat:recent', JSON.stringify(entry)], ['LTRIM', 'chat:recent', '0', '199']]);
     }).catch(() => {});
   }

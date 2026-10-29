@@ -14,6 +14,7 @@ const PORT = Number(process.argv[2] || 8124);
 const hashes = new Map();
 const lists = new Map();
 const sets = new Map();
+const strings = new Map();
 const at = (l, i) => (Number(i) < 0 ? l.length + Number(i) : Number(i)); // Redis-style negative indexes
 function redisCmd([cmd, ...a]) {
   switch (cmd.toUpperCase()) {
@@ -33,6 +34,12 @@ function redisCmd([cmd, ...a]) {
     }
     case 'EXPIRE':
       return 1;
+    case 'SET':
+      if (a.includes('NX') && strings.has(a[0])) return null;
+      strings.set(a[0], a[1]);
+      return 'OK';
+    case 'GET':
+      return strings.get(a[0]) ?? null;
     case 'HINCRBY': {
       const h = hashes.get(a[0]) || new Map();
       h.set(a[1], (h.get(a[1]) || 0) + Number(a[2]));

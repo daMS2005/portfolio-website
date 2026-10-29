@@ -107,6 +107,19 @@ projectDisclosures.forEach(disclosure => {
     disclosure.addEventListener('toggle', syncProjectDetailsToggle);
 });
 
+// Type the tagline out letter by letter, holding its height so the buttons below stay put.
+const tagline = document.querySelector('.tagline');
+if (tagline && !prefersReducedMotion) {
+    const text = tagline.textContent;
+    tagline.style.minHeight = `${tagline.offsetHeight}px`;
+    tagline.textContent = '';
+    [...text].forEach((character, index) => {
+        window.setTimeout(() => {
+            tagline.textContent += character;
+            if (index === text.length - 1) tagline.style.minHeight = '';
+        }, index * 35);
+    });
+}
 
 document.querySelectorAll('.project-card .card-inner').forEach((inner, index) => {
     const card = inner.closest('.project-card');

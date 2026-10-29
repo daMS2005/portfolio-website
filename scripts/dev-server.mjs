@@ -14,8 +14,25 @@ const PORT = Number(process.argv[2] || 8124);
 const hashes = new Map();
 const lists = new Map();
 const sets = new Map();
+const at = (l, i) => (Number(i) < 0 ? l.length + Number(i) : Number(i)); // Redis-style negative indexes
 function redisCmd([cmd, ...a]) {
   switch (cmd.toUpperCase()) {
+    case 'HSET': {
+      const h = hashes.get(a[0]) || new Map();
+      h.set(a[1], a[2]);
+      hashes.set(a[0], h);
+      return 1;
+    }
+    case 'HGET':
+      return hashes.get(a[0])?.get(a[1]) ?? null;
+    case 'RPUSH': {
+      const l = lists.get(a[0]) || [];
+      l.push(...a.slice(1));
+      lists.set(a[0], l);
+      return l.length;
+    }
+    case 'EXPIRE':
+      return 1;
     case 'HINCRBY': {
       const h = hashes.get(a[0]) || new Map();
       h.set(a[1], (h.get(a[1]) || 0) + Number(a[2]));
@@ -34,12 +51,12 @@ function redisCmd([cmd, ...a]) {
     }
     case 'LTRIM': {
       const l = lists.get(a[0]) || [];
-      lists.set(a[0], l.slice(Number(a[1]), Number(a[2]) + 1));
+      lists.set(a[0], l.slice(Math.max(0, at(l, a[1])), at(l, a[2]) + 1));
       return 'OK';
     }
     case 'LRANGE': {
       const l = lists.get(a[0]) || [];
-      return l.slice(Number(a[1]), Number(a[2]) + 1);
+      return l.slice(Math.max(0, at(l, a[1])), at(l, a[2]) + 1);
     }
     case 'SADD': {
       const s = sets.get(a[0]) || new Set();

@@ -1,6 +1,7 @@
 // Cookieless event tracker. Enriches each event server-side with coarse geo
 // (Vercel edge headers) and a parsed user-agent, then aggregates into Redis.
 // Nothing is stored on the visitor's device; no persistent identifiers.
+import { createHash } from 'node:crypto';
 
 // Vercel's marketplace integrations inject Redis credentials under several
 // different names depending on the integration version - accept them all.
@@ -13,6 +14,9 @@ function redisCreds() {
 }
 
 const seen = globalThis.__mora_track_rl || (globalThis.__mora_track_rl = new Map());
+
+// Daniel's own networks: api/stats.js stores a hash of the IP that opens the dashboard; it counts for 30 days.
+const ipHash = (ip) => createHash('sha256').update(String(ip)).digest('hex').slice(0, 32);
 
 function parseUA(ua) {
   const s = String(ua || '');
@@ -78,6 +82,16 @@ export default async function handler(req, res) {
 
   const { url: rurl, token: rtok } = redisCreds();
   if (!rurl || !rtok) return res.status(204).end();
+  const redis = async (c) => {
+    const r = await fetch(`${rurl}/pipeline`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${rtok}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(c),
+    });
+    return (await r.json()).map((x) => x.result);
+  };
+  const [ownerAt] = await redis([['HGET', 'owner:ips', ipHash(ip)]]).catch(() => [null]);
+  if (ownerAt && Date.now() - Number(ownerAt) < 30 * 86400_000) return res.status(204).end();
 
   const cmds = [
     ['HINCRBY', `ev:${day}`, ev, '1'],
@@ -86,6 +100,10 @@ export default async function handler(req, res) {
 
   if (ev === 'pageview') {
     const source = refSource(b.ref, b.utm);
+    let refPage = '';
+    try { const u = new URL(b.ref); refPage = (u.host.replace(/^www\./, '') + u.pathname).slice(0, 120); } catch { /* direct */ }
+    const internal = refPage && refPage.startsWith(String(req.headers.host || '').replace(/^www\./, ''));
+    if (refPage && !internal) cmds.push(['HINCRBY', 'ref:total', refPage, '1']);
     cmds.push(
       ['HINCRBY', 'geo:total', country, '1'],
       ['HINCRBY', `geo:${day}`, country, '1'],
@@ -103,9 +121,17 @@ export default async function handler(req, res) {
         t: now, sid, country, city, source,
         browser: ua.browser, os: ua.os, device,
         page: String(m || '').slice(0, 60), vw: b.vw, vh: b.vh, lang: b.lang, tz: b.tz,
+        ref: refPage, scr: b.sw && b.sh ? `${b.sw}x${b.sh}` : undefined, dpr: b.dpr, dark: b.dark, reduced: b.reduced,
       })],
       ['LTRIM', 'visits:recent', '0', '99'],
     );
+  }
+
+  if (typeof sid === 'string' && /^[a-z0-9]{6,24}$/.test(sid)) {
+    const step = { t: now, e: ev };
+    if (m != null && m !== '') step.m = String(m).slice(0, 60);
+    if (typeof b.label === 'string' && b.label) step.l = b.label.slice(0, 50);
+    cmds.push(['RPUSH', `s:${sid}`, JSON.stringify(step)], ['LTRIM', `s:${sid}`, '-200', '-1'], ['EXPIRE', `s:${sid}`, '2592000']);
   }
 
   if (ev === 'pageview' && m) cmds.push(['HINCRBY', 'pages:total', String(m).slice(0, 60), '1']);
@@ -131,13 +157,7 @@ export default async function handler(req, res) {
     }
   }
 
-  try {
-    await fetch(`${rurl}/pipeline`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${rtok}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(cmds),
-    });
-  } catch (err) { /* analytics never blocks */ }
+  try { await redis(cmds); } catch (err) { /* analytics never blocks */ }
 
   return res.status(204).end();
 }

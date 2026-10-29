@@ -2,6 +2,7 @@
 // below; the key itself is never in this public repo) or the Vercel env var STATS_PASSWORD.
 import { createHash } from 'node:crypto';
 
+const ipHash = (ip) => createHash('sha256').update(String(ip)).digest('hex').slice(0, 32);
 const KEY_SHA256 = '0e130498da689896131ff87d6f8d50f604eef3d59f3db2df3a7db37053b86b40';
 
 // Vercel's marketplace integrations inject Redis credentials under several
@@ -80,13 +81,15 @@ export default async function handler(req, res) {
       'ev:total', 'geo:total', 'city:total', 'src:total', 'browser:total',
       'os:total', 'device:total', 'lang:total', 'scroll:total',
       'section:views', 'section:seconds', 'time:total', 'visits:day',
-      'campaign:total', 'pages:total', 'clicks:total',
+      'campaign:total', 'pages:total', 'clicks:total', 'ref:total',
     ];
     const cmds = [
       ...KEYS.map((k) => ['HGETALL', k]),
       ['LRANGE', 'chat:recent', '0', '49'],
       ['LRANGE', 'visits:recent', '0', '49'],
       ...days.map((d) => ['HGETALL', `ev:${d}`]),
+      // whoever opens the dashboard is Daniel: api/track.js skips this network for 30 days
+      ['HSET', 'owner:ips', ipHash(ip), String(now)],
     ];
     const out = await redis(cmds);
 
@@ -96,6 +99,11 @@ export default async function handler(req, res) {
     const parseList = (arr) => (arr || [])
       .map((x) => { try { return JSON.parse(x); } catch { return null; } })
       .filter(Boolean);
+
+    // each recent visit's timeline: pages, sections, clicks and time on page
+    const recentVisits = parseList(out[KEYS.length + 1]);
+    const steps = recentVisits.length ? await redis(recentVisits.map((v) => ['LRANGE', `s:${v.sid}`, '0', '-1'])) : [];
+    recentVisits.forEach((v, i) => { v.steps = parseList(steps[i]); });
 
     const daily = {};
     days.forEach((d, i) => { daily[d] = toObj(out[KEYS.length + 2 + i]); });
@@ -123,13 +131,14 @@ export default async function handler(req, res) {
       campaigns: data.campaign_total,
       pages: data.pages_total,
       clicks: data.clicks_total,
+      referrers: data.ref_total,
       scroll: data.scroll_total,
       sectionViews: data.section_views,
       sectionSeconds: data.section_seconds,
       visitsPerDay: data.visits_day,
       daily,
       recentQuestions: parseList(out[KEYS.length]),
-      recentVisits: parseList(out[KEYS.length + 1]),
+      recentVisits,
     });
   } catch (e) {
     console.error('stats error', e);

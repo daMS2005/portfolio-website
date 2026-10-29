@@ -37,6 +37,9 @@
         .day { flex: 1; background: linear-gradient(180deg, #ff8a50, #ff4500); border-radius: 3px 3px 0 0; min-height: 2px; position: relative; }
         .day span { position: absolute; bottom: -17px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; color: #777; }
         .funnel td:first-child { color: #cfcfcf; }
+        .trail { margin: 0.45rem 0 0 1.1rem; padding: 0; color: #bdbdbd; font-size: 0.8rem; }
+        .trail li { margin: 0.2rem 0; }
+        .trail span { color: #7a7a7a; }
         #dash { display: none; }
         .refresh { float: right; background: none; border: 1px solid rgba(255,255,255,0.2); color: #bbb; border-radius: 8px; padding: 0.5rem 0.9rem; min-height: 36px; font-size: 0.8rem; cursor: pointer; }
         .dash-err { color: #ff7a5c; font-size: 0.85rem; margin: -1rem 0 1.2rem; min-height: 0; }
@@ -58,7 +61,7 @@
         <div id="dash">
             <button class="refresh" id="refresh">Refresh</button>
             <h1>Site Stats</h1>
-            <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; last 14 days &middot; this browser isn't counted</p>
+            <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; last 14 days &middot; this browser and your network aren't counted</p>
             <p class="dash-err" id="dashErr" aria-live="polite"></p>
 
             <div class="kpis" id="kpis"></div>
@@ -71,6 +74,7 @@
             <div class="grid">
                 <div class="panel"><h2>Pages</h2><table id="pages"></table></div>
                 <div class="panel"><h2>Traffic sources</h2><table id="sources"></table></div>
+                <div class="panel"><h2>Referring pages</h2><table id="referrers"></table></div>
                 <div class="panel"><h2>Countries</h2><table id="countries"></table></div>
                 <div class="panel"><h2>Cities</h2><table id="cities"></table></div>
                 <div class="panel"><h2>Devices</h2><table id="devices"></table></div>
@@ -89,7 +93,7 @@
                 <table id="clicks"></table>
             </div>
             <div class="panel">
-                <h2>Recent visits</h2>
+                <h2>Recent visitors</h2>
                 <div id="visits"></div>
             </div>
             <div class="panel">
@@ -146,6 +150,7 @@
             fillTable('pages', d.pages);
             fillTable('clicks', d.clicks, null, 40);
             fillTable('sources', d.sources);
+            fillTable('referrers', d.referrers);
             fillTable('countries', d.countries);
             fillTable('cities', d.cities);
             fillTable('devices', d.devices);
@@ -173,14 +178,41 @@
                 `<div class="day" style="height:${(sums[i] / max) * 100}%" title="${day}: ${sums[i]} events"><span>${day.slice(8)}</span></div>`
             ).join('');
 
-            document.getElementById('visits').innerHTML = (d.recentVisits || []).map((v) =>
-                `<div class="q">${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')} &middot; via ${esc(v.source)}${v.page ? ' &rarr; ' + esc(v.page) : ''} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)}
-                 <div class="meta">${esc(v.vw)}&times;${esc(v.vh)} &middot; ${esc(v.lang || '')} &middot; ${esc(v.tz || '')} &middot; ${new Date(v.t).toLocaleString()}</div></div>`
-            ).join('') || '<p class="sub">No visits recorded yet.</p>';
+            document.getElementById('visits').innerHTML = visitors(d.recentVisits || []).map((g) => {
+                const v = g.pages[0], secs = g.pages.reduce((n, p) => n + pageInfo(p).secs, 0);
+                return `<div class="q"><b>${esc(v.city ? v.city + ', ' : '')}${esc(v.country || '?')}</b> &middot; via ${esc(v.ref || v.source)} &middot; ${esc(v.device)} ${esc(v.browser)}/${esc(v.os)} &middot; ${g.pages.length} page${g.pages.length > 1 ? 's' : ''} &middot; ${dur(secs)}
+                    <div class="meta">${[v.vw + '×' + v.vh + (v.scr ? ' (screen ' + v.scr + ')' : ''), v.lang, v.tz, v.dark && 'dark mode', new Date(v.t).toLocaleString()].filter(Boolean).map(esc).join(' &middot; ')}</div>
+                    <ol class="trail">${g.pages.map((p) => { const i = pageInfo(p); return `<li>${esc(p.page || '/')} <span>&middot; ${dur(i.secs)}${i.scroll ? ' &middot; scrolled ' + i.scroll + '%' : ''}${i.sections.length ? ' &middot; saw ' + esc(i.sections.join(', ')) : ''}${i.clicks.length ? ' &middot; clicked ' + esc(i.clicks.join(', ')) : ''}</span></li>`; }).join('')}</ol></div>`;
+            }).join('') || '<p class="sub">No visits recorded yet.</p>';
 
             document.getElementById('questions').innerHTML = (d.recentQuestions || []).map((q) =>
                 `<div class="q">${esc(q.q)}<div class="meta">${esc(q.country || '?')}${q.city ? ' · ' + esc(safeDecode(q.city)) : ''} · ${new Date(q.t).toLocaleString()}</div></div>`
             ).join('') || '<p class="sub">No questions yet.</p>';
+        }
+
+        const dur = (n) => n >= 60 ? Math.floor(n / 60) + 'm ' + (n % 60) + 's' : n + 's';
+
+        // page loads from the same place, browser, time zone and window within 30 minutes are one visitor
+        function visitors(list) {
+            const groups = [];
+            for (const v of [...list].sort((a, b) => a.t - b.t)) {
+                const k = [v.country, v.city, v.browser, v.os, v.tz, v.vw, v.vh].join('|');
+                const g = groups.find((x) => x.k === k && v.t - x.end < 30 * 60000);
+                if (g) { g.pages.push(v); g.end = v.t; } else groups.push({ k, end: v.t, pages: [v] });
+            }
+            return groups.reverse();
+        }
+
+        // one page load's timeline: time on page, deepest scroll, sections seen, what was clicked
+        function pageInfo(v) {
+            const st = v.steps || [], end = st.find((x) => x.e === 'visit-end');
+            const skip = ['pageview', 'section', 'scroll', 'visit-end'];
+            return {
+                secs: end ? Number(end.m) || 0 : 0,
+                scroll: Math.max(0, ...st.filter((x) => x.e === 'scroll').map((x) => Number(x.m) || 0)),
+                sections: [...new Set(st.filter((x) => x.e === 'section').map((x) => x.m))],
+                clicks: st.filter((x) => !skip.includes(x.e) && x.l).map((x) => x.l),
+            };
         }
 
         const safeDecode = (s) => { try { return decodeURIComponent(s); } catch { return s; } };

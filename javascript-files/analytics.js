@@ -89,8 +89,7 @@
       .replace(/\s+/g, ' ').trim().slice(0, 50);
 
     let e = 'click';
-    if (el.id === 'learnMoreBtn') e = 'cta-learn-more';
-    else if (el.classList.contains('guide-chat-btn')) e = 'chat-open';
+    if (el.classList.contains('guide-chat-btn')) e = 'chat-open';
     else if (el.closest('#droid-guide')) e = 'droid-click';
     else if (href.includes('huggingface.co')) e = 'outbound-hf';
     else if (href.includes('anonymous.4open.science')) e = 'outbound-paper';

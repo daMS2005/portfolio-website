@@ -10,10 +10,6 @@ function scrollToSection(sectionId) {
     });
 }
 
-document.getElementById('learnMoreBtn')?.addEventListener('click', () => {
-    scrollToSection('aboutMe');
-});
-
 const skipLink = document.querySelector('.skip-link');
 const mainContent = document.getElementById('main-content');
 

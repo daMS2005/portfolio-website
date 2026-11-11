@@ -2272,31 +2272,32 @@ body.guide-hidden .guide-entry { display: inline-flex; }
   }
 
   body.guide-ready:not(.guide-hidden) .guide-chat-btn {
-    right: 104px;
-    bottom: 100px;
+    right: 12px;
+    bottom: 152px;
     display: flex !important;
     align-items: center;
     justify-content: center;
   }
 
   body.guide-ready:not(.guide-hidden) .guide-hide-btn {
-    right: 104px;
-    bottom: 62px;
+    right: 58px;
+    bottom: 158px;
     display: flex !important;
   }
 
   body.guide-ready:not(.guide-hidden) .guide-chat-panel.open {
     right: 12px;
-    bottom: 154px;
+    bottom: 198px;
     width: calc(100vw - 24px);
-    max-height: min(440px, calc(100vh - 190px));
+    max-height: min(440px, calc(100vh - 234px));
     display: flex !important;
   }
 
   body.guide-ready:not(.guide-hidden) .guide-bubble {
-    right: 142px;
-    bottom: 28px;
-    max-width: min(210px, calc(100vw - 172px));
+    right: 132px;
+    bottom: 12px;
+    box-sizing: border-box;
+    max-width: calc(100vw - 144px);
   }
 
   body.guide-ready:not(.guide-hidden) .guide-restore-btn { display: none !important; }

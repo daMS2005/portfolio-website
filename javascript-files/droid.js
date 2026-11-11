@@ -20,7 +20,7 @@ export const DroidGuide = {
     const camera = new THREE.PerspectiveCamera(
       35, (container.clientWidth || 170) / (container.clientHeight || 200), 0.1, 50
     );
-    camera.position.set(0, 1.36, 2.0);
+    camera.position.set(0, 1.36, 2.35);
     camera.lookAt(0, 1.32, 0);
 
     const pmrem = new THREE.PMREMGenerator(renderer);

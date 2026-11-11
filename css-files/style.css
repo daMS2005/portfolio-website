@@ -1539,7 +1539,9 @@ footer {
   }
 }
 
+a.primary-btn,
 a.secondary-btn {
+  box-sizing: border-box;
   text-decoration: none;
   display: inline-flex;
   align-items: center;

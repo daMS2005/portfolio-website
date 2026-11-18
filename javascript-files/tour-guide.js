@@ -224,7 +224,7 @@ export function initTourGuide({ container, api, immediate = false, entry = null 
       suggestions.style.display = 'none';
       history.push({ role: 'user', text: q }, { role: 'model', text: data.reply });
     } catch (err) {
-      pending.innerHTML = mdToHtml("I can't reach my brain from here - but Daniel answers email quickly: **damorasoler@gmail.com**");
+      pending.innerHTML = mdToHtml("I can't reach my brain from here - but Daniel answers email quickly: **contact@daniel-mora.com**");
     }
   });
   // ---- hide / restore the droid ----

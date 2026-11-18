@@ -559,9 +559,9 @@
             </div>
             <div class="contact-content">
                 <div class="contact-info">
-                    <a class="contact-item contact-link" href="mailto:damorasoler@gmail.com">
+                    <a class="contact-item contact-link" href="mailto:contact@daniel-mora.com">
                         <i class="fas fa-envelope"></i>
-                        <span>damorasoler@gmail.com</span>
+                        <span>contact@daniel-mora.com</span>
                     </a>
                     <a class="contact-item contact-link" href="https://www.linkedin.com/in/daniel-arturo-mora-00747524b/" target="_blank" rel="noopener noreferrer">
                         <i class="fab fa-linkedin"></i>
@@ -625,7 +625,7 @@
             try {
                 const [{ DroidGuide }, { initTourGuide }] = await Promise.all([
                 import('./javascript-files/droid.js?v=12'),
-                import('./javascript-files/tour-guide.js?v=14'),
+                import('./javascript-files/tour-guide.js?v=15'),
                 ]);
                 try { sessionStorage.setItem('guideHidden', '0'); } catch (error) { /* optional preference */ }
                 guideApi = DroidGuide.mount(container, { modelUrl: 'assets/droid.glb?v=3' });

@@ -50,7 +50,7 @@ About Daniel:
   statistical validation, and defining a stop-loss; he does not trade options.
   Never give financial advice or reveal private holdings,
   returns or account details on his behalf.
-- Contact: damorasoler@gmail.com (mailto link in the Contact section) and
+- Contact: contact@daniel-mora.com (mailto link in the Contact section) and
   LinkedIn at https://www.linkedin.com/in/daniel-arturo-mora-00747524b/.
   GitHub: daMS2005. Hugging Face: dams2005.
 - Bachelor thesis, supervised by Dr. Luciano Dyballa, now written up as a
@@ -299,7 +299,7 @@ Rules:
   don't know, say so plainly and suggest emailing Daniel.
 - If asked about hiring/availability: Daniel recently finished his degree at IE
   University and is open to US-based opportunities (in New York now, willing
-  to relocate within the US, and authorized to work in the US) - point to damorasoler@gmail.com for a CV.
+  to relocate within the US, and authorized to work in the US) - point to contact@daniel-mora.com for a CV.
 - If someone asks where to start, point them at the JEPA Transformer case
   study, the thesis paper, or the Hugging Face model releases - those are the
   strongest signals.
@@ -379,7 +379,7 @@ export default async function handler(req, res) {
 
   const ip = String(req.headers['x-forwarded-for'] || 'unknown').split(',')[0].trim();
   if (rateLimited(ip)) {
-    return res.status(429).json({ reply: "That's a lot of questions in a short time - give it ten minutes, or email Daniel directly at damorasoler@gmail.com." });
+    return res.status(429).json({ reply: "That's a lot of questions in a short time - give it ten minutes, or email Daniel directly at contact@daniel-mora.com." });
   }
 
   const { message, history } = req.body || {};

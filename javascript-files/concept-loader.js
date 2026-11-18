@@ -5,13 +5,14 @@
   if (!/^[a-z0-9-]+(,[a-z0-9-]+)*$/.test(name)) return;
   // "film" = the chosen designs for whichever page this is (the page designs share class names, so never mix them)
   const p = location.pathname;
-  const film = p.includes('thesis') ? ['film-thesis', 'film-frame']
+  const film = p.includes('thesis') ? ['film-thesis', 'film-frame', 'engrave']
     : p.includes('jepa') ? ['film-jepa', 'film-frame']
-    : p.includes('tc-acc') ? ['film-tcacc', 'film-frame']
+    : p.includes('tc-acc') ? ['film-tcacc', 'film-frame', 'engrave']
     : document.title.startsWith('Page not found') ? ['fade-to-black', 'film-pages'] // the host serves 404.html at any missing path
-    : /personal|privacy|terms/.test(p) ? ['film-pages', 'film-frame']
-    : ['event-horizon', 'film-middle', 'film-flagship', 'film-frame', 'fade-to-black', 'intro'];
-  const names = name.split(',').flatMap((n) => (n === 'film' ? film : [n]));
+    : p.includes('personal') ? ['film-pages', 'film-frame', 'engrave']
+    : /privacy|terms/.test(p) ? ['film-pages', 'film-frame']
+    : ['event-horizon', 'film-middle', 'film-flagship', 'film-frame', 'fade-to-black', 'intro', 'engrave'];
+  const names = [...new Set(name.split(',').flatMap((n) => (n === 'film' ? film : [n])))];
   document.documentElement.dataset.concept = names.join(' ');
   // hide the page until the design's CSS and scripts are in, so the plain site never shows and then rebuilds
   const root = document.documentElement.style;

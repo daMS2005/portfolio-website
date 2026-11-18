@@ -1,0 +1,9 @@
+/* engrave demo: shared tokens for the engraved line-art layer (area styles live in engrave-<area>.css) */
+html[data-concept~="engrave"] {
+  --eg-bone: #d8d4cc;
+  --eg-teal: #8fcac5;
+  --eg-ember: #ff5c2a;
+  --eg-gold: linear-gradient(90deg, #fff4dc, #ffb347 45%, #ff5c2a);
+  --eg-hair: 0.7px;
+  --eg-ease: cubic-bezier(.16, 1, .3, 1);
+}

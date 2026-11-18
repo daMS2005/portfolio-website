@@ -49,7 +49,7 @@ function storyOrder() {
     if (!from) {
       sec = document.createElement('section');
       sec.className = 'detail-section';
-      sec.innerHTML = `<div class="detail-section-header"><span></span><h2>The same stories, read by a language model.</h2></div>
+      sec.innerHTML = `<div class="detail-section-header"><span></span><h2>The model side</h2></div>
         <figure class="ft-ai"><canvas role="img" aria-label="The language model drawn as a head of six layer bands of grid cells, a few sparse features lit in teal and linked across layers, beside a bank of 256 feature IDs."></canvas>
           <div class="ft-head-labels" aria-hidden="true"><span>256 feature IDs<small>locked on the source description</small></span><span>Six depth-spaced layers<small>a few sparse features active at once</small></span></div></figure>
         <div class="detail-grid">

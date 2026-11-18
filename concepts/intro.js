@@ -1,4 +1,4 @@
-// intro: the opening shot, once per session. ?concept=event-horizon,intro&intro=eye|flare|name (any intro= value replays).
+// intro: the opening shot on every load (not on #links, back/forward or reduced motion). ?concept=event-horizon,intro&intro=eye|flare|name (any intro= value replays).
 // A black cover goes up at once; a pupil-sized window in it dives open until its ring is the hero's ring (match cut).
 const pick = new URLSearchParams(location.search).get('intro');
 const kind = pick === 'flare' || pick === 'name' ? pick : 'eye';
@@ -6,10 +6,8 @@ const html = document.documentElement;
 let ok = false;
 try {
   const nav = performance.getEntriesByType('navigation')[0];
-  const internal = document.referrer && new URL(document.referrer).origin === location.origin;
   ok = !location.hash && nav?.type !== 'back_forward' && document.visibilityState === 'visible'
-    && !matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData
-    && (pick !== null || (!internal && !sessionStorage.fxIntroSeen));
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData;
 } catch { ok = false; }
 
 const IGN = 'cubic-bezier(.16,1,.3,1)', FALL = 'cubic-bezier(.7,0,.84,0)';
@@ -57,7 +55,6 @@ if (ok) {
     const hands = kind === 'eye' && await Promise.race([img.decode().then(() => true, () => false), wait(120)]);
     const eh = document.querySelector('.hero .eh'), dim = eh?.querySelector('.eh-dim');
     if (done || !dim || performance.now() - born > 1500) return cleanup();
-    try { sessionStorage.fxIntroSeen = 1; } catch {} // seen only once it really plays
 
     const W = innerWidth, H = innerHeight, phone = W < 700;
     const { left: cx, top: cy } = eh.getBoundingClientRect();

@@ -15,7 +15,7 @@
         ['Foreign large caps', '#a08cff', .07, .86], ['Fallen high-beta', '#ff4d94', .93, .58], ['Mega-cap quality', '#9cc6ff', .08, .18]],
     },
     vicreg: {
-      note: '<b>Retrained with a VICReg penalty.</b> A variance–covariance term keeps about 370 effective dimensions in use, so the clusters separate by risk, momentum and size.',
+      note: '<b>Retrained with a VICReg penalty.</b> A variance-covariance term keeps about 370 effective dimensions in use, so the clusters separate by risk, momentum and size.',
       CL: [['Low-beta defensives', '#6ccb5f', .30, .50], ['Average stock, normal market', '#b9b39f', .50, .48], ['Volatile growth winners', '#c9f04a', .88, .15],
         ['Caught in market stress', '#f28c38', .66, .72], ['Crashed cyclicals', '#ff4d94', .86, .90], ['Mega-cap staples', '#9cc6ff', .06, .22],
         ['Utilities & REITs', '#4c8df6', .10, .60], ['Foreign large caps', '#a08cff', .08, .88], ['Large quality compounders', '#45c4c0', .27, .18],
@@ -52,7 +52,7 @@
       setEnc(enc, false);
       show(0, false);
       if (visible && !reduced) play(true);
-    }).catch(() => { $('jtMapStatus').textContent = 'The map could not be loaded.'; });
+    }).catch(() => { $('jtMapStatus').textContent = 'The map failed to load.'; });
   }
 
   // Island layout for frame f: biggest companies at the centre, a sunflower spiral outwards.

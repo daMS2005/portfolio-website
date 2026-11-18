@@ -42,7 +42,7 @@ if (main) {
   const seg = main.querySelector('#jtMap .jt-seg');
   const g = document.createElement('span');
   g.className = 'fj-gauge';
-  g.innerHTML = '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="11"/><circle class="fj-arc" cx="14" cy="14" r="11" pathLength="370"/></svg><span><b></b> effective dims</span>';
+  g.innerHTML = '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="11"/><circle class="fj-arc" cx="14" cy="14" r="11" pathLength="370"/></svg><span><b></b> effective dimensions</span>';
   seg.after(g);
   const arc = g.querySelector('.fj-arc'), num = g.querySelector('b'), og = seg.querySelector('[data-enc="og"]');
   let gt = 0;

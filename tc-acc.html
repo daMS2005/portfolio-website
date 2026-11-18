@@ -153,12 +153,12 @@
     </nav>
 
     <main class="case-page" id="main-content" tabindex="-1">
-        <p class="case-kicker">Agentic Systems &middot; Case Study</p>
+        <p class="case-kicker">Agentic systems &middot; case study</p>
         <h1>TC_ACC: an autonomous documentary studio</h1>
         <p class="case-lede">
-            One case reference link goes in. Roughly five hours later, the system returns a finished
-            ten-minute documentary package. This page presents the public scope and verified output
-            without documenting the private prompts, tuning, routing, or production control logic.
+            The system takes one link to a case and, about five hours later, returns a finished
+            ten-minute documentary package. This page covers the public scope and verified output.
+            It leaves out the private prompts, tuning, routing, and production control logic.
         </p>
 
         <div class="stat-row">
@@ -171,14 +171,14 @@
 
         <figure class="tcacc-case-image">
             <img src="/images/tcacc-episode-stills.jpg" alt="A montage of documentary imagery used in a TC_ACC episode: coastline, archival surveillance, document research, and a harbor" width="1280" height="720">
-            <figcaption>Representative episode imagery &middot; research, archival material, documents, and location context assembled into one edit.</figcaption>
+            <figcaption>Episode stills &middot; research, archival material, documents, and location context cut into one edit.</figcaption>
         </figure>
 
         <h2>What it produces</h2>
         <p>
-            The public claim is deliberately simple: a case reference is turned into a researched,
-            written, narrated, illustrated, edited, rendered, and packaged documentary episode.
-            The four outputs below show the system at different points in its development.
+            The system turns a case reference into a documentary episode. It researches, writes,
+            narrates, illustrates, edits, renders, and packages the episode itself.
+            The four outputs below come from different points in its development.
         </p>
         <div class="episodes">
             <article class="episode">
@@ -191,7 +191,7 @@
                 <div class="episode-body">
                     <span class="episode-tag">Animation study</span>
                     <h3>Animation-only render</h3>
-                    <p>An early visual-system pass focused on the motion and editorial layer. The narration is my own voice, generated through ElevenLabs.</p>
+                    <p>An early test of the visual system, focused on motion and editing. The narration is my own voice, generated with ElevenLabs.</p>
                     <div class="episode-meta">6:53 runtime</div>
                 </div>
             </article>
@@ -205,7 +205,7 @@
                 <div class="episode-body">
                     <span class="episode-tag">Full pipeline</span>
                     <h3>First full production pass</h3>
-                    <p>A longer end-to-end render from the same case, showing the assembled documentary package.</p>
+                    <p>A longer end-to-end render of the same case, with the full documentary package assembled.</p>
                     <div class="episode-meta">13:14 runtime</div>
                 </div>
             </article>
@@ -219,7 +219,7 @@
                 <div class="episode-body">
                     <span class="episode-tag">Full pipeline</span>
                     <h3>Refined production pass</h3>
-                    <p>A later full-system iteration with the visual, narrative, audio, and finishing layers together.</p>
+                    <p>A later run of the full system, with visuals, narrative, audio, and finishing combined.</p>
                     <div class="episode-meta">9:56 runtime</div>
                 </div>
             </article>
@@ -233,18 +233,18 @@
                 <div class="episode-body">
                     <span class="episode-tag">Latest output · Oct 2026</span>
                     <h3>Latest episode</h3>
-                    <p>A new case, researched, written, narrated and rendered end to end by the current pipeline.</p>
+                    <p>The current pipeline researched, wrote, narrated, and rendered this new case end to end.</p>
                     <div class="episode-meta">6:28 runtime</div>
                 </div>
             </article>
         </div>
-        <p class="runtime-note"><strong>Current runtime:</strong> a complete run takes about five hours. Time was not a project constraint, so I prioritized output quality and a reliable sequential workflow over concurrency optimization. That runtime is a current engineering tradeoff, not a speed claim.</p>
+        <p class="runtime-note"><strong>Runtime.</strong> A complete run takes about five hours. Time was not a constraint, so I put output quality and a reliable sequential workflow ahead of concurrency. The five hours are a tradeoff I chose, not a speed claim.</p>
 
         <section class="video-request" aria-labelledby="video-request-title">
             <div>
                 <p class="case-kicker">A useful next test</p>
                 <h2 id="video-request-title">Request a case video</h2>
-                <p>Have a story or unusual case you want to see processed? Leave your email and a short reference. The request is sent directly to me; a full pipeline run currently takes about five hours.</p>
+                <p>Have a story or unusual case you want to see run through the pipeline? Leave your email and a short reference. The request comes straight to me. A full run takes about five hours.</p>
             </div>
             <form id="videoRequestForm">
                 <label for="requestEmail">Your email</label>
@@ -253,7 +253,7 @@
                 <textarea id="requestTopic" name="topic" rows="4" required placeholder="A link or two sentences is enough."></textarea>
                 <div class="form-trap" hidden><label for="requestWebsite">Website</label><input id="requestWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></div>
                 <button type="submit">Send the request <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
-                <p class="request-note">Your email and case reference are used only to receive and reply to this request. See the <a href="/privacy">privacy policy</a>.</p>
+                <p class="request-note">I use your email and case reference only to receive and answer this request. See the <a href="/privacy">privacy policy</a>.</p>
                 <p class="request-note request-status" id="videoRequestStatus" role="status" aria-live="polite"></p>
             </form>
         </section>
@@ -261,8 +261,8 @@
         <h2>Public system overview</h2>
         <p>
             The current pipeline has five production departments, twenty-eight stages, and two
-            independent review gates. The diagram stays at that published level; internal stage
-            contracts, routing, retry policy, and tuned orchestration are intentionally omitted.
+            independent review gates. The diagram stops at that level and leaves out internal stage
+            contracts, routing, retry policy, and tuned orchestration.
         </p>
 
         <div class="pipeline">
@@ -298,12 +298,12 @@
 
         <h2>Public evidence</h2>
         <div class="public-facts">
-            <div class="public-fact"><strong>Selected production code</strong><span>The excerpt contains real, low-disclosure-risk modules rather than display-only pseudocode.</span></div>
-            <div class="public-fact"><strong>46 published tests</strong><span>The included modules and their tests run independently of the private package.</span></div>
+            <div class="public-fact"><strong>Selected production code</strong><span>The excerpt is real production modules with low disclosure risk, not pseudocode written for show.</span></div>
+            <div class="public-fact"><strong>46 published tests</strong><span>The included modules and their tests run without the private package.</span></div>
             <div class="public-fact"><strong>Measured output</strong><span>The published reference run reports 9:55 at 1920&times;1080, 14,294 frames, 128 shots, and 760 reviewed assets.</span></div>
         </div>
 
-        <h2>Public technology boundary</h2>
+        <h2>Public tech stack</h2>
         <p class="stack-line">
             <strong>Python 3.12</strong> for the pipeline, <strong>TypeScript</strong> for rendering &middot;
             <strong>LangGraph</strong> and <strong>Pydantic</strong> for the public architecture &middot;
@@ -314,13 +314,13 @@
         <div class="provider-list" aria-label="TC_ACC model and voice providers">
             <span>OpenAI</span><span>Gemini</span><span>Qwen</span><span>ElevenLabs</span><span>Fish Audio</span>
         </div>
-        <p>Specific models, routing order, provider contracts, fallback policy, and configuration are intentionally not documented here.</p>
+        <p>This page does not document specific models, routing order, provider contracts, fallback policy, or configuration.</p>
 
         <h2>Disclosure boundary</h2>
         <p>
-            The public repository is intentionally not a runnable copy of the production system. It
-            includes selected modules, tests, redacted configuration structure, and explanatory docs;
-            it omits the entry point, dependency manifest, environment template, and most production modules.
+            By design, the public repository is not a runnable copy of the production system. It
+            includes selected modules, tests, redacted configuration structure, and explanatory docs.
+            It omits the entry point, dependency manifest, environment template, and most production modules.
         </p>
 
         <div class="disclosure">
@@ -330,8 +330,8 @@
                 the brand and animation system, and most of the TypeScript renderer and agent implementation.
             </p>
             <p>
-                The portfolio follows the same boundary. It demonstrates the system's scope and public
-                evidence without reproducing the transferable implementation details.
+                This portfolio follows the same boundary. It shows the system's scope and public
+                evidence and leaves out implementation details someone could reuse.
             </p>
         </div>
 
@@ -386,7 +386,7 @@
             }),
           });
           const payload = await response.json().catch(() => ({}));
-          if (!response.ok) throw new Error(payload.error || 'The request could not be sent.');
+          if (!response.ok) throw new Error(payload.error || 'The request did not go through.');
           form.reset();
           status.dataset.state = 'success';
           status.textContent = 'Request sent. I will reply by email if I can take it on.';

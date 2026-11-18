@@ -36,11 +36,11 @@ export async function storyFigure(fig, B, brain) {
   fig.querySelector('a').outerHTML = `
     <div class="ft-story">
       <div class="ft-story-brain">
-        <canvas role="img" aria-label="The 200 cortical parcels in a lateral view, coloured by leave-one-participant-out inter-subject correlation from 0 to 0.79; strongest around superior temporal cortex. Play the story to drive them with the cleaned BOLD run."></canvas>
+        <canvas role="img" aria-label="The 200 cortical parcels in a lateral view, coloured by leave-one-participant-out inter-subject correlation from 0 to 0.79, strongest around superior temporal cortex. Play the story to color them by the cleaned BOLD run."></canvas>
         <p class="ft-credit ft-brain-say"></p>
       </div>
       <div class="ft-story-panels">
-        <div class="ft-pa" role="img" aria-label="Framewise displacement over 457 seconds of one run, peaking at 0.74 mm, with a 0.5 mm censoring threshold; ${cens.size} censored frames, most between 117 and 285 seconds."></div>
+        <div class="ft-pa" role="img" aria-label="Framewise displacement over 457 seconds of one run, peaking at 0.74 mm, with a 0.5 mm censoring threshold. ${cens.size} frames are censored, most between 117 and 285 seconds."></div>
         <div class="ft-pb" role="img" aria-label="Cleaned, standardized BOLD for 200 cortical parcels over the story, z from -2.5 to 2.5. Drag to scrub."></div>
         <button class="ft-play" type="button"><i aria-hidden="true"></i><span>Play the story</span></button>
       </div>
@@ -139,7 +139,7 @@ export function fallFigure(fig, B, brain) {
   const r = brain.transfer_r, lo = Math.min(...r), hi = Math.max(...r), bw = (hi - lo) / 36, mean = r.reduce((a, b) => a + b) / r.length;
   const bin = r.map((v) => Math.min(35, Math.floor((v - lo) / bw)));
   const stack = r.map((v, i) => r.filter((u, j) => bin[j] === bin[i] && (u < v || (u === v && j < i))).length);
-  fig.querySelector('a').outerHTML = `<canvas class="ft-fall" role="img" aria-label="Held-out transfer r for each of the 200 parcels, highest bilaterally in superior temporal cortex, and its distribution: mean ${mean.toFixed(3)}, range ${lo.toFixed(3)} to ${hi.toFixed(3)}, ${r.filter((v) => v > 0.2).length} parcels above 0.2; shaded range of condition means .068 to .092."></canvas>
+  fig.querySelector('a').outerHTML = `<canvas class="ft-fall" role="img" aria-label="Held-out transfer r for each of the 200 parcels, highest bilaterally in superior temporal cortex, and its distribution: mean ${mean.toFixed(3)}, range ${lo.toFixed(3)} to ${hi.toFixed(3)}, ${r.filter((v) => v > 0.2).length} parcels above 0.2. The shaded range marks condition means of .068 to .092."></canvas>
     <p class="ft-credit ft-fall-say" aria-live="polite">Point at a parcel to see its r.</p>${orig('images/thesis-brain-encoding.webp')}`;
   const cv = fig.querySelector('canvas'), say = fig.querySelector('.ft-fall-say');
   let prog = 1, hover = -1, geo;
@@ -230,12 +230,12 @@ export function detectFigure(link) {
   const fig = document.createElement('figure');
   fig.className = 'ft-detect';
   fig.innerHTML = `<div class="ft-detect-grid">
-      <div role="img" aria-label="A, detection fraction against planted rho from 0 to 0.8: every line stays between about 0.02 and 0.10, far under the 0.8 target."></div>
-      <div role="img" aria-label="B, recovered rho against planted rho for Gemma 2 2B and Llama 3.1 8B: near zero at every planted strength."></div>
+      <div role="img" aria-label="A, detection fraction against planted rho from 0 to 0.8. Every line stays between about 0.02 and 0.10, far under the 0.8 target."></div>
+      <div role="img" aria-label="B, recovered rho against planted rho for Gemma 2 2B and Llama 3.1 8B, near zero at every planted strength."></div>
       <div role="img" aria-label="C, median recovered rho against bank size K. Transfer: ${BANK.K.map((k, i) => `K ${k}, ${BANK.transfer[i]}`).join('; ')}. Within description: ${BANK.K.map((k, i) => `K ${k}, ${BANK.within[i]}`).join('; ')}. Target 0.8; the paper uses K = 256."></div>
     </div>
     <figcaption><span class="ft-key"><i class="k-g"></i>Gemma 2 2B</span><span class="ft-key"><i class="k-l"></i>Llama 3.1 8B</span><span class="ft-key"><i class="k-t"></i>Transfer</span><span class="ft-key"><i class="k-w"></i>Within description</span>
-      <span class="ft-credit">A and B: bands span every plotted line (1× and 2× residual SD); C: values read from the figure.</span> ${orig('images/thesis-detectability.webp')}</figcaption>`;
+      <span class="ft-credit">In A and B, bands span every plotted line (1× and 2× residual SD). C values are read from the figure.</span> ${orig('images/thesis-detectability.webp')}</figcaption>`;
   link.replaceWith(fig);
   const [a, b, c] = fig.querySelectorAll('.ft-detect-grid > div');
   const H = 250, top = 44, bot = 206;

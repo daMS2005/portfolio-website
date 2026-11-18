@@ -15,9 +15,9 @@ const once = (el, fn, threshold = 0.15) => new IntersectionObserver(([e], io) =>
 if (hero && location.pathname.includes('thesis')) {
   // static restructuring first, so nothing shifts once the data arrives
   hero.insertAdjacentHTML('beforeend', `<figure class="ft-head">
-      <canvas role="img" aria-label="Human and AI face each other. Left: an x-ray head with the 200 cortical parcels at their atlas positions, gold where the 59 listeners responded alike. Right: the same head drawn as a language model, six layer bands of grid cells with a few sparse features lit in teal. Between them: one bank of 256 feature IDs, linked to both."></canvas>
+      <canvas role="img" aria-label="Human and AI face each other. On the left, an x-ray head shows the 200 cortical parcels at their atlas positions, gold where the 59 listeners responded alike. On the right, the same head is drawn as a language model, with six layer bands of grid cells and a few sparse features lit in teal. Between them, one bank of 256 feature IDs links to both."></canvas>
       <div class="ft-head-labels" aria-hidden="true"><span>Human<small>200 cortical parcels</small></span><span>Same features<small>256 feature IDs, locked</small></span><span>AI<small>language model, six layers</small></span></div>
-      <figcaption>Do the brain and the model rely on the same features? Gold: where the 59 listeners responded alike (inter-subject correlation, max 0.79). Teal: sparse model features, drawn for illustration.</figcaption>
+      <figcaption>Do the brain and the model rely on the same features? Gold marks where the 59 listeners responded alike (inter-subject correlation, max 0.79). Teal marks sparse model features, drawn for illustration.</figcaption>
     </figure>`);
   hero.querySelector('div').insertAdjacentHTML('beforeend', `<nav class="ft-chapters" aria-label="The story">${CHAPTERS.filter(([, id]) => id !== 'ft-scale').slice(0, 5).map(([, id, name]) => `<a href="#${id}">${name}</a>`).join('')}</nav>`);
   storyOrder();
@@ -54,7 +54,7 @@ function storyOrder() {
           <div class="ft-head-labels" aria-hidden="true"><span>256 feature IDs<small>locked on the source description</small></span><span>Six depth-spaced layers<small>a few sparse features active at once</small></span></div></figure>
         <div class="detail-grid">
           <div class="detail-panel"><h3>Hidden states</h3><p>Each timed transcript runs through the model in causal context windows. Hidden states and residual-stream SAE activations are kept from six depth-spaced layers.</p></div>
-          <div class="detail-panel"><h3>Sparse features</h3><p>A sparse autoencoder (SAE) rewrites each hidden state as a few active features out of many. For the paper's test, nested banks of 64 to 1,024 feature IDs are chosen on one description, without looking at BOLD, model targets, or the second description, and then locked; the headline result uses 256.</p></div>
+          <div class="detail-panel"><h3>Sparse features</h3><p>A sparse autoencoder (SAE) rewrites each hidden state as a few active features out of many. For the paper's test, nested banks of 64 to 1,024 feature IDs are chosen on one description and then locked. The choice never looks at BOLD, model targets, or the second description. The headline result uses 256.</p></div>
         </div>`;
     }
     if (!sec) return;

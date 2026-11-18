@@ -154,7 +154,7 @@ $$('#websites .website-card').forEach((card) => {
   // Info layer: only what the card below doesn't already say, from the section intro and the link itself.
   const row = (k, v) => `<dt>${k}</dt><dd>${v}</dd>`;
   const info = `<dl class="fm-info">${row('Role', 'Solo build, from scope and design through launch')}${
-    row('Client', 'Direct communication')}${row('Live', `${new URL(card.href).host.replace(/^www\./, '')} ↗`)}</dl>`;
+    row('Client', 'Worked with me directly')}${row('Live', `${new URL(card.href).host.replace(/^www\./, '')} ↗`)}</dl>`;
   card.insertAdjacentHTML('afterbegin', `<div class="fm-shot" style="--ix:${ix};--iy:${iy}" aria-hidden="true"><img class="fm-shot-mono" ${img}><img class="fm-shot-col" ${img}><i class="fm-ring"></i>${info}</div>`);
   // Touch: the first tap on the picture opens the info, a second tap follows the link.
   card.addEventListener('click', (ev) => {

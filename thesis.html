@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain–LLM Feature Correspondence · Daniel Mora</title>
+    <title>Brain–LLM feature correspondence · Daniel Mora</title>
     <meta name="description" content="A research case study on cross-description sparse-feature correspondence between language models and fMRI responses.">
     <meta name="theme-color" content="#050505">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Brain–LLM Feature Correspondence · Daniel Mora">
+    <meta property="og:title" content="Brain–LLM feature correspondence · Daniel Mora">
     <meta property="og:description" content="The design, transfer test, results, and limits of Daniel Mora's thesis research.">
     <meta property="og:image" content="/images/thesis-method.png">
     <meta name="twitter:card" content="summary_large_image">
@@ -41,52 +41,52 @@
             <div>
                 <span class="detail-kicker">Bachelor thesis · paper</span>
                 <h1>Brain–LLM feature correspondence</h1>
-                <p class="detail-lede">Language-model features can predict both held-out model activity and human fMRI responses. This project asks the harder question: do those targets rely on the same features in the same way?</p>
+                <p class="detail-lede">Language-model features can predict both held-out model activity and human fMRI responses. This project asks whether the two targets rely on the same features in the same way.</p>
             </div>
             <aside class="detail-status-card">
                 <span class="status-live"><i></i> Current status</span>
-                <p>The bachelor thesis is complete. A more focused paper develops the same central idea with a tighter claim, stronger controls, and a deliberately conservative conclusion: <em>Can We Detect Shared Features Between Language Models and the Brain?</em></p>
+                <p>The bachelor thesis is complete. A follow-up paper, <em>Can We Detect Shared Features Between Language Models and the Brain?</em>, tests the same idea with a narrower claim, stronger controls and a cautious conclusion.</p>
             </aside>
         </header>
 
         <section class="detail-section">
             <div class="detail-section-header"><span>01 · Evolution</span><h2>Thesis and paper</h2></div>
-            <p class="detail-intro">The thesis and the paper belong to the same research program: testing whether sparse language-model features provide a meaningful bridge between model activity and human responses to spoken stories. They differ in scope and purpose.</p>
+            <p class="detail-intro">The thesis and the paper both test whether sparse language-model features link model activity to human responses to spoken stories. They differ in scope and purpose.</p>
             <div class="artifact-comparison">
                 <article class="artifact-card">
                     <span class="artifact-label">Bachelor thesis · broad and exploratory</span>
-                    <h3>Build the research system and investigate the space.</h3>
-                    <p>The thesis was the more open-ended version of the work. It included dataset and stimulus selection, exploratory fMRI analysis, transcript and timing infrastructure, SAE feature discovery, qualitative inspection, and focused feature probing.</p>
+                    <h3>Build the research system and explore the data.</h3>
+                    <p>The thesis was the more open-ended version of the work. It covered dataset and stimulus selection, exploratory fMRI analysis, transcript and timing infrastructure, SAE feature discovery, qualitative inspection, and focused feature probing.</p>
                     <ul>
-                        <li>Compared candidate naturalistic fMRI datasets before selecting the paired <em>Shapes</em> stories.</li>
-                        <li>Built auditable feature evidence from transcript activations, Dolma contexts, judge summaries, and local alignment records.</li>
+                        <li>Compared candidate naturalistic fMRI datasets before choosing the paired <em>Shapes</em> stories.</li>
+                        <li>Recorded the evidence behind each feature: transcript activations, Dolma contexts, judge summaries, and local alignment records.</li>
                         <li>Tested individual feature hypotheses with synthetic probes, counterfactual edits, and optional steering interventions.</li>
-                        <li>Explored complementary model-side, sensitivity, and behavioral-benchmark analyses.</li>
+                        <li>Ran extra model-side, sensitivity, and behavioral-benchmark analyses.</li>
                     </ul>
                     <div class="artifact-result">
                         <span>What the thesis found</span>
-                        <p>In the cleaned 48-run <em>shapesphysical</em> analysis, the three completed model analyses converged at about <strong>r = .17</strong> on the brain side with a small positive <strong>R² ≈ .034</strong>. Feature-importance correlations looked high (<strong>.909–.961</strong>), but sample-level RSA remained low (<strong>.019–.067</strong>). The exploratory result suggested overlap in feature salience, not matching moment-by-moment representational geometry.</p>
+                        <p>In the cleaned 48-run <em>shapesphysical</em> analysis, the three completed model analyses converged at about <strong>r = .17</strong> on the brain side with a small positive <strong>R² ≈ .034</strong>. Feature-importance correlations looked high (<strong>.909–.961</strong>), but sample-level RSA stayed low (<strong>.019–.067</strong>). The exploratory result suggested overlap in feature salience, not matching moment-by-moment representational geometry.</p>
                     </div>
                 </article>
                 <article class="artifact-card artifact-card-polished">
-                    <span class="artifact-label">Paper · focused and polished</span>
+                    <span class="artifact-label">Paper · focused</span>
                     <h3>Turn the strongest idea into one defensible test.</h3>
-                    <p>The paper trims the exploratory branches and centers the cleanest question: after a sparse feature bank transfers to a second description, do the brain and the model depend on those coordinates in the same order?</p>
+                    <p>The paper drops the exploratory branches and asks one question. After a sparse feature bank transfers to a second description, do the brain and the model depend on its features in the same order?</p>
                     <ul>
-                        <li>Freezes feature selection on the source description before either target or the held-out description is examined.</li>
+                        <li>Freezes feature selection on the source description before looking at either target or the held-out description.</li>
                         <li>Measures reliance through held-out conditional and grouped ablation, not coefficient magnitude.</li>
                         <li>Tests correspondence against temporal and feature-identity nulls.</li>
                         <li>Uses simulations with planted agreement to check whether the test can detect correspondence at all.</li>
                     </ul>
                     <div class="artifact-result">
                         <span>What the paper found</span>
-                        <p>The source-selected basis still transferred, although BOLD prediction was weak (<strong>r = .068–.092</strong>). But the held-out reliance rankings did not agree: at 256 features, the mean across twelve model-direction conditions was <strong>ρ = −.056</strong> and no better than the fully retuned temporal null (<strong>p = .805</strong>). Simulations then show why this null is inconclusive: with 256 features, the test detects planted agreement in at most about 10% of runs, even when it is strong. The result cannot rule out shared organization between brain and model.</p>
+                        <p>The source-selected basis still transferred, though BOLD prediction was weak (<strong>r = .068–.092</strong>). The held-out reliance rankings did not agree. At 256 features, the mean across twelve model-direction conditions was <strong>ρ = −.056</strong>, no better than the fully retuned temporal null (<strong>p = .805</strong>). Simulations show why this null is inconclusive. With 256 features, the test detects planted agreement in at most about 10% of runs, even when that agreement is strong. The result cannot rule out shared organization between brain and model.</p>
                     </div>
                 </article>
             </div>
             <div class="result-evolution">
                 <span>Why the result changed</span>
-                <p>The thesis result came from an exploratory, cleaned single-story comparison of fitted feature importance. The paper raises the bar: features are selected on one description, transferred unchanged to the other, and judged by the loss caused by removing them in held-out data. It also controls for shared story timing and correlated features. Under that stricter test, the earlier apparent salience agreement does not generalize. That difference is the intellectual progression of the project, not an attempt to hide the first result.</p>
+                <p>The thesis result came from an exploratory, cleaned single-story comparison of fitted feature importance. The paper uses a stricter test. It selects features on one description, transfers them unchanged to the other, and judges each one by the loss when it is removed from held-out data. It also controls for shared story timing and correlated features. Under that test, the apparent salience agreement from the thesis does not generalize.</p>
             </div>
         </section>
 
@@ -94,7 +94,7 @@
             <div class="detail-section-header"><span>02 · Question</span><h2>Prediction vs. correspondence</h2></div>
             <div class="detail-grid">
                 <div class="detail-panel"><h3>The tempting claim</h3><p>If one sparse feature bank predicts activity in a language model and in the brain, it is tempting to call that shared representation.</p></div>
-                <div class="detail-panel"><h3>The actual test</h3><p>Freeze the features selected on one spoken description, transfer them unchanged to a second description of the same events, and compare which features each target truly depends on.</p></div>
+                <div class="detail-panel"><h3>The actual test</h3><p>Freeze the features selected on one spoken description, transfer them unchanged to a second description of the same events, and compare which features each target depends on.</p></div>
             </div>
         </section>
 
@@ -103,35 +103,35 @@
             <ol class="research-pipeline">
                 <li>
                     <span class="pipeline-number">01</span>
-                    <div><h3>Select a defensible paired stimulus</h3><p>Exploratory analysis compared candidate naturalistic fMRI datasets and their timing quality. The final design uses <em>shapesphysical</em> and <em>shapessocial</em>: different spoken descriptions of the same animation, heard by the same 59 participants.</p></div>
+                    <div><h3>Choose a paired stimulus</h3><p>Exploratory analysis compared candidate naturalistic fMRI datasets and their timing quality. The final design uses <em>shapesphysical</em> and <em>shapessocial</em>, two spoken descriptions of the same animation heard by the same 59 participants.</p></div>
                 </li>
                 <li>
                     <span class="pipeline-number">02</span>
-                    <div><h3>Build a shared time axis</h3><p>Audio and transcripts are normalized, long recordings are chunked for Whisper word timing, and Gentle/Kaldi forced alignment refines word and phoneme boundaries. Words and model-specific tokens are then mapped to the scanner's 1.5-second TR grid.</p></div>
+                    <div><h3>Build a shared time axis</h3><p>The pipeline normalizes audio and transcripts and splits long recordings into chunks for Whisper word timing. Gentle/Kaldi forced alignment then refines word and phoneme boundaries. Words and each model's tokens are mapped to the scanner's 1.5-second TR grid.</p></div>
                 </li>
                 <li>
                     <span class="pipeline-number">03</span>
-                    <div><h3>Construct clean brain targets</h3><p>fMRIPrep outputs are summarized into 200 Schaefer cortical parcels. Motion and physiological nuisance terms are regressed out; high-motion, high-DVARS, and non-steady-state response rows are censored while the complete timing grid remains intact.</p></div>
+                    <div><h3>Build clean brain targets</h3><p>fMRIPrep outputs are summarized into 200 Schaefer cortical parcels. Motion and physiological nuisance terms are regressed out. High-motion, high-DVARS, and non-steady-state response rows are censored, and the full timing grid stays intact.</p></div>
                 </li>
                 <li>
                     <span class="pipeline-number">04</span>
-                    <div><h3>Extract model states and sparse features</h3><p>Each timed transcript is processed in causal context windows. Hidden states and residual-stream SAE activations are retained across six depth-spaced layers, then aggregated from tokens to TRs alongside the model's final hidden-state target.</p></div>
+                    <div><h3>Extract model states and sparse features</h3><p>Each timed transcript runs through the model in causal context windows. Hidden states and residual-stream SAE activations are kept from six depth-spaced layers. They are then aggregated from tokens to TRs, along with the model's final hidden-state target.</p></div>
                 </li>
                 <li>
                     <span class="pipeline-number">05</span>
-                    <div><h3>Discover, inspect, and probe features</h3><p>The thesis ranks transcript-relevant features by temporal activity and preserves their strongest tokens, spans, sentences, corpus contexts, and judge summaries. Selected features can then be tested with synthetic examples, counterfactual edits, and steering as an auditable interpretability track.</p></div>
+                    <div><h3>Discover, inspect, and probe features</h3><p>The thesis ranks transcript-relevant features by temporal activity and keeps their strongest tokens, spans, sentences, corpus contexts, and judge summaries. Selected features can then be tested with synthetic examples, counterfactual edits, and steering. Every piece of evidence is kept, so each step can be audited.</p></div>
                 </li>
                 <li>
                     <span class="pipeline-number">06</span>
-                    <div><h3>Freeze the source-only feature bank</h3><p>For the paper's decisive test, feature identities are chosen from one description without looking at BOLD, model targets, or the second description. Nested banks from 64 to 1,024 features are carried unchanged into the paired telling.</p></div>
+                    <div><h3>Freeze the source-only feature bank</h3><p>For the paper's main test, feature identities are chosen from one description without looking at BOLD, model targets, or the second description. Nested banks of 64 to 1,024 features carry over unchanged to the paired description.</p></div>
                 </li>
                 <li>
                     <span class="pipeline-number">07</span>
-                    <div><h3>Fit matched ridge models</h3><p>The same sparse coordinates predict two different outcomes: lagged cortical BOLD and the model's unlagged final hidden state. Contiguous temporal folds, nested penalty selection, training-only scaling, and a purge around BOLD test blocks reduce leakage.</p></div>
+                    <div><h3>Fit matched ridge models</h3><p>The same sparse features predict two different outcomes: lagged cortical BOLD and the model's unlagged final hidden state. Contiguous temporal folds, nested penalty selection, training-only scaling, and a purge around BOLD test blocks reduce leakage.</p></div>
                 </li>
                 <li>
                     <span class="pipeline-number">08</span>
-                    <div><h3>Ablate, compare, and calibrate</h3><p>Each feature—or correlated feature group—is removed only in held-out data to measure the loss in predictive performance. Brain and model reliance rankings are compared in both transfer directions, against fully retuned temporal nulls, identity nulls, robustness sweeps, and a semi-synthetic power analysis.</p></div>
+                    <div><h3>Ablate, compare, and calibrate</h3><p>Each feature, or group of correlated features, is removed only in held-out data to measure the loss in predictive performance. Brain and model reliance rankings are compared in both transfer directions against fully retuned temporal nulls and identity nulls, with robustness sweeps and a semi-synthetic power analysis.</p></div>
                 </li>
             </ol>
             <a href="images/thesis-method.webp" target="_blank" rel="noopener"><img class="research-figure research-figure-tall" src="images/thesis-method.webp" alt="Five-step research design: pair two descriptions, select a source-only SAE basis, predict participant BOLD and language-model hidden states, compare removal-based feature profiles, and test against structured nulls" width="870" height="1355" loading="lazy" decoding="async"></a>
@@ -139,19 +139,19 @@
 
         <section class="detail-section">
             <div class="detail-section-header"><span>04 · Brain data</span><h2>The fMRI data</h2></div>
-            <p class="detail-intro">The analysis does not treat “the brain” as one score. It begins with quality-controlled time series, preserves the full story timeline through censoring, and models responses across a 200-parcel cortical atlas.</p>
+            <p class="detail-intro">The analysis models responses in each of 200 cortical parcels rather than as one brain-wide score. It starts from quality-controlled time series, and censoring keeps the full story timeline intact.</p>
             <div class="brain-data-grid">
                 <figure class="brain-data-figure brain-data-figure-wide">
                     <a href="images/thesis-brain-data.webp" target="_blank" rel="noopener"><img src="images/thesis-brain-data.webp" alt="Three-part fMRI data figure showing head-motion censoring for one run, a cleaned standardized BOLD response matrix across 200 cortical parcels, and cortical maps of leave-one-participant-out inter-subject correlation" width="1113" height="667" loading="lazy" decoding="async"></a>
-                    <figcaption><strong>From raw movement to usable signal.</strong> The top panels show motion-based quality control and the cleaned parcel-by-time BOLD matrix. The cortical views show where participants share a reliable stimulus-locked response, with the strongest consistency around superior temporal regions.</figcaption>
+                    <figcaption><strong>Quality control and shared response.</strong> The top panels show motion-based quality control and the cleaned parcel-by-time BOLD matrix. The cortical maps show where participants share a reliable stimulus-locked response. It is strongest around superior temporal regions.</figcaption>
                 </figure>
                 <figure class="brain-data-figure">
                     <a href="images/thesis-brain-encoding.webp" target="_blank" rel="noopener"><img src="images/thesis-brain-encoding.webp" alt="Cortical maps and histogram showing held-out cross-description prediction correlation across 200 brain parcels" width="1067" height="513" loading="lazy" decoding="async"></a>
-                    <figcaption><strong>Where the transferred feature bank predicts.</strong> Held-out prediction is weak overall but not spatially uniform. The cortical maps and parcel distribution show where the source-selected sparse basis carries predictive signal on the second description.</figcaption>
+                    <figcaption><strong>Where the transferred feature bank predicts.</strong> Held-out prediction is weak overall and varies across cortex. The cortical maps and parcel distribution show where the source-selected sparse basis predicts BOLD on the second description.</figcaption>
                 </figure>
                 <aside class="brain-data-note">
                     <span>How to read this</span>
-                    <p>The colorful cortex is not a claim that an SAE feature is a biological mechanism. These maps establish the measured BOLD target, its reliability, and the anatomical distribution of held-out prediction. The correspondence question is tested separately through feature-removal profiles.</p>
+                    <p>These maps do not claim that an SAE feature is a biological mechanism. They show the measured BOLD target, its reliability, and where in cortex held-out prediction falls. The feature-removal profiles test correspondence separately.</p>
                 </aside>
             </div>
         </section>
@@ -167,8 +167,8 @@
         <section class="detail-section">
             <div class="detail-section-header"><span>06 · Result</span><h2>Results</h2></div>
             <div class="result-band">
-                <div class="result-card"><strong>≤ 10%</strong><p class="detail-copy">Detection of planted agreement at 256 features, against an 80% target: the test is underpowered.</p></div>
-                <div class="result-card"><strong>r ≈ .07–.09</strong><p class="detail-copy">The frozen feature basis weakly predicts held-out BOLD responses.</p></div>
+                <div class="result-card"><strong>≤ 10%</strong><p class="detail-copy">Detection of planted agreement at 256 features, against an 80% target. The test is underpowered.</p></div>
+                <div class="result-card"><strong>r ≈ .07–.09</strong><p class="detail-copy">The frozen feature basis predicts held-out BOLD responses, but only weakly.</p></div>
                 <div class="result-card"><strong>ρ = −.056</strong><p class="detail-copy">The observed BOLD–model feature-profile agreement is no better than the temporal null (p = .805).</p></div>
             </div>
             <a href="images/thesis-detectability.webp" target="_blank" rel="noopener"><img class="research-figure" src="images/thesis-detectability.webp" alt="Simulation results: detection of planted correspondence stays near 5 to 10 percent at every planted strength, recovered correspondence stays near zero, and recovery improves only with much smaller feature banks" width="1600" height="828" loading="lazy" decoding="async" style="margin-top:1rem"></a>
@@ -178,7 +178,7 @@
             <div class="detail-section-header"><span>07 · Interpretation</span><h2>Conclusion</h2></div>
             <div class="detail-grid">
                 <div class="detail-panel"><h3>What the work supports</h3><p>A feature basis selected from one description contains signal that transfers to another description for both targets.</p></div>
-                <div class="detail-panel"><h3>What it does not establish</h3><p>It does not show that brain and model rely on different features. Because the test rarely recovers planted agreement, the null cannot separate shared organization from its absence. A recovery check has to come before such a null is interpreted.</p></div>
+                <div class="detail-panel"><h3>What it does not establish</h3><p>It does not show that brain and model rely on different features. Because the test rarely recovers planted agreement, the null cannot separate shared organization from its absence. A null like this needs a recovery check before anyone interprets it.</p></div>
             </div>
         </section>
 

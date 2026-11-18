@@ -19,7 +19,7 @@ const SOCIAL = [['GitHub', 'https://github.com/daMS2005'], ['LinkedIn', 'https:/
 const FLAGSHIPS = [['JEPA Transformer', '/jepa-transformer.html'], ['Brain–LLM Feature Correspondence', '/thesis.html'], ['TC_ACC Documentary Studio', '/tc-acc.html']];
 
 // The hero tagline verbatim; each keyword lights once when its section first enters view.
-let LINE = 'I build software that holds up in the real world, from web products to machine-learning systems.';
+let LINE = 'I build software that runs in the real world: web products and machine-learning systems.';
 [['I build', 'aboutMe'], ['software', 'projects'], ['real world', 'contact'], ['web products', 'websites'], ['machine-learning systems', 'research']]
   .forEach(([w, k]) => { LINE = LINE.replace(w, `<span data-k="${k}">${w}</span>`); });
 const PRELIT = { thesis: 'research', jepa: 'research', 'tc-acc': 'projects', personal: 'aboutMe' };

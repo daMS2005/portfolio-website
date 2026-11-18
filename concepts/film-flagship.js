@@ -240,7 +240,7 @@ function lens(visual, content, paint) {
   const dg = visual.querySelector('.dg');
   const [, bank, brain, model] = dg.querySelectorAll('.dg-node');
   note([...dg.querySelectorAll('.dg-node, .dg-bridge, .dg-verdict')], [ // thesis.html §03–06
-    'shapesphysical, one spoken telling\n59 participants, Narratives fMRI\nWords timed to the 1.5 s TR grid',
+    'shapesphysical, one spoken description\n59 participants, Narratives fMRI\nWords timed to the 1.5 s TR grid',
     'Chosen on description A alone, before BOLD\nNested banks of 64 to 1,024 features\n6 SAE systems · 3 families · 1B–12B',
     'Description B: shapessocial\nsame animation, same 59 listeners',
     '200 Schaefer cortical parcels\nMotion and physiology regressed out\nHeld-out r = .068–.092',
@@ -331,7 +331,7 @@ function lens(visual, content, paint) {
       sync();
     }, { threshold: [0, 0.3] }).observe(shot);
   }
-  note([shot], ['Case link in, 10-minute episode out\nAbout 5 hours, 0 human steps\nReference run: 9:55 · 1920×1080 · 128 shots']); // tc-acc.html
+  note([shot], ['Turns a case link into a 10-minute episode\nAbout 5 hours, no human steps\nReference run: 9:55 · 1920×1080 · 128 shots']); // tc-acc.html
 
   strip.classList.add('ff-tl');
   strip.setAttribute('aria-label', 'TC_ACC production pipeline: research 5 stages, story 4, assets 7, showrunner review gate, animation 2, showrunner review gate, publishing 8');

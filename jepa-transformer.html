@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JEPA Transformer · ArgusJEPA + CassaFormer · Daniel Mora</title>
-    <meta name="description" content="A two-stage equity forecaster: ArgusJEPA learns point-in-time asset-day embeddings, then a frozen hand-off feeds CassaFormer, a causal RoPE + Mixture-of-Experts Transformer, with custom Triton kernels.">
+    <meta name="description" content="A two-stage equity forecaster. ArgusJEPA learns point-in-time asset-day embeddings, and its frozen encoder feeds CassaFormer, a causal RoPE + Mixture-of-Experts Transformer with custom Triton kernels.">
     <meta name="theme-color" content="#050505">
     <meta property="og:type" content="article">
     <meta property="og:title" content="JEPA Transformer · Daniel Mora">
@@ -144,13 +144,13 @@
             <div>
                 <span class="detail-kicker">Financial time series · two-stage model</span>
                 <h1>JEPA Transformer</h1>
-                <p class="detail-lede"><strong>ArgusJEPA</strong> learns what a single asset-day looks like from a sparse, point-in-time feature vector. It is then frozen, and its daily embeddings become the input sequence of <strong>CassaFormer</strong>, a causal Transformer (RoPE, QK-RMSNorm, Mixture-of-Experts) that forecasts returns over several horizons. Hot paths run on custom Triton kernels, kept only where they beat <code>torch.compile</code>.</p>
+                <p class="detail-lede"><strong>ArgusJEPA</strong> learns an embedding of each asset-day from a sparse, point-in-time feature vector. It is then frozen, and its daily embeddings become the input sequence of <strong>CassaFormer</strong>, a causal Transformer (RoPE, QK-RMSNorm, Mixture-of-Experts) that forecasts returns over several horizons. Hot paths run on custom Triton kernels, kept only where they beat <code>torch.compile</code>.</p>
             </div>
             <aside class="detail-status-card">
                 <span class="status-live"><i></i> Weights released</span>
                 <div class="jt-statlist">
                     <div><b>2 stages</b><span>self-supervised JEPA, then a supervised Transformer</span></div>
-                    <div><b>Frozen</b><span>encoder: one embedding per asset-day</span></div>
+                    <div><b>Frozen</b><span>encoder, one embedding per asset-day</span></div>
                     <div><b>MoE</b><span>mixture-of-experts blocks in the middle of the stack</span></div>
                     <div><b>up to 2.4×</b><span>full-model speedup over <code>torch.compile</code> from custom Triton kernels</span></div>
                 </div>
@@ -159,16 +159,16 @@
 
         <section class="detail-section">
             <div class="detail-section-header"><span>01 · Inputs</span><h2>Four sources, one vector per asset‑day</h2></div>
-            <p class="detail-intro">A separate data repo collects each source into PostgreSQL and publishes reviewed, point-in-time views. A value only enters a row once it was actually public on that trading day. The universe is a point-in-time set of large, liquid US common stocks. Delisted names stay in, so the history is not limited to today's survivors.</p>
+            <p class="detail-intro">A separate data repo collects each source into PostgreSQL and publishes reviewed, point-in-time views. A value enters a row only if it was public on that trading day. The universe is a point-in-time set of large, liquid US common stocks. Delisted names stay in, so the history is not limited to today's survivors.</p>
 
             <div class="jt-panel">
                 <div class="jt-sources">
                     <div class="jt-src"><h4>IBKR</h4><p>Completed daily <code>TRADES</code> bars, keyed by the stable contract ID rather than the ticker.</p><small>Log returns, ranges, volume, risk</small></div>
                     <div class="jt-src"><h4>SEC EDGAR</h4><p>CompanyFacts and filings. A value becomes visible on the first session strictly after the filing's acceptance timestamp.</p><small>Fundamentals, 8-K events, business descriptions</small></div>
-                    <div class="jt-src"><h4>FRED / ALFRED</h4><p>Macro series aligned by vintage, i.e. the value as it was published then, not as revised later.</p><small>Joined by date as market context</small></div>
+                    <div class="jt-src"><h4>FRED / ALFRED</h4><p>Macro series aligned by vintage, so each value is the one published at the time, before later revisions.</p><small>Joined by date as market context</small></div>
                     <div class="jt-src"><h4>Alpha Vantage options</h4><p>Implied volatility, skew and put/call activity, used only once a month's option chains are complete.</p><small>Optional; masked when missing</small></div>
                 </div>
-                <p class="jt-join">↓ point-in-time join on <b>(contract, trading day)</b> → concatenated into <b>x ∈ ℝ<sup>F</sup></b> ↓</p>
+                <p class="jt-join">↓ point-in-time join on <b>(contract, trading day)</b>, concatenated into <b>x ∈ ℝ<sup>F</sup></b> ↓</p>
                 <div class="jt-vector" aria-label="Concatenated feature vector">
                     <div style="--w:3;background:#75d69c">market</div>
                     <div style="--w:4;background:#75d69c">fundamentals</div>
@@ -183,7 +183,7 @@
 
         <section class="detail-section">
             <div class="detail-section-header"><span>02 · Stage I · self-supervised</span><h2>ArgusJEPA: predict the full view from a masked view</h2></div>
-            <p class="detail-intro">Each asset-day is an independent sample; this stage models no time. Half of the available features are hidden. From what is left, the context encoder and predictor must reproduce the <em>latent</em> that an EMA teacher computes from the full view. The loss is in embedding space, so the model learns how features relate to each other rather than reconstructing raw numbers.</p>
+            <p class="detail-intro">Each asset-day is an independent sample, and this stage models no time. The mask hides half of the available features. From what is left, the context encoder and predictor must reproduce the <em>latent</em> that an EMA teacher computes from the full view. The loss is in embedding space, so the model learns how features relate to each other rather than reconstructing raw numbers.</p>
 
             <div class="jt-panel">
                 <p class="jt-swipe">Swipe sideways to see the whole diagram →</p>
@@ -256,7 +256,7 @@
 
         <section class="detail-section">
             <div class="detail-section-header"><span>03 · Freeze &amp; hand-off</span><h2>ArgusJEPA embeddings become CassaFormer's input</h2></div>
-            <p class="detail-intro">JEPA is trained only on the training period, then frozen. The two models never share gradients and have separate optimizers, schedules and checkpoints. The Transformer checkpoint just records which JEPA checkpoint produced its inputs.</p>
+            <p class="detail-intro">JEPA is trained only on the training period, then frozen. The two models never share gradients and have separate optimizers, schedules and checkpoints. The Transformer checkpoint only records which JEPA checkpoint produced its inputs.</p>
 
             <div class="jt-flow">
                 <div class="frozen"><b>❄ Frozen encoder</b><span><code>JEPA.encode(x)</code> runs the context encoder on the full view, with no mask and no dropout</span></div>
@@ -268,7 +268,7 @@
 
         <section class="detail-section">
             <div class="detail-section-header"><span>04 · Stage II · supervised</span><h2>CassaFormer: causal Transformer over daily embeddings</h2></div>
-            <p class="detail-intro">A decoder-only stack in which each position <em>t</em> forecasts that day's forward returns. It has no tokenizer and no learned positional table: a bias-free linear layer maps the JEPA vector into the residual stream, and RoPE supplies order.</p>
+            <p class="detail-intro">A decoder-only stack in which each position <em>t</em> forecasts that day's forward returns. It has no tokenizer and no learned positional table. A bias-free linear layer maps the JEPA vector into the residual stream, and RoPE supplies order.</p>
 
             <div class="jt-panel">
                 <p class="jt-swipe">Swipe sideways to see the whole diagram →</p>
@@ -339,7 +339,7 @@
                         <rect class="n" x="696" y="58" width="130" height="80"/>
                         <text class="t" x="708" y="84">QK-RMSNorm</text>
                         <text class="s" x="708" y="106">per head, Q and K</text>
-                        <text class="s" x="708" y="125">tames logit scale</text>
+                        <text class="s" x="708" y="125">bounds logit scale</text>
                         <path class="a" d="M826 98 L842 98"/>
                         <rect class="n" x="844" y="58" width="128" height="80"/>
                         <text class="t" x="856" y="84">RoPE</text>
@@ -421,7 +421,7 @@
 
         <section class="detail-section">
             <div class="detail-section-header"><span>05 · Custom kernels</span><h2>Triton only where it beats <code>torch.compile</code></h2></div>
-            <p class="detail-intro">Every candidate kernel was A/B-tested on NVIDIA L4 and A100 GPUs against the strongest off-the-shelf baseline: <code>torch.compile</code>, cuBLAS, or SDPA/FlashAttention. Parity was checked before timing, and warm-up included compilation. Two kernels survived. The backend is an explicit <code>torch</code> / <code>triton</code> switch with identical state dicts.</p>
+            <p class="detail-intro">Every candidate kernel was A/B-tested on NVIDIA L4 and A100 GPUs against the strongest off-the-shelf baseline: <code>torch.compile</code>, cuBLAS, or SDPA/FlashAttention. Outputs had to match before timing started, and warm-up included compilation. Two kernels beat the baseline and shipped. The backend is an explicit <code>torch</code> / <code>triton</code> switch with identical state dicts.</p>
 
             <div class="jt-kernels">
                 <div class="jt-panel">
@@ -437,11 +437,11 @@
                         <div><b>Deterministic</b><span>expert-weight grads use split, non-atomic reductions</span></div>
                         <div><b>FP32 &amp; wide models</b><span>grouped GEMMs that keep up/gate; autotunes IEEE vs 3×TF32</span></div>
                     </div>
-                    <p style="margin-bottom:0">Tile shapes are autotuned per GPU, keyed by model shape and a power-of-two token bucket that is a runtime argument, so a new batch size never recompiles.</p>
+                    <p style="margin-bottom:0">Tile shapes are autotuned per GPU and keyed by model shape and a power-of-two token bucket. The bucket is a runtime argument, so a new batch size never recompiles.</p>
                 </div>
                 <div class="jt-panel">
                     <h3>Strict-FP32 linear layers</h3>
-                    <p>FP32 matmuls on tensor cores via 3×TF32: each operand is split into a TF32 high part and a remainder, and three partial products accumulate in FP32.</p>
+                    <p>FP32 matmuls run on tensor cores via 3×TF32. Each operand splits into a TF32 high part and a remainder, and three partial products accumulate in FP32.</p>
                     <div class="jt-flow">
                         <div class="kern"><b>1 · Split</b><span>a = a<sub>hi</sub> + a<sub>lo</sub>, both TF32</span></div>
                         <div class="kern"><b>2 · Accumulate</b><span>hi·hi + hi·lo + lo·hi in FP32 on tensor cores</span></div>
@@ -460,12 +460,12 @@
                         <tbody>
                             <tr><td>MoE experts (per layer)</td><td>Triton</td><td class="jt-win">up to 3.6×</td></tr>
                             <tr><td>Full model, MoE kernel</td><td>Triton MoE + compiled rest</td><td class="jt-win">up to 2.4×</td></tr>
-                            <tr><td>Linear layers, strict FP32 (A100)</td><td>Triton 3×TF32</td><td class="jt-win">1.3 – 1.5× per GEMM</td></tr>
-                            <tr><td>Full model, strict FP32 (A100)</td><td>Triton 3×TF32 + MoE</td><td class="jt-win">1.4 – 1.9×</td></tr>
+                            <tr><td>Linear layers, strict FP32 (A100)</td><td>Triton 3×TF32</td><td class="jt-win">1.3 to 1.5× per GEMM</td></tr>
+                            <tr><td>Full model, strict FP32 (A100)</td><td>Triton 3×TF32 + MoE</td><td class="jt-win">1.4 to 1.9×</td></tr>
                             <tr><td>JEPA fused first block</td><td>PyTorch</td><td class="jt-loss">at most 1.12×, removed</td></tr>
                             <tr><td>RMSNorm, QK-norm + RoPE, SwiGLU</td><td>PyTorch</td><td class="jt-loss">tied or lost, removed</td></tr>
                             <tr><td>Attention</td><td>SDPA / FlashAttention</td><td>baseline</td></tr>
-                            <tr><td>Early sparse-gather JEPA kernel</td><td>discarded</td><td class="jt-loss">30 – 100× slower</td></tr>
+                            <tr><td>Early sparse-gather JEPA kernel</td><td>discarded</td><td class="jt-loss">30 to 100× slower</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -477,13 +477,13 @@
 
             <div class="jt-decisions">
                 <div class="jt-decision"><h4>Two stages, never joint</h4><p>The forecasting loss cannot reshape the representation, and JEPA is fit on the training period only. That keeps leakage boundaries simple to audit, and either model can be retrained on its own.</p></div>
-                <div class="jt-decision"><h4>Per-day JEPA, temporal Transformer</h4><p>JEPA learns cross-sectional structure within a single day. Sequence modelling across days belongs to the Transformer.</p></div>
-                <div class="jt-decision"><h4>Mask by zeroing, not compaction</h4><p>Hidden and missing features are zeroed inside the projection, so every feature keeps its own weight column and NaNs never reach the arithmetic. Missingness becomes something the model sees, not an imputation.</p></div>
-                <div class="jt-decision"><h4>Latent L1 + EMA teacher</h4><p>Predicting the teacher's embedding rather than raw values avoids fitting noise in heavy-tailed inputs. The EMA target and predictor head were not enough on their own: the first encoder collapsed to about 3 effective dimensions, so a VICReg variance–covariance penalty now keeps about 370 in use (section 07).</p></div>
-                <div class="jt-decision"><h4>RoPE, no learned positions</h4><p>Relative position comes from rotations, so cached inference stays exact: cached keys keep their original angles. No position table has to be learned from limited financial data.</p></div>
+                <div class="jt-decision"><h4>Per-day JEPA, temporal Transformer</h4><p>JEPA learns cross-sectional structure within a single day. The Transformer models the sequence across days.</p></div>
+                <div class="jt-decision"><h4>Mask by zeroing, not compaction</h4><p>The projection zeroes hidden and missing features, so every feature keeps its own weight column and NaNs never reach the arithmetic. The model sees which values are missing instead of imputed values.</p></div>
+                <div class="jt-decision"><h4>Latent L1 + EMA teacher</h4><p>Predicting the teacher's embedding rather than raw values avoids fitting noise in heavy-tailed inputs. The EMA target and predictor head were not enough on their own. The first encoder collapsed to about 3 effective dimensions, so a VICReg variance-covariance penalty now keeps about 370 in use (section 07).</p></div>
+                <div class="jt-decision"><h4>RoPE, no learned positions</h4><p>Relative position comes from rotations. Cached keys keep their original angles, so cached inference stays exact. No position table has to be learned from limited financial data.</p></div>
                 <div class="jt-decision"><h4>QK-RMSNorm before RoPE</h4><p>Normalizing Q and K per head bounds attention-logit growth, which keeps training stable. Attention is full multi-head, with no grouped-query sharing.</p></div>
-                <div class="jt-decision k"><h4>MoE only in the middle</h4><p>The middle blocks route each day to a few of several experts, letting different market regimes use different MLPs. The first and last blocks stay dense, so input embedding and output readout are shared.</p></div>
-                <div class="jt-decision k"><h4>Gates not renormalized</h4><p>Renormalizing the selected gates weakens the router's gradient from the forecast loss, and with a single expert cuts it off entirely. Keeping the raw softmax probabilities preserves it. Routing is dropless, with no capacity limit.</p></div>
+                <div class="jt-decision k"><h4>MoE only in the middle</h4><p>The middle blocks route each day to a few of several experts, so different market regimes can use different MLPs. The first and last blocks stay dense, so input embedding and output readout are shared.</p></div>
+                <div class="jt-decision k"><h4>Gates not renormalized</h4><p>Renormalizing the selected gates weakens the router's gradient from the forecast loss, and with a single expert cuts it off. Keeping the raw softmax probabilities preserves it. Routing is dropless, with no capacity limit.</p></div>
                 <div class="jt-decision"><h4>Student-t head</h4><p>Returns are heavy-tailed. The distributional head learns location, a softplus scale and degrees of freedom held above 2, so the predicted variance stays finite. It trains on NLL; a point head with MSE is also available.</p></div>
                 <div class="jt-decision"><h4>Leakage-safe supervision</h4><p>Labels are shifted forward to each horizon before batching, and companies are split into separate groups as well as by time. A boolean <code>valid_mask</code> selects the labelled positions, and windows never cross assets, continuity breaks or split boundaries.</p></div>
             </div>
@@ -491,7 +491,7 @@
 
         <section class="detail-section">
             <div class="detail-section-header"><span>07 · Embedding space</span><h2>What the encoder learned, month by month</h2></div>
-            <p class="detail-intro">Each dot is one company on the last trading day of a month, from 2010 to 2026: 1,000 a month, sampled from roughly 2,500 US-listed stocks. The encoder sorts them into twelve clusters, drawn as islands placed by forecast volatility (calmer left, riskier right) and 12-month momentum (winners up, losers down). Inside an island the biggest companies sit at the centre. Play it and watch companies move between islands: the stress clusters swell in early 2020 and again in 2022.</p>
+            <p class="detail-intro">Each dot is one company on the last trading day of a month, from 2010 to 2026. There are 1,000 a month, sampled from roughly 2,500 US-listed stocks. The encoder sorts them into twelve clusters, drawn as islands placed by forecast volatility (calmer left, riskier right) and 12-month momentum (winners up, losers down). Inside an island the biggest companies sit at the centre. Press play to see companies move between islands. The stress clusters grow in early 2020 and again in 2022.</p>
 
             <div class="jt-panel jt-map" id="jtMap">
                 <div class="jt-map-bar">
@@ -511,7 +511,7 @@
                 </div>
                 <p class="jt-map-note" id="jtMapNote"></p>
             </div>
-            <p class="detail-intro" style="margin-top:1rem">The encoders capture strong risk and volatility structure, and it holds for companies kept out of training. On their own they are a map of the market, not a trading signal.</p>
+            <p class="detail-intro" style="margin-top:1rem">The encoders capture strong risk and volatility structure, also for companies held out of training. Used alone, they describe the market and give no trading signal.</p>
         </section>
 
         <div class="detail-links">
@@ -524,7 +524,7 @@
 
     <footer><div class="container"><div class="footer-content"><p>&copy; 2026 Daniel Mora. All rights reserved.</p></div></div></footer>
     <script src="javascript-files/main.js?v=access-v3"></script>
-    <script src="javascript-files/jepa-map.js?v=9" defer></script>
+    <script src="javascript-files/jepa-map.js?v=10" defer></script>
     <script src="javascript-files/analytics.js" defer></script>
 </body>
 </html>

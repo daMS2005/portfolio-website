@@ -23,7 +23,7 @@ ${p('ag', 'M298 73 V740 H253')}${t(306, 300, 'full view (no mask)', 's', ' trans
 const blocks = [['Block 0', 'dense SwiGLU', 'nm', 's'], ['Block 1', 'dense SwiGLU', 'nm', 's'], ['Block 2', 'MoE', 'nk', 'k'], ['Block 3', 'MoE', 'nk', 'k'], ['Block 4', 'dense SwiGLU', 'nm', 's'], ['Block 5', 'dense SwiGLU', 'nm', 's']]
   .map(([n, d, c, dc], i) => box(c, 1, 166 + i * 52, 296, 42) + t(16, 192 + i * 52, n, 't') + t(181, 192 + i * 52, d, dc)).join('');
 // two-column snake of attention nodes: [col, row, title, lines]
-const attn = [[0, 0, 'RMSNorm', ['pre-norm (ln1)'], 'nm'], [1, 0, 'Q, K, V proj', ['multi-head', 'full MHA, no GQA'], 'n'], [1, 1, 'QK-RMSNorm', ['per head, Q and K', 'tames logit scale'], 'n'],
+const attn = [[0, 0, 'RMSNorm', ['pre-norm (ln1)'], 'nm'], [1, 0, 'Q, K, V proj', ['multi-head', 'full MHA, no GQA'], 'n'], [1, 1, 'QK-RMSNorm', ['per head, Q and K', 'bounds logit scale'], 'n'],
   [0, 1, 'RoPE', ['base 10⁴, pairs', 'offset = cache len'], 'n'], [0, 2, 'Causal SDPA', ['FlashAttention', 'on sm80+'], 'n'], [1, 2, 'Output proj', ['back to residual'], 'n'], [1, 3, '⊕ residual', ['x + attn(ln1 x)'], 'nm']]
   .map(([c, r, n, ls, cls]) => { const x = 10 + c * 148, y = 852 + r * 96; return box(cls, x, y, 136, 80) + t(x + 10, y + 26, n, 't') + ls.map((l, i) => t(x + 10, y + 48 + i * 19, l)).join(''); }).join('');
 const note = ['Inference: the KV cache appends', 'already-rotated K and V, so cached', 'positions keep their original RoPE angles.', 'Going past max_seq raises an error instead', 'of silently trimming or re-indexing', 'positions.']

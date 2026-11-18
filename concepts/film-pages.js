@@ -115,7 +115,7 @@ if (personal) {
 
   // tier list: the three reasons, shown on the exercises they explain
   const why = $$('.tier-commentary p');
-  const reasonOf = { 'Cable lateral raise': 0, 'Walking lunge': 1, 'Farmer’s carry': 1, 'Leg extension': 2 };
+  const reasonOf = { 'Cable lateral raise': 0, 'Walking lunge': 1, "Farmer's carry": 1, 'Leg extension': 2 };
   if (why.length === 3) {
     $$('.tier-items span').forEach((s) => {
       const p = why[reasonOf[s.textContent.trim()]];

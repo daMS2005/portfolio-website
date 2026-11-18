@@ -9,7 +9,7 @@ try {
   const internal = document.referrer && new URL(document.referrer).origin === location.origin;
   ok = !location.hash && nav?.type !== 'back_forward' && document.visibilityState === 'visible'
     && !matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData
-    && (pick !== null || (nav?.type === 'navigate' && !internal && !sessionStorage.fxIntro));
+    && (pick !== null || (!internal && !sessionStorage.fxIntroSeen));
 } catch { ok = false; }
 
 const IGN = 'cubic-bezier(.16,1,.3,1)', FALL = 'cubic-bezier(.7,0,.84,0)';
@@ -57,7 +57,7 @@ if (ok) {
     const hands = kind === 'eye' && await Promise.race([img.decode().then(() => true, () => false), wait(120)]);
     const eh = document.querySelector('.hero .eh'), dim = eh?.querySelector('.eh-dim');
     if (done || !dim || performance.now() - born > 1500) return cleanup();
-    try { sessionStorage.fxIntro = 1; } catch {} // seen only once it really plays
+    try { sessionStorage.fxIntroSeen = 1; } catch {} // seen only once it really plays
 
     const W = innerWidth, H = innerHeight, phone = W < 700;
     const { left: cx, top: cy } = eh.getBoundingClientRect();

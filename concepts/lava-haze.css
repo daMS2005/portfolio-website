@@ -1,0 +1,6 @@
+/* Decision demo: lava blobs recoloured into a dim ember haze (style bible §4) */
+html[data-concept~="lava-haze"] .lava-lamp { opacity: 0.14; }
+html[data-concept~="lava-haze"] .blob { background: radial-gradient(circle, rgba(255, 92, 42, 0.55), transparent 70%); }
+html[data-concept~="lava-haze"] .blob:nth-child(2) { background: radial-gradient(circle, rgba(122, 26, 10, 0.6), transparent 70%); animation-duration: 40s; }
+html[data-concept~="lava-haze"] .blob:nth-child(3) { background: radial-gradient(circle, rgba(255, 179, 71, 0.35), transparent 70%); animation-duration: 48s; }
+html[data-concept~="lava-haze"] .blob:first-child { animation-duration: 32s; }

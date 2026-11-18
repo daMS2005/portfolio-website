@@ -1,0 +1,87 @@
+/* diagram-light: the flagship diagrams are the light source. Links reach from both nodes and
+   meet in a spark; nodes ignite in data-flow order; JEPA tokens take the map's cluster colours. */
+html[data-concept~="diagram-light"] .dg-stage { isolation: isolate; }
+html[data-concept~="diagram-light"] .dg-node { position: relative; }
+
+/* warm border overlay (opacity only) and, on accent nodes, a halo behind the node that settles faint */
+html[data-concept~="diagram-light"] .dg-node::before {
+  content: ""; position: absolute; inset: -1px; border: 1px solid #ff8a4c; border-radius: inherit;
+  opacity: 0; pointer-events: none;
+}
+html[data-concept~="diagram-light"] .dg-accent::after {
+  content: ""; position: absolute; z-index: -1; inset: -45% -25%; pointer-events: none; opacity: 0.22;
+  background: radial-gradient(closest-side, rgba(255,179,71,.55), rgba(255,92,42,.32) 45%, rgba(122,26,10,.14) 72%, transparent);
+}
+html[data-concept~="diagram-light"] .dl-armed .dg-accent::after { opacity: 0; }
+html[data-concept~="diagram-light"] .dl-lit .dg-node::before { animation: dl-warm 520ms var(--d, 0ms) cubic-bezier(.16,1,.3,1) both; }
+html[data-concept~="diagram-light"] .dl-lit .dg-accent::after { animation: dl-bloom 560ms var(--d, 0ms) cubic-bezier(.16,1,.3,1) both; }
+
+/* links: two halves grow from each node toward the middle, a spark blooms where they meet */
+html[data-concept~="diagram-light"] .dl-h,
+html[data-concept~="diagram-light"] .dl-spark { display: none; position: absolute; pointer-events: none; }
+html[data-concept~="diagram-light"] .dg-link em { z-index: 1; }
+html[data-concept~="diagram-light"] .dl-armed .dg-link,
+html[data-concept~="diagram-light"] .dg-link.dl-run { background: transparent; }
+html[data-concept~="diagram-light"] .dl-armed .dg-link::after { opacity: 0; }
+html[data-concept~="diagram-light"] .dg-link.dl-run::after { animation: dl-fade 200ms calc(var(--d, 0ms) + 300ms) both; }
+html[data-concept~="diagram-light"] .dl-run .dl-h,
+html[data-concept~="diagram-light"] .dl-run .dl-spark { display: block; }
+html[data-concept~="diagram-light"] .dl-h { top: 0; width: 50%; height: 100%; background: var(--orange); }
+html[data-concept~="diagram-light"] .dg-link-loss .dl-h { background: repeating-linear-gradient(90deg, #ffb79f 0 3px, transparent 3px 6px); }
+html[data-concept~="diagram-light"] .dl-h + .dl-h { right: 0; transform-origin: right; }
+html[data-concept~="diagram-light"] .dl-h:first-child { left: 0; transform-origin: left; }
+html[data-concept~="diagram-light"] .dl-run .dl-h { animation: dl-reach-x 300ms var(--d, 0ms) cubic-bezier(.3,0,.2,1) both; }
+html[data-concept~="diagram-light"] .dl-spark {
+  top: 50%; left: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%;
+  background: radial-gradient(closest-side, #fff4dc, #ffb347 30%, #ff5c2a 55%, rgba(122,26,10,.5) 78%, transparent);
+}
+html[data-concept~="diagram-light"] .dl-run .dl-spark { animation: dl-spark 300ms calc(var(--d, 0ms) + 250ms) ease-out both; }
+
+/* freeze tokens: the JEPA map's cluster colours */
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(1) { background: #b9b39f; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(2) { background: #e8566c; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(3) { background: #f28c38; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(4) { background: #6ccb5f; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(5) { background: #45c4c0; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(6) { background: #4c8df6; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(7) { background: #c9f04a; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(8) { background: #a08cff; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(9) { background: #ff4d94; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(10) { background: #9cc6ff; }
+html[data-concept~="diagram-light"] .dg-tokens i { opacity: 0.6; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(n+5) { opacity: 0.75; }
+html[data-concept~="diagram-light"] .dg-tokens i:nth-child(n+8) { opacity: 0.9; }
+html[data-concept~="diagram-light"] .dl-armed .dg-tokens i { opacity: 0; }
+html[data-concept~="diagram-light"] .dl-lit .dg-tokens i { animation: dl-token 360ms var(--d, 0ms) cubic-bezier(.16,1,.3,1) backwards; }
+
+/* TC_ACC strip: stages light left to right, the gates hold the light briefly */
+html[data-concept~="diagram-light"] .pipeline-strip li + li::before { transform-origin: left; }
+html[data-concept~="diagram-light"] .pipeline-gate::after {
+  content: ""; position: absolute; z-index: -1; top: 5.5px; left: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px;
+  border-radius: 50%; opacity: 0; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255,179,71,.7), rgba(255,92,42,.35) 50%, rgba(122,26,10,.15) 75%, transparent);
+}
+html[data-concept~="diagram-light"] .pipeline-strip.dl-armed li { opacity: 0.3; }
+html[data-concept~="diagram-light"] .pipeline-strip.dl-armed li + li::before { transform: scaleX(0); }
+html[data-concept~="diagram-light"] .pipeline-strip.dl-lit li { animation: dl-stage 420ms var(--d, 0ms) cubic-bezier(.16,1,.3,1) both; }
+html[data-concept~="diagram-light"] .pipeline-strip.dl-lit li + li::before { animation: dl-reach-x 240ms var(--d, 0ms) cubic-bezier(.16,1,.3,1) both; }
+html[data-concept~="diagram-light"] .pipeline-strip.dl-lit .pipeline-gate::after { animation: dl-gate 460ms var(--d, 0ms) ease-out both; }
+
+@keyframes dl-warm { 30% { opacity: 1; } to { opacity: 0; } }
+@keyframes dl-bloom { from { opacity: 0; transform: scale(.7); } 35% { opacity: 1; transform: scale(1.05); } to { opacity: .22; transform: none; } }
+@keyframes dl-reach-x { from { transform: scaleX(0); } to { transform: none; } }
+@keyframes dl-reach-y { from { transform: scaleY(0); } to { transform: none; } }
+@keyframes dl-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dl-spark { from { opacity: 0; transform: scale(.2); } 35% { opacity: 1; transform: scale(1.3); } to { opacity: 0; transform: scale(.6); } }
+@keyframes dl-token { from { opacity: 0; transform: scaleY(.3); } }
+@keyframes dl-stage { from { opacity: .3; } to { opacity: 1; } }
+@keyframes dl-gate { from { opacity: 0; transform: scale(.4); } 40% { opacity: 1; transform: scale(1.1); } to { opacity: 0; transform: none; } }
+
+/* phones: arrows run vertically, so the halves grow from top and bottom */
+@media (max-width: 640px) {
+  html[data-concept~="diagram-light"] .dl-h { left: 0; width: 100%; height: 50%; }
+  html[data-concept~="diagram-light"] .dl-h:first-child { top: 0; transform-origin: top; }
+  html[data-concept~="diagram-light"] .dl-h + .dl-h { top: auto; bottom: 0; transform-origin: bottom; }
+  html[data-concept~="diagram-light"] .dg-link-loss .dl-h { background: repeating-linear-gradient(#ffb79f 0 3px, transparent 3px 6px); }
+  html[data-concept~="diagram-light"] .dl-run .dl-h { animation-name: dl-reach-y; }
+}

@@ -1,0 +1,98 @@
+/* intro: the opening shot. The cover and every layer live in .fi (fixed, above everything); the hero waits still underneath. */
+@keyframes fi-failsafe { to { visibility: hidden; } }
+
+html[data-concept~="intro"] .fi,
+html[data-concept~="intro"] .fi * { pointer-events: none; }
+html[data-concept~="intro"] .fi { pointer-events: auto; contain: strict; }
+
+html[data-concept~="intro"] .fi-cam,
+html[data-concept~="intro"] .fi-win,
+html[data-concept~="intro"] .fi-type { position: absolute; inset: 0; will-change: transform; }
+
+html[data-concept~="intro"] .fi-art,
+html[data-concept~="intro"] .fi-ring,
+html[data-concept~="intro"] .fi-point { position: absolute; width: 0; height: 0; }
+html[data-concept~="intro"] .fi-ring { transform-origin: 0 0; will-change: transform; }
+html[data-concept~="intro"] .fi-art svg { position: absolute; overflow: visible; }
+html[data-concept~="intro"] .fi-iris { transform-box: fill-box; transform-origin: center; }
+
+/* closed eye = one filament, white-hot at the middle */
+html[data-concept~="intro"] .fi-line {
+  position: absolute;
+  top: -0.5px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(216, 212, 204, 0.5) 22%, #fff4dc 50%, rgba(216, 212, 204, 0.5) 78%, transparent);
+}
+
+/* the pupil's black disc (hides the hero until the dive) and the ring clone, sized like the hero ring */
+html[data-concept~="intro"] .fi-plug {
+  position: absolute;
+  left: calc(var(--r) * -1);
+  top: calc(var(--r) * -1);
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  border-radius: 50%;
+  background: #000;
+}
+html[data-concept~="intro"] .fi .eh { left: 0; top: 0; translate: none; transition: none; }
+html[data-concept~="intro"] .fi .fi-mono {
+  --doppler: conic-gradient(#d8d4cc, #3a3936 22%, #1a1918 32%, #3a3936 42%, #d8d4cc 55%, #eceae5 66%, #fff 75%, #eceae5 84%, #d8d4cc);
+}
+
+/* reach-engrave hands at intro size; the wrist falls off into the dark */
+html[data-concept~="intro"] .fi-hand { position: absolute; will-change: transform, opacity; }
+html[data-concept~="intro"] .fi-hand canvas {
+  display: block;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%);
+  mask-image: linear-gradient(90deg, transparent, #000 22%);
+}
+
+/* flare: a 1px anamorphic line with a soft ember glow, contracting to a white-hot point */
+html[data-concept~="intro"] .fi-flare {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  margin-top: -0.5px;
+  background: linear-gradient(90deg, transparent, #ff5c2a 18%, #fff4dc 50%, #ff5c2a 82%, transparent);
+  box-shadow: 0 0 24px 2px rgba(255, 92, 42, 0.35);
+}
+html[data-concept~="intro"] .fi-point {
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #fff4dc, 0 0 8px 4px rgba(255, 179, 71, 0.7), 0 0 22px 8px rgba(255, 92, 42, 0.3);
+}
+html[data-concept~="intro"] .fi-point::before,
+html[data-concept~="intro"] .fi-point::after {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: -0.5px;
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #fff4dc, transparent);
+  box-shadow: 0 0 6px 2px rgba(255, 179, 71, 0.5);
+}
+html[data-concept~="intro"] .fi-point::after { rotate: 90deg; }
+
+/* name: the light behind the letters turns around the hole in the "o" */
+html[data-concept~="intro"] .fi-glow {
+  position: absolute;
+  -webkit-mask: radial-gradient(circle, transparent var(--p), #000 calc(var(--p) + 1px));
+  mask: radial-gradient(circle, transparent var(--p), #000 calc(var(--p) + 1px));
+}
+html[data-concept~="intro"] .fi-glow > div {
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(#d8d4cc, #8a8782 25%, #f5f3ef 50%, #8a8782 75%, #d8d4cc);
+}
+html[data-concept~="intro"] .fi-glow > .fi-glow-gold {
+  background: conic-gradient(#ff5c2a, #ffb347 25%, #fff4dc 50%, #ffb347 72%, #ff5c2a);
+}
+
+/* the hero holds its first frame while the intro plays, then its slow spin starts (no warm-up, no lean) */
+html[data-concept~="intro"].fx-intro .hero .eh { translate: none; transition: none; }
+html[data-concept~="intro"].fx-intro .eh-spin,
+html[data-concept~="intro"].fx-intro .eh-arc,
+html[data-concept~="intro"].fx-intro-done .eh-arc { animation: none; }
+html[data-concept~="intro"].fx-intro-done .hero .eh-spin { animation: eh-spin 90s linear infinite; }

@@ -1,0 +1,88 @@
+/* reach-engrave: the same hand drawn twice below the hero text, engraved (Human) and gridded (AI).
+   Canvas crop is 750x320 of hand-human.webp; fingertip sits at 25% height, 5% in from the inner edge. */
+html[data-concept~="reach-engrave"] .hero {
+  flex-direction: column;
+  height: auto;
+  min-height: 100svh;
+  padding-top: 6rem;
+  padding-bottom: 2rem;
+}
+
+html[data-concept~="reach-engrave"] .re-stage {
+  --hw: min(420px, 50vw - 18px);
+  position: relative;
+  display: flex;
+  margin-top: 2.5rem;
+  pointer-events: none;
+}
+
+html[data-concept~="reach-engrave"] .re-hand {
+  width: var(--hw);
+  margin: 0;
+  text-align: center;
+}
+
+html[data-concept~="reach-engrave"] .re-hand canvas {
+  --dir: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 750 / 320;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%);
+  mask-image: linear-gradient(90deg, transparent, #000 22%);
+  animation: re-breathe 10s ease-in-out 1.4s infinite;
+}
+
+/* the AI hand is the human silhouette mirrored */
+html[data-concept~="reach-engrave"] .re-ai canvas { --dir: -1; scale: -1 1; }
+
+/* each hand drifts inward under 1% of its width, the gap never closes */
+@keyframes re-breathe {
+  50% { translate: calc(var(--dir) * var(--hw) * 0.008) 0; }
+}
+
+html[data-concept~="reach-engrave"] figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.5rem;
+  color: #d6d3ce;
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+}
+
+html[data-concept~="reach-engrave"] .re-ai figcaption { color: #8fcac5; }
+
+html[data-concept~="reach-engrave"] figcaption small {
+  color: var(--muted, #aaa7a2);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+html[data-concept~="reach-engrave"] .re-signal {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--hw) * 320 / 750 * 0.25);
+  width: 6px;
+  height: 6px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: 0 0 0 1.5px #ffb347, 0 0 5px 2px #ff5c2a, 0 0 16px 5px rgba(255, 92, 42, 0.4);
+  animation: re-ignite 0.5s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+}
+
+@keyframes re-ignite {
+  from { opacity: 0; scale: 0.4; }
+}
+
+@media (max-width: 600px) {
+  html[data-concept~="reach-engrave"] .re-signal { width: 4px; height: 4px; }
+  html[data-concept~="reach-engrave"] figcaption { font-size: 0.68rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-concept~="reach-engrave"] .re-hand canvas,
+  html[data-concept~="reach-engrave"] .re-signal { animation: none; }
+}

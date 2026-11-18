@@ -74,7 +74,7 @@
     return { pos: out, islands };
   }
 
-  function target(f, e, ms) {
+  function target(f, e, ms, hole) {
     const prev = anim ? currentPositions() : null, L = layout(f, e), items = [];
     for (let r = off[f]; r < off[f + 1]; r++) {
       const [x, y, col] = L.pos.get(r), from = prev && prev.get(D.id[r]);
@@ -84,17 +84,114 @@
       const here = new Set(items.map(i => i.id));
       prev.forEach((p, id) => { if (!here.has(id)) items.push({ id, from: p, to: p, a0: p[2], a1: 0, col: p[3] }); });
     }
-    anim = { items, islands: L.islands, e, t0: performance.now(), ms: reduced ? 0 : ms };
+    anim = { items, islands: L.islands, e, t0: performance.now(), ms: reduced ? 0 : ms, hole };
     requestAnimationFrame(draw);
   }
 
+  // ?concept=jepa-collapse: on an encoder switch the points spiral into a black core, then settle or fling out
+  const collapse = () => /jepa-collapse|film-jepa/.test(document.documentElement.dataset.concept || '') && !reduced;
+
+  // ?concept=film-jepa: the original encoder is drawn mono. A switch folds the islands into an edge-on mono disk
+  // (the variance left on one axis); towards VICReg the disk ignites gold and spirals out into the coloured islands.
+  const film = () => document.documentElement.dataset.concept?.includes('film-jepa');
+  const SILVER = '#d8d4cc', GOLD = '#ffb347', mixed = new Map(), RING_AT = [0, .22, .32, .42, .55, .66, .75, .84, 1];
+  const RING = [['#d8d4cc', '#3a3936', '#1a1918', '#3a3936', '#d8d4cc', '#eceae5', '#ffffff', '#eceae5', '#d8d4cc'],
+    ['#ff5c2a', '#7a1a0a', '#4a0f06', '#7a1a0a', '#ff5c2a', '#ffb347', '#fff4dc', '#ffb347', '#ff5c2a']];
+  let introDone = false;
+  if (film()) {
+    ENC.og.CL.forEach(cl => { cl[1] = SILVER; });
+    root.addEventListener('pointerdown', e => { if (anim?.scene && !e.target.closest('button')) anim.t0 = -1e9; }); // any input skips to the end
+  }
+  function mix(a, b, t) {
+    t = Math.round(Math.min(1, Math.max(0, t)) * 8) / 8;
+    const key = a + b + t;
+    if (!mixed.has(key)) {
+      const [p, q] = [a, b].map(h => (h[0] === '#' ? [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)) : h.match(/\d+/g).map(Number)));
+      mixed.set(key, `rgb(${p.map((v, i) => Math.round(v + (q[i] - v) * t))})`);
+    }
+    return mixed.get(key);
+  }
+  function scene() {
+    const prev = currentPositions(), L = layout(frame, enc), A = canvas.clientHeight / canvas.clientWidth, items = [], [h0, g0] = anim?.scene ? holeLevel() : [0, 0];
+    for (let r = off[frame]; r < off[frame + 1]; r++) {
+      const id = D.id[r], [x1, y1, c1] = L.pos.get(r), from = prev.get(id), xog = ENC.og.CL[D.enc.og[r]][2];
+      const r0 = 0.11 + Math.abs(xog - 0.5) * 0.75 + (id % 13) * 0.005, t0 = (xog < 0.5 ? Math.PI : 0) + ((id * 0.618) % 1 - 0.5) * 2.2;
+      const r1 = Math.hypot((x1 - 0.5) / A, y1 - 0.5), t1 = Math.atan2(y1 - 0.5, (x1 - 0.5) / A);
+      const disk = [0.5 + r0 * Math.cos(t0) * A, 0.5 + r0 * Math.sin(t0) * 0.06];
+      items.push({ id, from: from || disk, c0: from ? from[3] : SILVER, disk, r0, t0, r1, dt: ((t1 - t0) % 6.283 + 6.283) % 6.283 + Math.PI, to: [x1, y1], c1, cl: D.enc[enc][r] });
+    }
+    root.dataset.scene = enc;
+    anim = { items, islands: L.islands, e: enc, t0: performance.now(), ms: enc === 'og' ? 2200 : 2600, hole: 'scene', scene: true, A, h0, g0 };
+    requestAnimationFrame(draw);
+  }
+  const clamp = t => Math.min(1, Math.max(0, t));
+  function scenePositions() {
+    const p = progress(), toV = anim.e === 'vicreg', F = toV ? 0.18 : 0.4, E = toV ? 0.38 : 0.6, m = new Map();
+    for (const it of anim.items) {
+      let x, y, col;
+      if (p < F) { // fold into the disk, losing colour
+        const f = ease(p / F);
+        x = it.from[0] + (it.disk[0] - it.from[0]) * f; y = it.from[1] + (it.disk[1] - it.from[1]) * f; col = mix(it.c0, SILVER, f);
+      } else if (p < E) { // hold the disk; towards VICReg it ignites gold from the inner edge out
+        [x, y] = it.disk; col = toV ? mix(SILVER, GOLD, ((p - F) / (E - F)) * 2 - it.r0 / 0.9) : SILVER;
+      } else if (toV) { // tilt open and spiral out; colour floods in island by island
+        const k = ease((p - E) / (1 - E)), r = it.r0 + (it.r1 - it.r0) * k, th = it.t0 + it.dt * k;
+        x = 0.5 + r * Math.cos(th) * anim.A; y = 0.5 + r * Math.sin(th) * (0.06 + 0.94 * k);
+        col = mix(GOLD, it.c1, (k - 0.1 - it.cl * 0.04) / 0.3);
+      } else { // the original encoder's islands re-form, still mono
+        const k = ease((p - E) / (1 - E));
+        x = it.disk[0] + (it.to[0] - it.disk[0]) * k; y = it.disk[1] + (it.to[1] - it.disk[1]) * k; col = SILVER;
+      }
+      m.set(it.id, [x, y, 1, col]);
+    }
+    return m;
+  }
+  function holeLevel() { // [core, gold]; a switch mid-scene starts from the current level so the core never blinks
+    const p = progress(), toV = anim.e === 'vicreg', F = toV ? 0.18 : 0.4, E = toV ? 0.38 : 0.6;
+    const h = p < F ? anim.h0 + (1 - anim.h0) * p / F : p < E ? 1 : clamp(1 - ((p - E) / (1 - E)) * (toV ? 1.6 : 1));
+    return [h, p < F ? anim.g0 * (1 - p / F) : toV ? clamp((p - F) / (E - F)) : 0];
+  }
+  function sceneHole(cx, cy, R) { // .fl-hole ring stops, Doppler-bright on the left; mono, then gold towards VICReg
+    if (!ctx.createConicGradient) return;
+    const [h, gold] = holeLevel();
+    [1 - gold, gold].forEach((w, i) => {
+      if (!w || !h) return;
+      const g = ctx.createConicGradient(-Math.PI / 2, cx, cy);
+      RING_AT.forEach((o, j) => g.addColorStop(o, RING[i][j]));
+      ctx.globalAlpha = h * w; ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.22, 0, 6.283); ctx.arc(cx, cy, R, 0, 6.283, true); ctx.fill();
+    });
+    ctx.globalAlpha = h; ctx.fillStyle = '#000';
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.283); ctx.fill();
+  }
+
+  function implode() {
+    if (film()) return scene();
+    const prev = currentPositions(), aspect = canvas.clientHeight / canvas.clientWidth, items = [];
+    prev.forEach((p, id) => {
+      const dx = (p[0] - 0.5) / aspect, dy = p[1] - 0.5;
+      items.push({ id, r0: Math.hypot(dx, dy), th0: Math.atan2(dy, dx), r1: 0.07 + (id % 7) * 0.003, a0: p[2], a1: p[2], col: p[3] });
+    });
+    const mine = anim = { items, islands: [], e: enc, t0: performance.now(), ms: enc === 'og' ? 800 : 350, hole: 'in', aspect };
+    requestAnimationFrame(draw);
+    setTimeout(() => { if (anim === mine) target(frame, enc, 800, 'out'); }, mine.ms);
+  }
+
   const ease = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+  const easeOut = t => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t)); // ~ cubic-bezier(0.16,1,0.3,1)
+  const kOf = () => (anim.scene ? clamp((progress() - 0.85) / 0.15) : (anim.hole ? easeOut : ease)(progress()));
   const progress = () => (anim.ms ? Math.min(1, (performance.now() - anim.t0) / anim.ms) : 1);
 
   function currentPositions() {
-    const k = ease(progress()), m = new Map();
+    if (anim.scene) return scenePositions();
+    const k = kOf(), m = new Map();
     for (const it of anim.items) {
       const a = it.a0 + (it.a1 - it.a0) * k;
+      if (anim.hole === 'in') {
+        const r = it.r0 + (it.r1 - it.r0) * k, th = it.th0 + 2.5 * k;
+        m.set(it.id, [0.5 + r * Math.cos(th) * anim.aspect, 0.5 + r * Math.sin(th), a, it.col]);
+        continue;
+      }
       if (a > 0.01) m.set(it.id, [it.from[0] + (it.to[0] - it.from[0]) * k, it.from[1] + (it.to[1] - it.from[1]) * k, a, it.col]);
     }
     return m;
@@ -111,20 +208,36 @@
     const dpr = resize(), W = canvas.width, H = canvas.height, padX = 34 * dpr, padY = 30 * dpr;
     const px = x => padX + x * (W - 2 * padX), py = y => padY + y * (H - 2 * padY);
     ctx.clearRect(0, 0, W, H);
-    const rad = Math.max(1.2 * dpr, spacing * (H - 2 * padY) * 0.42), pts = currentPositions(), named = [];
+    const rad = Math.max(1.2 * dpr, spacing * (H - 2 * padY) * 0.42), pts = currentPositions(), named = [], k = kOf();
+    if (root.dataset.scene && (!anim.scene || progress() >= 1)) delete root.dataset.scene;
+    if (anim.scene) sceneHole(px(0.5), py(0.5), 0.07 * (H - 2 * padY));
     pts.forEach(([x, y, a, col], id) => {
       ctx.globalAlpha = 0.9 * a; ctx.fillStyle = col;
       ctx.beginPath(); ctx.arc(px(x), py(y), rad, 0, 6.283); ctx.fill();
-      if (D.track.has(id)) named.push([px(x), py(y), a, col, D.track.get(id)]);
+      if (D.track.has(id) && anim.hole !== 'in') named.push([px(x), py(y), anim.hole ? a * k * k : a, col, D.track.get(id)]);
     });
 
+    if (anim.hole && !anim.scene) { // orange accretion ring with a black core, gone once the switch settles
+      const h = anim.hole === 'in' ? k : 1 - k, cx = px(0.5), cy = py(0.5), R = 0.07 * (H - 2 * padY);
+      const g = ctx.createRadialGradient(cx, cy, R * 0.7, cx, cy, R * 1.8);
+      [[0, 'rgba(255,244,220,0)'], [0.08, 'rgba(255,244,220,0.8)'], [0.2, '#ffb347'], [0.4, '#ff5c2a'], [0.7, 'rgba(122,26,10,0.45)'], [1, 'rgba(122,26,10,0)']].forEach(([o, c]) => g.addColorStop(o, c));
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.55 * h; ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.8, 0, 6.283); ctx.fill();
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = h; ctx.fillStyle = '#000';
+      ctx.beginPath(); ctx.arc(cx, cy, R * 0.78, 0, 6.283); ctx.fill();
+    }
+
     // cluster names above their islands, fading in once a switch or month change settles
-    const placed = [], lh = 12 * dpr, k = ease(progress());
+    const placed = [], lh = 12 * dpr;
     ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
     ctx.font = `700 ${11 * dpr}px system-ui, sans-serif`;
     for (const [c, cx, cy, r] of anim.islands) {
       const [name, col] = ENC[anim.e].CL[c], w = ctx.measureText(name).width;
-      const x = Math.min(Math.max(px(cx) - w / 2, 4 * dpr), W - w - 4 * dpr), y = Math.max(py(cy - r) - 9 * dpr, lh);
+      const x = Math.min(Math.max(px(cx) - w / 2, 4 * dpr), W - w - 4 * dpr), y0 = Math.max(py(cy - r) - 9 * dpr, lh);
+      // nudge up or down until the name clears the ones already drawn; skip it if a small map has no room
+      const y = [0, -1, 1, -2, 2, -3, 3].map((s) => y0 + s * lh).find((yy) => yy >= lh
+        && !placed.some((o) => x < o[2] && x + w > o[0] && yy - lh / 2 < o[3] && yy + lh / 2 > o[1]));
+      if (y === undefined) continue;
       placed.push([x, y - lh / 2, x + w, y + lh / 2]);
       ctx.globalAlpha = 0.95 * k; ctx.textAlign = 'left';
       ctx.strokeStyle = 'rgba(7,9,11,0.85)'; ctx.lineWidth = 3 * dpr; ctx.strokeText(name, x, y);
@@ -169,10 +282,15 @@
     enc = e;
     segBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.enc === e)));
     $('jtMapNote').innerHTML = ENC[e].note;
-    if (tween) target(frame, enc, 1000);
+    if (tween) collapse() ? implode() : target(frame, enc, 1000);
   }
 
   function play(on) {
+    if (on && film() && !reduced && !introDone) { // first view: original encoder, then the galaxy forms
+      introDone = true; setEnc('og', false); target(frame, 'og', 0);
+      setTimeout(() => { if (enc === 'og') setEnc('vicreg'); if (visible) play(true); }, 700);
+      return;
+    }
     playing = on;
     playBtn.textContent = on ? '❚❚ Pause' : '▶ Play';
     playBtn.setAttribute('aria-label', on ? 'Pause' : 'Play');
@@ -182,6 +300,7 @@
 
   function tick() {
     if (!playing) return;
+    if (anim && (anim.hole === 'in' || (anim.hole && progress() < 1))) { timer = setTimeout(tick, 120); return; } // let a collapse finish
     const last = frame >= D.dates.length - 1;
     show(last ? 0 : frame + 1, !last);
     timer = setTimeout(tick, last ? 1400 : 330);
@@ -190,7 +309,7 @@
   playBtn.addEventListener('click', () => { if (D) play(!playing); });
   range.addEventListener('input', () => { if (!D) return; play(false); show(+range.value, false); });
   segBtns.forEach(b => b.addEventListener('click', () => { if (D && b.dataset.enc !== enc) setEnc(b.dataset.enc); }));
-  addEventListener('resize', () => { if (D) target(frame, enc, 0); });
+  addEventListener('resize', () => { if (D && !(film() && anim?.scene && progress() < 1)) target(frame, enc, 0); });
 
   // load when the section approaches; play only while it is on screen
   new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); load(); } }, { rootMargin: '600px 0px' }).observe(root);

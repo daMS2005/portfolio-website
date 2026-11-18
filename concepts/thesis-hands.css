@@ -1,0 +1,88 @@
+/* Two hands reaching across a gap that holds a small black hole. */
+html[data-concept~="thesis-hands"] .th-stage {
+  --gap: 28px;
+  position: relative;
+  aspect-ratio: 4 / 1;
+  overflow: hidden;
+  background: #000;
+  isolation: isolate;
+}
+html[data-concept~="thesis-hands"] .th-hand {
+  position: absolute;
+  top: 38%;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transition: translate 500ms cubic-bezier(0.16,1,0.3,1), opacity 600ms cubic-bezier(0.16,1,0.3,1), transform 600ms cubic-bezier(0.16,1,0.3,1);
+}
+/* fingertips: human x710/y230, model x770/y270 of 1536×640, centred on the stage */
+html[data-concept~="thesis-hands"] .th-brain { left: 3.8%; translate: calc(var(--gap) / -2) -36%; }
+html[data-concept~="thesis-hands"] .th-model { left: -0.1%; translate: calc(var(--gap) / 2) -42%; }
+html[data-concept~="thesis-hands"] .th-hole {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 14px;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #000 0 40%, #fff4dc 46%, #ffb347 52%, #ff5c2a 62%, rgba(122,26,10,0.55) 74%, transparent 82%);
+  transition: opacity 600ms 200ms;
+}
+html[data-concept~="thesis-hands"] .th-stage:not(.is-lit) .th-hand,
+html[data-concept~="thesis-hands"] .th-stage:not(.is-lit) .th-hole { opacity: 0; }
+html[data-concept~="thesis-hands"] .th-stage:not(.is-lit) .th-brain { transform: translateX(-24px); }
+html[data-concept~="thesis-hands"] .th-stage:not(.is-lit) .th-model { transform: translateX(24px); }
+
+/* (a) homepage band */
+html[data-concept~="thesis-hands"] .th-band {
+  margin-top: 0.6rem;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+}
+html[data-concept~="thesis-hands"] .th-rho {
+  margin: 0;
+  padding: 0 0 0.45rem;
+  color: #aaa7a2;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* (b) thesis.html slider */
+html[data-concept~="thesis-hands"] .th-play {
+  max-width: 760px;
+  margin: 0 auto 1rem;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+}
+html[data-concept~="thesis-hands"] .th-play .th-stage { --gap: 56px; }
+html[data-concept~="thesis-hands"] .th-play .th-hole { width: 18px; }
+html[data-concept~="thesis-hands"] .th-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 2rem;
+  padding: 1rem 1.25rem 0.5rem;
+  color: #aaa7a2;
+  font-size: 0.85rem;
+}
+html[data-concept~="thesis-hands"] .th-controls label { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; color: #f5f3ef; }
+html[data-concept~="thesis-hands"] .th-controls label span { color: #aaa7a2; }
+html[data-concept~="thesis-hands"] .th-controls input { width: 140px; accent-color: #ff5c2a; }
+html[data-concept~="thesis-hands"] .th-meter { flex: 1 1 220px; display: flex; align-items: center; gap: 0.6rem; }
+html[data-concept~="thesis-hands"] .th-meter strong { color: #ff5c2a; font-variant-numeric: tabular-nums; }
+html[data-concept~="thesis-hands"] .th-track { position: relative; flex: 1; height: 6px; border-radius: 3px; background: rgba(245,243,239,0.12); }
+html[data-concept~="thesis-hands"] .th-fill { position: absolute; inset: 0 auto 0 0; width: 100%; border-radius: 3px; background: #ff5c2a; transform-origin: left; transform: scaleX(var(--detect-scale, 0.05)); transition: transform 400ms cubic-bezier(0.16,1,0.3,1); }
+html[data-concept~="thesis-hands"] .th-tick { position: absolute; left: 80%; top: -5px; width: 2px; height: 16px; background: #f5f3ef; }
+html[data-concept~="thesis-hands"] .th-tick b { position: absolute; top: 19px; left: 50%; translate: -50% 0; white-space: nowrap; color: #aaa7a2; font-size: 0.7rem; font-style: normal; font-weight: 600; }
+html[data-concept~="thesis-hands"] .th-play figcaption { padding: 1.1rem 1.25rem 1.1rem; color: #aaa7a2; font-size: 0.85rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-concept~="thesis-hands"] .th-hand,
+  html[data-concept~="thesis-hands"] .th-hole,
+  html[data-concept~="thesis-hands"] .th-fill { transition: none; }
+}

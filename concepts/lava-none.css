@@ -1,0 +1,2 @@
+/* Decision demo: no lava blobs, pure black */
+html[data-concept~="lava-none"] .lava-lamp { display: none; }

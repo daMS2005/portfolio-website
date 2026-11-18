@@ -1,0 +1,155 @@
+/* event-horizon: the hero text sits inside the black shadow of an orange black hole */
+html[data-concept~="event-horizon"] .hero {
+  --r: var(--fit-r, 320px);
+  --nav: var(--nav-h, 76px);
+  height: auto;
+  box-sizing: border-box;
+  /* the whole ring, lensed arc included (1.18r above centre), sits between the nav and the fold */
+  min-height: max(100vh, calc(var(--nav) + var(--r) * 2.18 + 32px));
+  padding-top: calc(var(--nav) + var(--r) * 0.18);
+  /* opaque black hides the fixed lava blobs behind the hero only */
+  background: #000;
+}
+
+/* the haze and orbiting figures fade out before the hero's clipped bottom edge */
+html[data-concept~="event-horizon"] .hero::after { content: ""; position: absolute; inset: auto 0 0; height: 32px; background: linear-gradient(transparent, #000); pointer-events: none; }
+
+/* no hard seam: the section after the hero starts black and lets the glow in gradually */
+html[data-concept~="event-horizon"] .hero + section { background: linear-gradient(#000, rgba(0, 0, 0, 0.6) 22vh, transparent 55vh); }
+
+html[data-concept~="event-horizon"] .hero-content {
+  position: relative;
+  z-index: 1;
+  width: min(34rem, 86vw);
+}
+
+html[data-concept~="event-horizon"] .hero h1 { margin-top: 0; }
+html[data-concept~="event-horizon"] .hero .tagline { min-height: 2lh; margin-bottom: 0.9rem; }
+html[data-concept~="event-horizon"] .eh-where { margin: 0 0 2rem; font-size: 0.95rem; font-weight: 500; color: #d6d3ce; }
+html[data-concept~="event-horizon"] .eh-where span { white-space: nowrap; }
+html[data-concept~="event-horizon"] .eh-where::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 10px 2px 0;
+  border-radius: 50%;
+  background: #ff5c2a;
+}
+
+html[data-concept~="event-horizon"] .eh {
+  --doppler: conic-gradient(#ff5c2a, #7a1a0a 22%, #4a0f06 32%, #7a1a0a 42%, #ff5c2a 55%, #ffb347 66%, #fff4dc 75%, #ffb347 84%, #ff5c2a);
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--nav) / 2 + var(--r) * 0.09);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  translate: var(--lx, 0) var(--ly, 0);
+  transition: translate 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html[data-concept~="event-horizon"] .eh > *,
+html[data-concept~="event-horizon"] .eh-spin > * {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% -50%;
+  border-radius: 50%;
+}
+
+html[data-concept~="event-horizon"] .eh-dim,
+html[data-concept~="event-horizon"] .eh-ring {
+  width: calc(var(--r) * 2 + 80px);
+  height: calc(var(--r) * 2 + 80px);
+}
+
+/* dim deep-red ring the hot ring warms up from */
+html[data-concept~="event-horizon"] .eh-dim {
+  background: radial-gradient(circle, transparent calc(var(--r) - 1px), rgba(122, 26, 10, 0.9) var(--r), rgba(122, 26, 10, 0.4) calc(var(--r) + 4px), transparent calc(var(--r) + 18px));
+}
+
+html[data-concept~="event-horizon"] .eh-spin {
+  width: 0;
+  height: 0;
+  animation: eh-warm 1.5s ease-in-out both, eh-spin 90s linear 1.5s infinite;
+}
+
+/* thin photon ring, brighter on the left (Doppler beaming) */
+html[data-concept~="event-horizon"] .eh-ring {
+  background: var(--doppler);
+  -webkit-mask: radial-gradient(circle, transparent calc(var(--r) - 1.5px), #000 calc(var(--r) + 0.5px), #000 calc(var(--r) + 2.5px), rgba(0, 0, 0, 0.4) calc(var(--r) + 6px), rgba(0, 0, 0, 0.12) calc(var(--r) + 14px), transparent calc(var(--r) + 32px));
+  mask: radial-gradient(circle, transparent calc(var(--r) - 1.5px), #000 calc(var(--r) + 0.5px), #000 calc(var(--r) + 2.5px), rgba(0, 0, 0, 0.4) calc(var(--r) + 6px), rgba(0, 0, 0, 0.12) calc(var(--r) + 14px), transparent calc(var(--r) + 32px));
+}
+
+/* accretion haze: falls off fast into deep red, then black */
+html[data-concept~="event-horizon"] .eh-haze {
+  width: calc(var(--r) * 2.9);
+  height: calc(var(--r) * 2.9);
+  background: radial-gradient(circle, transparent calc(var(--r) * 1.03), rgba(122, 26, 10, 0.9) calc(var(--r) * 1.16)), var(--doppler);
+  -webkit-mask: radial-gradient(circle, transparent calc(var(--r) - 1px), rgba(0, 0, 0, 0.5) calc(var(--r) + 2px), rgba(0, 0, 0, 0.2) calc(var(--r) * 1.08), rgba(0, 0, 0, 0.06) calc(var(--r) * 1.2), transparent calc(var(--r) * 1.42));
+  mask: radial-gradient(circle, transparent calc(var(--r) - 1px), rgba(0, 0, 0, 0.5) calc(var(--r) + 2px), rgba(0, 0, 0, 0.2) calc(var(--r) * 1.08), rgba(0, 0, 0, 0.06) calc(var(--r) * 1.2), transparent calc(var(--r) * 1.42));
+}
+
+/* lensed image of the far side of the disc, arcing over the top */
+html[data-concept~="event-horizon"] .eh-arc {
+  width: calc(var(--r) * 2.5);
+  height: calc(var(--r) * 2.24);
+  translate: -50% -54%;
+  background: radial-gradient(closest-side, transparent 96.6%, rgba(255, 179, 71, 0.75) 98.4%, rgba(255, 92, 42, 0.25) 99.2%, transparent);
+  -webkit-mask: linear-gradient(#000, rgba(0, 0, 0, 0.35) 20%, transparent 38%);
+  mask: linear-gradient(#000, rgba(0, 0, 0, 0.35) 20%, transparent 38%);
+  animation: eh-warm 1.5s ease-in-out both;
+}
+
+/* small luminous figures orbiting outside the ring (never over the text) / one falling in */
+html[data-concept~="event-horizon"] .eh-orbit {
+  rotate: var(--a);
+  animation: eh-orbit var(--t) linear infinite;
+}
+
+html[data-concept~="event-horizon"] .eh-fig {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--h);
+  height: var(--h);
+  opacity: 0.9;
+  /* 200x200 crops of the transparent 1024x256 sprite sheet */
+  background: url(assets/figures-alpha.webp) var(--sx) 44.6% / 512% 128% no-repeat;
+  transform: translate(-50%, -50%) translateX(calc(var(--d) * var(--r))) rotate(var(--tilt));
+}
+
+html[data-concept~="event-horizon"] .eh-fall {
+  animation: eh-fall 26s cubic-bezier(0.5, 0, 0.9, 0.6) infinite;
+}
+
+@keyframes eh-warm { from { opacity: 0; } }
+@keyframes eh-spin { to { rotate: 360deg; } }
+@keyframes eh-orbit { to { rotate: calc(var(--a) + 360deg); } }
+@keyframes eh-fall {
+  0% { opacity: 0; transform: translate(-50%, -50%) translateX(calc(1.42 * var(--r))) rotate(var(--tilt)); }
+  15%, 70% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(-50%, -50%) translateX(calc(1.03 * var(--r))) rotate(calc(var(--tilt) + 200deg)) scale(0.35); }
+}
+
+/* phones: the hole rises partly off the top; the text sits below it on plain black */
+@media (max-width: 699px) {
+  html[data-concept~="event-horizon"] .hero {
+    --r: min(40vw, 150px);
+    min-height: 100svh;
+    align-items: flex-start;
+    padding-top: calc(var(--r) * 2.45);
+    box-sizing: border-box;
+  }
+  html[data-concept~="event-horizon"] .hero .tagline { min-height: 3lh; } /* the typed line wraps to 3 lines: no jump */
+  html[data-concept~="event-horizon"] .eh { top: calc(var(--r) * 0.75); }
+  html[data-concept~="event-horizon"] .eh-fig { width: calc(var(--h) * 0.7); height: calc(var(--h) * 0.7); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-concept~="event-horizon"] .eh-spin,
+  html[data-concept~="event-horizon"] .eh-arc,
+  html[data-concept~="event-horizon"] .eh-orbit,
+  html[data-concept~="event-horizon"] .eh-fall { animation: none; }
+}

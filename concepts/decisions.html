@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Three decisions</title>
+    <style>
+        body { margin: 0; background: #000; color: #f5f3ef; font: 14px -apple-system, BlinkMacSystemFont, sans-serif; }
+        nav { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; align-items: center; padding: 0.6rem 1rem; border-bottom: 1px solid #222; }
+        nav div { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+        nav strong { color: #aaa7a2; font-weight: 500; margin-right: 0.2rem; }
+        button { padding: 0.4rem 0.75rem; border: 1px solid #333; border-radius: 6px; background: #111; color: inherit; font: inherit; cursor: pointer; }
+        button[aria-pressed="true"] { border-color: #ff5c2a; color: #ffb79f; }
+        nav a { margin-left: auto; color: #aaa7a2; }
+        iframe { display: block; width: 100%; height: calc(100vh - 96px); border: 0; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div><strong>Label</strong>
+            <button data-url="/?concept=event-horizon#research">Keep eyebrow</button>
+            <button data-url="/?concept=event-horizon,eyebrow-credit#research">Corner credit</button>
+        </div>
+        <div><strong>Lava</strong>
+            <button data-url="/?concept=event-horizon#aboutMe">As now</button>
+            <button data-url="/?concept=event-horizon,lava-haze#aboutMe">Ember haze</button>
+            <button data-url="/?concept=event-horizon,lava-none#aboutMe">None</button>
+        </div>
+        <div><strong>Hands</strong>
+            <button data-url="/?concept=reach-engrave">Hero only</button>
+            <button data-url="/?concept=event-horizon,thesis-hands-drawn#research">Thesis card only</button>
+            <button data-url="/?concept=reach-engrave,thesis-hands-drawn">Both</button>
+        </div>
+        <a id="open" href="/" target="_blank">Open full page</a>
+    </nav>
+    <iframe title="Decision demo"></iframe>
+    <script>
+        const frame = document.querySelector('iframe');
+        const buttons = document.querySelectorAll('button');
+        const show = (url) => {
+            frame.src = url;
+            document.getElementById('open').href = url;
+            buttons.forEach((b) => b.setAttribute('aria-pressed', b.dataset.url === url));
+        };
+        buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.url)));
+        show(buttons[0].dataset.url);
+    </script>
+</body>
+</html>

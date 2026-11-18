@@ -1,0 +1,162 @@
+/* fade-to-black: ember black hole at the end of the page */
+html[data-concept~="fade-to-black"] .ftb-hole {
+  position: relative;
+  width: min(40vmin, 420px);
+  aspect-ratio: 1;
+  justify-self: center;
+  align-self: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-concept~="fade-to-black"].ftb-on .ftb-hole { opacity: 1; transform: none; }
+
+/* haze: falls off fast from the rim into deep red, then black */
+html[data-concept~="fade-to-black"] .ftb-hole::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side, rgba(255, 92, 42, 0.5) 42%, rgba(122, 26, 10, 0.35) 52%, rgba(122, 26, 10, 0) 78%);
+}
+/* the disc */
+html[data-concept~="fade-to-black"] .ftb-hole::after {
+  content: "";
+  position: absolute;
+  inset: 20%;
+  border-radius: 50%;
+  background: #000;
+}
+/* burning rim, hottest on one slowly turning arc */
+html[data-concept~="fade-to-black"] .ftb-rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg, #7a1a0a, #ff5c2a 25%, #ffb347 40%, #fff4dc 47%, #ffb347 54%, #ff5c2a 70%, #7a1a0a);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 57%, #000 60.5%, #000 64%, transparent 76%);
+  mask: radial-gradient(circle closest-side, transparent 57%, #000 60.5%, #000 64%, transparent 76%);
+  animation: ftb-turn 72s linear infinite;
+}
+@keyframes ftb-turn { to { transform: rotate(1turn); } }
+
+/* the background light dims while Contact is in view, and comes back when you scroll away */
+html[data-concept~="fade-to-black"] .lava-lamp { transition: opacity 1.2s ease; }
+html[data-concept~="fade-to-black"].ftb-dim .lava-lamp { opacity: 0.12; }
+
+/* one ember beside the email link */
+html[data-concept~="fade-to-black"] .contact-link[href^="mailto:"]::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  margin-left: -0.2rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff4dc 0, #ffb347 30%, #ff5c2a 55%, rgba(122, 26, 10, 0) 72%);
+  opacity: 0.4;
+  transform: scale(0.7);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-concept~="fade-to-black"] .contact-link[href^="mailto:"]:is(:hover, :focus-visible)::after {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+html[data-concept~="fade-to-black"] .ftb-end {
+  margin: 5rem 0 2rem;
+  text-align: center;
+  color: #aaa7a2;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+html[data-concept~="fade-to-black"] footer { background: linear-gradient(transparent, #000 160px); }
+
+@media (max-width: 768px) {
+  html[data-concept~="fade-to-black"] .ftb-hole {
+    order: -1;
+    width: min(52vw, 220px);
+    margin: 1rem 0 2.5rem;
+  }
+}
+
+/* 404: the hole is the pupil of one drawn eye; four figures drift toward it. Text first on phones. */
+html.ftb-404[data-concept~="fade-to-black"] .detail-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; align-items: center; min-height: 72vh; border: 0;
+}
+html[data-concept~="fade-to-black"] .ftb-orbit {
+  position: relative;
+  width: min(100%, 520px);
+  aspect-ratio: 1;
+  justify-self: center;
+  container-type: inline-size;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-concept~="fade-to-black"].ftb-on .ftb-orbit { opacity: 1; }
+html[data-concept~="fade-to-black"] .ftb-eye { position: absolute; left: 8cqw; top: 24.8cqw; width: 84cqw; aspect-ratio: 400 / 240; }
+html[data-concept~="fade-to-black"] .ftb-eye-haze {
+  position: absolute; inset: -12% 6%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 92, 42, 0.22), rgba(122, 26, 10, 0.12) 55%, transparent);
+}
+html[data-concept~="fade-to-black"] .ftb-ball { position: absolute; inset: 0; clip-path: var(--open); transition: clip-path 0.14s ease-in; }
+html[data-concept~="fade-to-black"] .is-blink .ftb-ball { clip-path: var(--shut); }
+/* iris = 140 of the 400-unit eye, centred; 1 unit = .21cqw */
+html[data-concept~="fade-to-black"] .ftb-look {
+  position: absolute; left: 50%; top: 50%; width: 35%; aspect-ratio: 1; margin: -17.5% 0 0 -17.5%;
+  transform: translate(calc(var(--gx, 0) * 0.21cqw), calc(var(--gy, 0) * 0.21cqw));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-concept~="fade-to-black"] .ftb-eye .ftb-hole { position: absolute; inset: 0; width: 100%; margin: 0; opacity: 1; transform: none; }
+html[data-concept~="fade-to-black"] .ftb-eye .ftb-hole::before {
+  inset: 0;
+  background:
+    repeating-conic-gradient(rgba(255, 244, 220, 0.2) 0 1.2deg, transparent 1.2deg 7deg),
+    radial-gradient(circle closest-side, #ff5c2a 60%, #b8401c 72%, #7a1a0a 88%, #1a0603 100%);
+}
+html[data-concept~="fade-to-black"] .ftb-eye svg { position: absolute; inset: 0; overflow: visible; fill: none; }
+html[data-concept~="fade-to-black"] .ftb-eye path { stroke: #d8d4cc; stroke-width: 1.2; }
+html[data-concept~="fade-to-black"] .ftb-eye .ftb-crease { stroke: rgba(216, 212, 204, 0.3); stroke-width: 1; }
+html[data-concept~="fade-to-black"] .ftb-lid { transform-box: view-box; transform-origin: 200px 120px; transition: transform 0.14s ease-in; }
+html[data-concept~="fade-to-black"] .is-blink .ftb-lid { transform: scaleY(-1); }
+
+/* figures-alpha.webp has a real transparent background: no box, no blend mode */
+html[data-concept~="fade-to-black"] .ftb-fig {
+  position: absolute;
+  display: grid;
+  justify-items: center;
+  width: 30cqw;
+  margin: -8cqw 0 0 -15cqw;
+  color: #aaa7a2;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  animation: ftb-drift 20s ease-in-out infinite alternate;
+}
+html[data-concept~="fade-to-black"] .ftb-fig i {
+  width: 16cqw; aspect-ratio: 1;
+  background: url(/concepts/assets/figures-alpha.webp) var(--sx) 44.6% / 512% 128% no-repeat;
+  transform: scaleX(var(--f));
+  opacity: 0.85;
+  transition: opacity 0.3s;
+}
+html[data-concept~="fade-to-black"] .ftb-fig small { color: #7f7c77; font-size: 0.7rem; opacity: 0; transition: opacity 0.3s; }
+html[data-concept~="fade-to-black"] .ftb-fig:is(:hover, :focus-visible) { color: #f5f3ef; }
+html[data-concept~="fade-to-black"] .ftb-fig:is(:hover, :focus-visible) :is(i, small) { opacity: 1; }
+@keyframes ftb-drift { to { transform: translate(var(--dx), var(--dy)) scale(0.82); } }
+@media (max-width: 899px) {
+  html.ftb-404[data-concept~="fade-to-black"] .detail-hero { grid-template-columns: minmax(0, 1fr); gap: 1rem; min-height: 0; }
+  html[data-concept~="fade-to-black"] .ftb-orbit { width: min(100%, 360px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-concept~="fade-to-black"]  .contact-link[href^="mailto:"]::after,
+  html[data-concept~="fade-to-black"] :is(.ftb-hole, .lava-lamp) { transition: none; }
+  html[data-concept~="fade-to-black"] :is(.ftb-rim, .ftb-fig) { animation: none; }
+  html[data-concept~="fade-to-black"] :is(.ftb-look, .ftb-ball, .ftb-lid, .ftb-orbit) { transition: none; }
+}
+
+/* With film-frame loaded: this black hole owns the Contact ending, film-frame owns the decoding "[fade to black]" */
+html[data-concept~="film-frame"][data-concept~="fade-to-black"] .ff-flare,
+html[data-concept~="film-frame"][data-concept~="fade-to-black"] .ftb-end { display: none; }
+/* no opaque Contact: the dimmed lava and the footer's gradient carry the fade, so neither edge shows a seam */
+html[data-concept~="film-frame"][data-concept~="fade-to-black"] #contact { background: none; }

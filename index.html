@@ -80,7 +80,7 @@
             <p class="tagline">I build software that holds up in the real world, from web products to machine-learning systems.</p>
             <div class="cta-buttons">
                 <a class="primary-btn" href="#research">See flagship work</a>
-                <a class="secondary-btn" href="#contact">Get in touch</a>
+                <a class="secondary-btn" href="/Daniel_Mora_CV.pdf" download>Download resume</a>
             </div>
         </div>
     </section>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-code"></i>
-                            <span>AI &amp; ML Builder</span>
+                            <span>Software &amp; AI Engineer</span>
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-globe"></i>
@@ -267,6 +267,29 @@
                 <button id="toggleProjectDetails" type="button" aria-pressed="false">Expand all details <i class="fas fa-plus" aria-hidden="true"></i></button>
             </div>
             <div class="project-records">
+                <article class="project-record">
+                    <header class="project-record-header">
+                        <div><span class="work-type">Hackathon &middot; team of four &middot; New York, Nov 2026</span><h3>CAMOX Evidence Agent</h3></div>
+                        <div class="project-actions" aria-label="CAMOX Evidence Agent links">
+                            <a class="project-action" href="https://camox.onrender.com/v2/" target="_blank" rel="noopener noreferrer">Live demo</a>
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/system-public-challenge-2026/tree/camox/projects/camox" target="_blank" rel="noopener noreferrer" aria-label="Open the CAMOX code on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a>
+                        </div>
+                    </header>
+                    <p class="project-summary">Built at the System Public Challenge for the World Bank jobs agenda: ask about a jobs topic and agents show what the research links it to, how strong each link is, and which World Bank indicator measures it, or where the data runs out.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>My role</span> One of four teammates; I set up and ran the shared coordination server our coding agents used to claim tasks, share notes and lock deploys, and I owned the submission repo.</p>
+                            <ul class="project-evidence">
+                                <li>A planner splits each question into tasks; specialist agents (evidence, indicator map, coverage, research, policy, skeptic) work in parallel over our own MCP server, with Pydantic contracts at every hand-off.</li>
+                                <li>Searches the System Public Graph (2.0M findings from 845k studies), World Bank Data360, OpenAlex and PubMed.</li>
+                                <li>Statistics are computed in code, never by the model, and a verifier re-checks every DOI, concept and number against the run's tool results; anything it can't confirm is labelled "Not verified".</li>
+                            </ul>
+                            <div class="project-stack" aria-label="CAMOX technologies"><span>Python</span><span>FastAPI</span><span>Pydantic</span><span>DuckDB</span><span>PostgreSQL</span><span>MCP</span><span>OpenAI</span><span>Cytoscape.js</span></div>
+                        </div>
+                    </details>
+                </article>
+
                 <article class="project-record">
                     <header class="project-record-header">
                         <div><span class="work-type">Model research &middot; release</span><h3>Triplet SAE Project</h3></div>
@@ -623,5 +646,6 @@
 
         entry.addEventListener('click', startGuide);
     </script>
+    <script src="/javascript-files/concept-loader.js"></script>
 </body>
 </html>

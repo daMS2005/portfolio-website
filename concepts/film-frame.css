@@ -1,0 +1,320 @@
+/* film-frame: the film's chrome. Nav as corner credits, menu wipe, persistent strip,
+   Contact flare, "[fade to black]" footer, ember focus/selection/scrollbar, MORA-01 as eyes.
+   `:not(#ff)` lifts specificity over the site's guide rules without !important. */
+html[data-concept~="film-frame"] {
+  --ff-ink: #f5f3ef; --ff-ink-2: #d6d3ce; --ff-muted: #aaa7a2; --ff-dim: #7f7c77;
+  --ff-edge: rgba(245, 243, 239, .08); --ff-edge-2: rgba(245, 243, 239, .16);
+  --ff-ember: #ff5c2a; --ff-ember-text: #ffb79f; --ff-core: #ffb347; --ff-hot: #fff4dc;
+  --ff-ignite: cubic-bezier(.16, 1, .3, 1); --ff-fall: cubic-bezier(.7, 0, .84, 0);
+  --ff-falloff: linear-gradient(90deg, transparent, var(--ff-edge-2) 12%, var(--ff-edge-2) 88%, transparent);
+  --ff-star: radial-gradient(circle, var(--ff-hot) 0 1px, rgba(255, 179, 71, .75) 1.8px, rgba(255, 92, 42, .25) 3.6px, transparent 6px);
+  --ff-star-mono: radial-gradient(circle, #d8d4cc 0 1px, rgba(216, 212, 204, .35) 1.6px, rgba(216, 212, 204, .08) 3.5px, transparent 6px);
+  scrollbar-width: thin;
+  scrollbar-color: #3a2a22 #000;
+  caret-color: var(--ff-ember);
+}
+html[data-concept~="film-frame"] ::selection { background: var(--ff-ember); color: #050403; }
+html[data-concept~="film-frame"] ::-webkit-scrollbar { width: 8px; height: 8px; background: #000; }
+html[data-concept~="film-frame"] ::-webkit-scrollbar-thumb { background: #3a2a22; border-radius: 999px; }
+html[data-concept~="film-frame"] ::-webkit-scrollbar-thumb:hover { background: var(--ff-ember); }
+html[data-concept~="film-frame"] :focus-visible {
+  outline: 2px solid var(--ff-ember);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(255, 92, 42, .18);
+  animation: ff-halo .22s var(--ff-ignite);
+}
+@keyframes ff-halo { from { box-shadow: 0 0 0 14px rgba(255, 92, 42, 0); } }
+html[data-concept~="film-frame"] .ff-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- nav: the top edge of the frame ---------- */
+html[data-concept~="film-frame"] .navbar { background: linear-gradient(#000, rgba(0, 0, 0, .55) 75%, transparent) !important; }
+html[data-concept~="film-frame"] .navbar.ff-solid { background: #000 !important; }
+html[data-concept~="film-frame"] .navbar::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 1px;
+  background: var(--ff-falloff); opacity: 0; transition: opacity .28s;
+}
+html[data-concept~="film-frame"] .navbar.ff-solid::after { opacity: 1; }
+html[data-concept~="film-frame"] .ff-sentinel { position: absolute; top: 80px; left: 0; width: 1px; height: 1px; pointer-events: none; }
+html[data-concept~="film-frame"] .navbar .logo { font-size: 1.25rem; font-weight: 700; color: var(--ff-ink); letter-spacing: -.02em; }
+html[data-concept~="film-frame"] .navbar a.logo, html[data-concept~="film-frame"] .navbar a.logo-link { display: inline-flex; align-items: center; }
+html[data-concept~="film-frame"] .ff-credit {
+  display: inline-flex; flex-direction: column; justify-content: center;
+  margin-left: 12px; padding-left: 12px; min-height: 30px;
+  font-size: 12px; font-weight: 500; line-height: 1.3; letter-spacing: .01em;
+  color: var(--ff-muted); font-variant-numeric: tabular-nums; white-space: nowrap;
+  background: linear-gradient(180deg, transparent, var(--ff-edge-2) 20%, var(--ff-edge-2) 80%, transparent) left / 1px 100% no-repeat;
+}
+html[data-concept~="film-frame"] .logo-section .ff-credit { margin-left: -4px; }
+html[data-concept~="film-frame"] .ff-credit b { font-weight: 500; color: var(--ff-ink-2); }
+html[data-concept~="film-frame"] .ff-credit span { max-width: min(36ch, calc(100vw - 190px)); overflow: hidden; text-overflow: ellipsis; transition: opacity .16s; }
+html[data-concept~="film-frame"] .social-nav a { color: var(--ff-muted); font-size: 1.15rem; transform: none !important; transition: color .28s; }
+html[data-concept~="film-frame"] .social-nav a:hover { color: var(--ff-ink); }
+/* the real Hugging Face logo: quiet greyscale at rest, its own colour on hover */
+html[data-concept~="film-frame"] :is(.hf-logo, .hf-footer-logo) { filter: grayscale(1) brightness(1.2); opacity: .75; transition: filter .28s, opacity .28s; }
+html[data-concept~="film-frame"] a:is(:hover, :focus-visible) > :is(.hf-logo, .hf-footer-logo) { filter: none; opacity: 1; }
+
+@media (min-width: 1001px) {
+  html[data-concept~="film-frame"] .nav-links { gap: 1.75rem; }
+  html[data-concept~="film-frame"] .nav-links a {
+    padding: 6px 0; font-size: 14px; font-weight: 500; color: var(--ff-ink-2);
+    background: linear-gradient(90deg, var(--ff-ember) calc(100% - 12px), var(--ff-core)) no-repeat 0 100% / 0 1px;
+    transition: color .28s, background-size .28s var(--ff-ignite);
+  }
+  html[data-concept~="film-frame"] .nav-links a.ff-here { color: var(--ff-ink); background-image: linear-gradient(rgba(255, 92, 42, .45), rgba(255, 92, 42, .45)); background-size: 100% 1px; }
+  html[data-concept~="film-frame"] .nav-links a:hover,
+  html[data-concept~="film-frame"] .nav-links a:focus-visible { color: var(--ff-ink); background-image: linear-gradient(90deg, var(--ff-ember) calc(100% - 12px), var(--ff-core)); background-size: 100% 1px; }
+  html[data-concept~="film-frame"] .nav-links .ff-sub, html[data-concept~="film-frame"] .nav-links .ff-social { display: none; }
+}
+
+/* ---------- mobile menu: a black panel wipes down into a credits card ---------- */
+@media (max-width: 1000px) {
+  html[data-concept~="film-frame"] .nav-toggle { width: 44px; height: 44px; padding: 0; border: 1px solid var(--ff-edge-2); border-radius: 0; background: transparent; color: var(--ff-ink); }
+  html[data-concept~="film-frame"] .nav-links.is-open {
+    position: fixed; top: var(--ff-nav-h, 64px); left: 0; right: 0; bottom: 0; z-index: 1;
+    max-height: none; margin: 0; padding: 8px 16px 40px; gap: 0;
+    background: #000; border: 0; overflow-y: auto;
+    animation: ff-wipe .38s var(--ff-ignite) both;
+  }
+  html[data-concept~="film-frame"] .navbar:has(.nav-links.is-open)::before {
+    content: ""; position: fixed; left: 0; right: 0; top: var(--ff-nav-h, 64px); height: calc(100dvh - var(--ff-nav-h, 64px));
+    z-index: 2; pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--ff-ember) 20%, var(--ff-core) 50%, var(--ff-ember) 80%, transparent) top / 100% 1px no-repeat,
+                radial-gradient(50% 6px at 50% 0, rgba(255, 92, 42, .35), transparent) top / 100% 12px no-repeat;
+    animation: ff-edge .38s var(--ff-ignite) forwards;
+  }
+  html[data-concept~="film-frame"] .nav-links.is-open li { background: var(--ff-falloff) bottom / 100% 1px no-repeat; }
+  html[data-concept~="film-frame"] .nav-links.is-open a { min-height: 52px; padding: 0; border-radius: 0; background: none; font-size: 20px; font-weight: 600; color: var(--ff-ink); }
+  html[data-concept~="film-frame"] .nav-links.is-open a.ff-here { color: var(--ff-ember-text); }
+  html[data-concept~="film-frame"] .nav-links.is-open li:has(+ .ff-sub), html[data-concept~="film-frame"] .nav-links.is-open .ff-sub:has(+ .ff-sub) { background: none; }
+  html[data-concept~="film-frame"] .nav-links.is-open .ff-sub a { position: relative; min-height: 44px; padding-left: 22px; font-size: 15px; font-weight: 500; color: var(--ff-ink-2); }
+  html[data-concept~="film-frame"] .nav-links.is-open .ff-sub a::before { content: ""; position: absolute; left: 2px; top: 50%; width: 12px; height: 12px; margin-top: -6px; background: var(--ff-star-mono); }
+  html[data-concept~="film-frame"] .nav-links.is-open .ff-sub a:hover::before { background: var(--ff-star); }
+  html[data-concept~="film-frame"] .nav-links.is-open .ff-social { display: flex; gap: 20px; padding-top: 12px; background: none; }
+  html[data-concept~="film-frame"] .nav-links.is-open .ff-social a { min-height: 44px; font-size: 14px; font-weight: 500; color: var(--ff-muted); }
+  html[data-concept~="film-frame"] .ff-credit span { display: block; }
+}
+@media (max-width: 600px) {
+  html[data-concept~="film-frame"] .social-nav { display: none; }
+}
+@keyframes ff-wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+@keyframes ff-edge { 0%, 80% { opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
+
+/* ---------- persistent frame: bottom strip (desktop) / footer end line (phone) ---------- */
+html[data-concept~="film-frame"] .ff-strip { display: none; }
+html[data-concept~="film-frame"] .ff-line [data-k] { position: relative; transition: color .28s; }
+html[data-concept~="film-frame"] .ff-line [data-k]::before {
+  content: ""; position: absolute; left: -8px; top: 50%; width: 12px; height: 12px; margin-top: -6px;
+  background: var(--ff-star); opacity: 0; transition: opacity .28s;
+}
+html[data-concept~="film-frame"] .ff-line .is-lit { color: var(--ff-ember); }
+html[data-concept~="film-frame"] .ff-line .is-lit[data-k="contact"] { color: var(--ff-core); }
+html[data-concept~="film-frame"] .ff-strip .is-lit::before { opacity: 1; }
+@media (min-width: 1000px) and (min-height: 640px) {
+  html[data-concept~="film-frame"] .ff-strip {
+    position: fixed; inset: auto 0 0; z-index: 930; height: 44px; padding: 0 2rem;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    background: linear-gradient(to top, #000 60%, transparent); pointer-events: none;
+    transition: opacity .28s;
+  }
+  html[data-concept~="film-frame"] .ff-sec { font-size: 12px; font-weight: 500; letter-spacing: .01em; color: var(--ff-muted); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .16s; }
+  html[data-concept~="film-frame"] .ff-strip .ff-line { margin: 0; font-size: 13px; color: var(--ff-dim); white-space: nowrap; }
+  html.ff-at-hero[data-concept~="film-frame"] .ff-strip,
+  html[data-concept~="film-frame"] body:has(.nav-links.is-open, .guide-chat-panel.open) .ff-strip { opacity: 0; }
+  html[data-concept~="film-frame"] footer { padding-bottom: calc(48px + 44px); }
+}
+html[data-concept~="film-frame"] .ff-endline { display: none; }
+@media (max-width: 999px) {
+  html[data-concept~="film-frame"] footer .ff-endline { display: block; max-width: 34ch; margin: 32px auto 0; font-size: 13px; line-height: 1.6; color: var(--ff-dim); }
+}
+
+/* ---------- Contact: the last scene, a flare collapsing to one point ---------- */
+html[data-concept~="film-frame"] #contact { position: relative; z-index: 1; background: #000; }
+html[data-concept~="film-frame"] #contact .section-heading, html[data-concept~="film-frame"] #contact .section-heading h2 { margin-inline: auto; text-align: center; }
+html[data-concept~="film-frame"] .ff-flare { position: relative; height: 140px; max-width: 760px; margin: 0 auto 8px; pointer-events: none; }
+html[data-concept~="film-frame"] .ff-flare > * { position: absolute; left: 50%; top: 50%; }
+html[data-concept~="film-frame"] .ff-flare .ff-streak {
+  left: 0; right: 0; height: 2px; margin-top: -1px; opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(122, 26, 10, .7) 10%, var(--ff-ember) 30%, var(--ff-core) 45%, var(--ff-hot) 50%, var(--ff-core) 55%, var(--ff-ember) 70%, rgba(122, 26, 10, .7) 90%, transparent);
+}
+html[data-concept~="film-frame"] .ff-flare .ff-streak::after {
+  content: ""; position: absolute; left: 15%; right: 15%; top: -9px; height: 20px;
+  background: radial-gradient(closest-side, rgba(255, 179, 71, .3), rgba(255, 92, 42, .12) 60%, transparent);
+}
+html[data-concept~="film-frame"] .ff-flare .ff-halo {
+  width: 140px; height: 140px; margin: -70px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(closest-side, rgba(255, 244, 220, .5), rgba(255, 179, 71, .3) 25%, rgba(255, 92, 42, .14) 55%, rgba(122, 26, 10, .06) 78%, transparent),
+              repeating-conic-gradient(rgba(255, 179, 71, .1) 0 1.5deg, transparent 1.5deg 9deg);
+  -webkit-mask: radial-gradient(closest-side, #000 40%, transparent); mask: radial-gradient(closest-side, #000 40%, transparent);
+}
+html[data-concept~="film-frame"] .ff-flare .ff-point {
+  width: 14px; height: 14px; margin: -7px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, var(--ff-hot) 0 1.5px, rgba(255, 179, 71, .85) 2.5px, rgba(255, 92, 42, .3) 4.5px, transparent 7px);
+}
+html[data-concept~="film-frame"] .ff-flare .ff-point::before {
+  content: ""; position: absolute; inset: -33px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 179, 71, .22), rgba(255, 92, 42, .1) 45%, rgba(122, 26, 10, .05) 72%, transparent);
+}
+html[data-concept~="film-frame"] .ff-flare.is-on .ff-streak { animation: ff-streak 1.2s both; }
+html[data-concept~="film-frame"] .ff-flare.is-on .ff-halo { animation: ff-halo-c 1.2s both; }
+html[data-concept~="film-frame"] .ff-flare.is-on .ff-point { opacity: 1; animation: ff-point .5s .95s var(--ff-ignite) backwards; }
+html[data-concept~="film-frame"] .ff-flare.is-flash .ff-point { animation: ff-flash .6s var(--ff-ignite); }
+@media (max-width: 599px) { html[data-concept~="film-frame"] .ff-flare { height: 96px; } }
+@keyframes ff-streak {
+  0% { opacity: 0; transform: scaleX(.04); animation-timing-function: var(--ff-ignite); }
+  30% { opacity: 1; transform: scaleX(1); animation-timing-function: linear; }
+  50% { opacity: 1; transform: scaleX(1); animation-timing-function: var(--ff-fall); }
+  100% { opacity: .6; transform: scaleX(0); }
+}
+@keyframes ff-halo-c {
+  0% { opacity: 0; transform: scale(.3); animation-timing-function: var(--ff-ignite); }
+  30% { opacity: 1; transform: scale(1); animation-timing-function: linear; }
+  50% { opacity: 1; transform: scale(1); animation-timing-function: var(--ff-fall); }
+  100% { opacity: 0; transform: scale(.1); }
+}
+@keyframes ff-point { from { opacity: 0; transform: scale(2.4); } }
+@keyframes ff-flash { 40% { transform: scale(1.8); } }
+
+html[data-concept~="film-frame"] #contact .contact-content { display: block; }
+html[data-concept~="film-frame"] #contact .contact-info { position: relative; display: flex; flex-flow: row wrap; justify-content: center; align-items: center; gap: 4px 8px; max-width: 760px; margin: 0 auto; text-align: center; }
+html[data-concept~="film-frame"] #contact .contact-item { flex: 0 0 100%; justify-content: center; gap: 0; color: var(--ff-ink-2); font-size: 1rem; }
+html[data-concept~="film-frame"] #contact .contact-item i { display: none; }
+html[data-concept~="film-frame"] #contact .contact-item:not(a) { font-size: 13px; font-weight: 500; color: var(--ff-muted); }
+html[data-concept~="film-frame"]:not(#ff) #contact .ff-where { order: 1; margin: 6px 0 10px; font-size: clamp(1rem, 3.6vw, 1.2rem); color: var(--ff-ink-2); }
+html[data-concept~="film-frame"] #contact .ff-where b { font-weight: 600; color: var(--ff-ember-text); }
+html[data-concept~="film-frame"] #contact a.contact-item:not([href^="mailto:"]) { order: 2; }
+html[data-concept~="film-frame"] #contact a.contact-item[href^="mailto:"] { flex: 0 1 auto; font-size: clamp(1.35rem, 4.6vw, 2.4rem); font-weight: 600; letter-spacing: -.02em; color: var(--ff-ink); }
+html[data-concept~="film-frame"] #contact a.contact-item span {
+  background: linear-gradient(90deg, var(--ff-ember) calc(100% - 12px), var(--ff-core)) no-repeat 0 100% / 0 1px;
+  transition: background-size .28s var(--ff-ignite);
+}
+html[data-concept~="film-frame"] #contact a.contact-item:hover { color: var(--ff-ink); }
+html[data-concept~="film-frame"] #contact a.contact-item:hover span { background-size: 100% 1px; }
+html[data-concept~="film-frame"] .ff-copy { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--ff-edge-2); background: transparent; color: var(--ff-muted); cursor: pointer; transition: color .28s, border-color .28s; }
+html[data-concept~="film-frame"] .ff-copy:hover { color: var(--ff-ember-text); border-color: rgba(255, 92, 42, .6); }
+html[data-concept~="film-frame"] .ff-copied { position: absolute; top: 100%; left: 0; right: 0; font-size: 12px; color: var(--ff-core); }
+
+/* ---------- footer: the end card ---------- */
+html[data-concept~="film-frame"] footer { position: relative; z-index: 1; background: linear-gradient(transparent, #000 160px); padding-top: 96px; }
+html[data-concept~="film-frame"] footer::before { display: none; } /* no seam: the page fades into the footer */
+html[data-concept~="film-frame"] .ff-fade { margin: 0 0 64px; font: 500 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ff-muted); transition: color 1.2s; }
+html[data-concept~="film-frame"] .ff-fade.is-dim { color: var(--ff-dim); }
+html[data-concept~="film-frame"] footer .social-links a { color: var(--ff-muted); font-size: 20px; }
+html[data-concept~="film-frame"] footer .social-links a:hover { color: var(--ff-ink); }
+html[data-concept~="film-frame"] footer .social-links.ff-text { gap: 20px; }
+html[data-concept~="film-frame"] footer .social-links.ff-text a { font-size: 14px; font-weight: 500; text-decoration: none; }
+html[data-concept~="film-frame"] footer .footer-legal, html[data-concept~="film-frame"] footer .footer-content > p { font-size: 12px; color: var(--ff-dim); }
+html[data-concept~="film-frame"] footer .footer-legal { font-size: 13px; }
+html[data-concept~="film-frame"] footer .footer-legal a { color: var(--ff-muted); }
+html[data-concept~="film-frame"] footer .footer-legal a:hover { color: var(--ff-ink); }
+
+/* ---------- MORA-01: the launcher pill is its eyes ---------- */
+html[data-concept~="film-frame"]:not(#ff) .guide-entry {
+  right: 16px; bottom: 18px; min-height: 40px; gap: 10px; padding: 4px 16px 4px 4px;
+  border: 1px solid var(--ff-edge-2); border-radius: 999px; background: rgba(5, 4, 3, .92); box-shadow: none;
+  color: var(--ff-ink); font-size: 14px; font-weight: 600; transition: opacity .28s;
+}
+html[data-concept~="film-frame"]:not(#ff) .guide-entry:hover { border-color: rgba(255, 179, 71, .5); }
+html[data-concept~="film-frame"] .guide-entry > .fa-robot { display: none; }
+html[data-concept~="film-frame"] body:has(.nav-links.is-open) .guide-entry { opacity: 0; pointer-events: none; }
+html[data-concept~="film-frame"] .ff-eyes {
+  display: inline-flex; flex: none; align-items: center; justify-content: center; gap: 7px;
+  width: 46px; height: 30px; border-radius: 999px; background: #000;
+  box-shadow: inset 0 0 0 1px rgba(245, 243, 239, .1);
+}
+html[data-concept~="film-frame"] .ff-eyes i {
+  width: 7px; height: 11px; border-radius: 4px; background: var(--ff-hot);
+  box-shadow: 0 0 6px rgba(255, 179, 71, .6), 0 0 14px rgba(255, 92, 42, .25);
+  transform: translate(var(--ex, 0), var(--ey, 0)) scale(var(--s, 1)) scaleY(var(--sy, 1));
+  transition: transform .2s ease-out, border-radius .2s;
+}
+html[data-concept~="film-frame"] .ff-eyes.is-blink { --sy: .1; }
+html[data-concept~="film-frame"] .guide-entry:is(:hover, :focus-visible) .ff-eyes { --s: 1.18; }
+html[data-concept~="film-frame"] .ff-eyes.is-happy i { --sy: .45; border-radius: 6px 6px 2px 2px; }
+html[data-concept~="film-frame"] .guide-entry:disabled .ff-eyes i { animation: ff-scan .9s ease-in-out infinite alternate; }
+@keyframes ff-scan { from { translate: -3px 0; } to { translate: 3px 0; } }
+@media (min-width: 1000px) and (min-height: 640px) {
+  html[data-concept~="film-frame"]:not(#ff) .guide-entry { bottom: 6px; min-height: 32px; padding: 2px 14px 2px 2px; }
+  html[data-concept~="film-frame"] .ff-eyes { width: 42px; height: 26px; }
+}
+@media (max-width: 599px) {
+  html[data-concept~="film-frame"]:not(#ff) .guide-entry { right: 12px; bottom: 12px; width: 48px; height: 48px; padding: 0; gap: 0; justify-content: center; font-size: 0; }
+  html[data-concept~="film-frame"] .ff-eyes { width: 38px; height: 26px; }
+}
+
+/* the droid floats on the void, rim-lit: no box behind it, and its arms fade out instead of being cut at the canvas edge */
+html[data-concept~="film-frame"]:not(#ff) #droid-guide { background: none; border: 0; border-radius: 0; box-shadow: none; overflow: visible; }
+html[data-concept~="film-frame"] #droid-guide canvas { -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); }
+/* phones: chat and hide sit in the droid's own bottom corners, so the guide covers no more than the droid itself */
+@media (max-width: 899px) {
+  html[data-concept~="film-frame"]:not(#ff) .guide-chat-btn { right: 12px; bottom: 12px; width: 32px; height: 32px; z-index: 960; }
+  html[data-concept~="film-frame"]:not(#ff) .guide-hide-btn { right: 98px; bottom: 15px; z-index: 960; }
+}
+/* desktop: a smaller droid in the corner (it only exists once the visitor opens MORA-01) */
+@media (min-width: 1000px) and (min-height: 640px) {
+  html[data-concept~="film-frame"]:not(#ff) #droid-guide { right: 12px; bottom: 44px; width: 112px; height: 132px; }
+  html[data-concept~="film-frame"]:not(#ff) .guide-chat-btn { right: 132px; bottom: 140px; }
+  html[data-concept~="film-frame"]:not(#ff) .guide-hide-btn { right: 138px; bottom: 106px; }
+}
+
+/* No pinned bottom strip: it covered content and the footer. The section credit lives in the nav instead. */
+html[data-concept~="film-frame"] .ff-strip { display: none !important; }
+
+/* subtitles: a letterbox bar that only exists while MORA-01 talks */
+html[data-concept~="film-frame"]:not(#ff) .guide-bubble {
+  top: auto; left: 0; right: 0; bottom: 0; z-index: 940; box-sizing: border-box;
+  max-width: none; min-height: 56px; padding: 14px 210px 14px 24px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  background: var(--ff-falloff) top / 100% 1px no-repeat, #000; border: 0; border-radius: 0;
+  color: var(--ff-ink); font-size: 15px; font-weight: 500; line-height: 1.4; text-align: center;
+  opacity: 1; transform: translateY(100%); transition: transform .42s var(--ff-ignite);
+}
+html[data-concept~="film-frame"]:not(#ff) .guide-bubble.visible { transform: none; }
+html[data-concept~="film-frame"] .guide-bubble::before { content: "MORA-01"; flex: none; font-size: 12px; font-weight: 500; color: var(--ff-muted); }
+html[data-concept~="film-frame"] .guide-bubble .ff-name { font-weight: 600; color: var(--ff-ember-text); }
+html[data-concept~="film-frame"] .guide-bubble .ff-num { font-weight: 600; color: var(--ff-core); font-variant-numeric: tabular-nums; }
+@media (max-width: 899px) {
+  html[data-concept~="film-frame"]:not(#ff) .guide-bubble { max-width: none; min-height: 72px; padding: 12px 136px 12px 16px; justify-content: flex-start; font-size: 14px; text-align: left; flex-wrap: wrap; gap: 2px 10px; }
+  html[data-concept~="film-frame"] .guide-bubble::before { flex-basis: 100%; }
+}
+
+/* chat: a transcript, not a support widget */
+html[data-concept~="film-frame"]:not(#ff) .guide-chat-btn,
+html[data-concept~="film-frame"]:not(#ff) .guide-hide-btn { background: rgba(5, 4, 3, .92); border: 1px solid var(--ff-edge-2); color: var(--ff-muted); }
+html[data-concept~="film-frame"]:not(#ff) .guide-chat-btn { color: var(--ff-ember); }
+html[data-concept~="film-frame"]:not(#ff) .guide-chat-panel { background: #0b0907; border: 1px solid var(--ff-edge); border-radius: 0; box-shadow: 0 20px 60px rgba(0, 0, 0, .7); }
+html[data-concept~="film-frame"] .guide-chat-head { background: none; border-bottom: 1px solid var(--ff-edge); text-transform: none; letter-spacing: 0; font-size: 12px; font-weight: 500; color: var(--ff-muted); }
+html[data-concept~="film-frame"] .guide-chat-head i { display: none; }
+html[data-concept~="film-frame"] .guide-chat-log { gap: 10px; padding: 12px 16px; }
+html[data-concept~="film-frame"]:not(#ff) .guide-msg { align-self: stretch; max-width: none; padding: 10px 0 0; background: none; border: 0; border-radius: 0; color: var(--ff-ink-2); font-size: 14px; }
+html[data-concept~="film-frame"]:not(#ff) .guide-msg.user { color: var(--ff-ink); text-align: right; }
+html[data-concept~="film-frame"] .guide-msg + .guide-msg { border-top: 1px solid var(--ff-edge); }
+html[data-concept~="film-frame"] .guide-msg::before { content: "MORA-01"; display: block; margin-bottom: 2px; font-size: 12px; color: var(--ff-dim); }
+html[data-concept~="film-frame"] .guide-msg.user::before { content: "You"; }
+html[data-concept~="film-frame"] .guide-msg strong, html[data-concept~="film-frame"] .guide-msg a { color: var(--ff-ember-text); }
+html[data-concept~="film-frame"] .guide-msg .guide-h { text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--ff-ink); }
+html[data-concept~="film-frame"] .guide-msg .guide-list li::before { width: 12px; height: 12px; left: -1.1em; top: .2em; border-radius: 0; background: var(--ff-star-mono); }
+html[data-concept~="film-frame"] .guide-suggestions { flex-direction: column; align-items: flex-start; gap: 0; padding: 4px 16px 10px; }
+html[data-concept~="film-frame"]:not(#ff) .guide-suggestions button {
+  padding: 6px 0; border: 0; border-radius: 0; color: var(--ff-muted); font-size: 13px; text-align: left;
+  background: linear-gradient(90deg, var(--ff-ember) calc(100% - 12px), var(--ff-core)) no-repeat 0 100% / 0 1px;
+  transition: color .28s, background-size .28s var(--ff-ignite);
+}
+html[data-concept~="film-frame"]:not(#ff) .guide-suggestions button:hover { color: var(--ff-ink); background-size: 100% 1px; }
+html[data-concept~="film-frame"] .guide-chat-form { gap: 8px; padding: 8px 12px; border-top: 1px solid var(--ff-edge); }
+html[data-concept~="film-frame"]:not(#ff) .guide-chat-form input { padding: 8px 0; background: transparent; border: 0; border-bottom: 1px solid var(--ff-edge-2); border-radius: 0; color: var(--ff-ink); font-size: 14px; }
+html[data-concept~="film-frame"]:not(#ff) .guide-chat-form input:focus { border-bottom-color: var(--ff-ember); }
+html[data-concept~="film-frame"]:not(#ff) .guide-chat-form button { width: 40px; background: transparent; border-radius: 0; color: var(--ff-ember); }
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-concept~="film-frame"] :is(.ff-flare *, .ff-eyes i, .nav-links.is-open, :focus-visible),
+  html[data-concept~="film-frame"] .navbar::before { animation: none !important; }
+  html[data-concept~="film-frame"] .ff-eyes i { --ex: 0; --ey: 0; }
+  html[data-concept~="film-frame"] .ff-flare .ff-point { opacity: 1; }
+}
+html.fx-scrolling body { pointer-events: none; }
+/* legal pages have no burger: on phones the credit keeps only the name so the bar stays one row */
+@media (max-width: 600px) {
+  html[data-concept~="film-frame"] .navbar:has(.legal-nav) .ff-credit span { display: none; }
+}
+/* contact links never depend on a reveal that might not fire */
+html[data-concept~="film-frame"] #contact .contact-item { opacity: 1 !important; transform: none !important; }

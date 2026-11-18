@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Reel concepts</title>
+    <style>
+        body { margin: 0; background: #000; color: #f5f3ef; font: 14px -apple-system, BlinkMacSystemFont, sans-serif; }
+        nav { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; padding: 0.6rem 1rem; border-bottom: 1px solid #222; }
+        button { padding: 0.45rem 0.8rem; border: 1px solid #333; border-radius: 6px; background: #111; color: inherit; font: inherit; cursor: pointer; }
+        button[aria-pressed="true"] { border-color: #ff5c2a; color: #ffb79f; }
+        nav a { margin-left: auto; color: #aaa7a2; }
+        iframe { display: block; width: 100%; height: calc(100vh - 56px); border: 0; }
+    </style>
+</head>
+<body>
+    <nav>
+        <button data-url="/">Current site</button>
+        <button data-url="/?concept=event-horizon">1 · Event horizon</button>
+        <button data-url="/?concept=hero-reach">2 · The reach</button>
+        <button data-url="/?concept=thesis-hands#research">3 · Thesis hands</button>
+        <button data-url="/thesis.html?concept=thesis-hands">3b · Thesis page slider</button>
+        <button data-url="/jepa-transformer.html?concept=jepa-collapse">4 · JEPA collapse</button>
+        <button data-url="/?concept=diagram-light#research">5 · Diagram light</button>
+        <button data-url="/?concept=fade-to-black#contact">6 · Fade to black</button>
+        <button data-url="/404.html?concept=fade-to-black">6b · 404</button>
+        <button data-url="/?concept=event-horizon,diagram-light,thesis-hands,fade-to-black">All together</button>
+        <button data-url="/?concept=event-horizon,intro&intro=eye">Intro 1 · The eye</button>
+        <button data-url="/?concept=event-horizon,intro&intro=flare">Intro 2 · Flare</button>
+        <button data-url="/?concept=event-horizon,intro&intro=name">Intro 3 · The name</button>
+        <a id="open" href="/" target="_blank">Open full page</a>
+    </nav>
+    <iframe title="Concept demo"></iframe>
+    <script>
+        const frame = document.querySelector('iframe');
+        const buttons = document.querySelectorAll('button');
+        const show = (url) => {
+            frame.src = url;
+            document.getElementById('open').href = url;
+            buttons.forEach((b) => b.setAttribute('aria-pressed', b.dataset.url === url));
+        };
+        buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.url)));
+        show('/?concept=event-horizon');
+    </script>
+</body>
+</html>

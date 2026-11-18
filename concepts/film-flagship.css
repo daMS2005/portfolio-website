@@ -1,0 +1,346 @@
+/* film-flagship: Flagship work as three scenes (see film-flagship.js). Scoped to #research. */
+@property --ff-r { syntax: '<length>'; inherits: true; initial-value: 0px; }
+
+html[data-concept~="film-flagship"] #research {
+  --ember: #ff5c2a; --ember-text: #ffb79f; --core: #ffb347; --deep: #7a1a0a;
+  --ink: #f5f3ef; --ink-2: #d6d3ce; --muted: #aaa7a2; --dim: #7f7c77; --silver: #d8d4cc; --teal: #8fcac5;
+  --edge: rgba(245,243,239,.08); --edge-2: rgba(245,243,239,.16); --edge-node: rgba(216,212,204,.28);
+  --fx-ignite: cubic-bezier(.16,1,.3,1); --fx-fall: cubic-bezier(.7,0,.84,0);
+  --hair-x: linear-gradient(90deg, transparent, var(--edge-2) 12%, var(--edge-2) 88%, transparent);
+  --hair-y: linear-gradient(180deg, transparent, var(--edge-2) 12%, var(--edge-2) 88%, transparent);
+}
+
+/* ---- heading: ?film-eyebrow=keep (as today) | credit | none */
+html[data-concept~="film-flagship"][data-film-eyebrow="none"] #research .editorial-heading .eyebrow { display: none; }
+html[data-concept~="film-flagship"][data-film-eyebrow="credit"] #research .editorial-heading { display: grid; grid-template-columns: 1fr auto; align-items: baseline; column-gap: 2rem; max-width: none; }
+html[data-concept~="film-flagship"][data-film-eyebrow="credit"] #research .editorial-heading .eyebrow { grid-column: 2; grid-row: 1; color: var(--muted); font-size: .75rem; font-weight: 500; letter-spacing: .01em; text-transform: none; }
+html[data-concept~="film-flagship"][data-film-eyebrow="credit"] #research .editorial-heading h2 { grid-column: 1; grid-row: 1; }
+html[data-concept~="film-flagship"][data-film-eyebrow="credit"] #research .editorial-heading > p:last-child { grid-column: 1 / -1; max-width: 760px; }
+
+/* ---- card frame: no panel, falloff hairlines, calm black behind the copy */
+html[data-concept~="film-flagship"] #research .flagship-list { gap: 2.5rem; }
+html[data-concept~="film-flagship"] #research .flagship-card {
+  border: 0; border-radius: 0; box-shadow: none;
+  background: var(--hair-x) top / 100% 1px no-repeat, var(--hair-x) bottom / 100% 1px no-repeat; /* no fill: the lava glows through */
+}
+html[data-concept~="film-flagship"] #research .flagship-visual { border: 0; background: transparent; }
+html[data-concept~="film-flagship"] #research .flagship-copy { background: var(--hair-y) right / 1px 100% no-repeat; }
+html[data-concept~="film-flagship"] #research .flagship-card:nth-child(even) .flagship-copy { background-position: left; }
+
+/* copy column: the meta row becomes one credit under the title; facts are sentence-case readouts */
+html[data-concept~="film-flagship"] #research .flagship-copy h3 { margin: 0 0 .7rem; }
+html[data-concept~="film-flagship"] #research .flagship-meta {
+  order: 1; justify-content: flex-start; gap: 0; margin-bottom: 1.4rem; padding: 0; border: 0;
+  color: var(--muted); font-size: .75rem; font-weight: 500; letter-spacing: .01em; text-transform: none; font-variant-numeric: tabular-nums;
+}
+html[data-concept~="film-flagship"] #research .flagship-meta span:first-child { color: var(--dim); }
+html[data-concept~="film-flagship"] #research .flagship-meta span:first-child::after { content: "\00a0·\00a0"; }
+html[data-concept~="film-flagship"] #research .flagship-lede,
+html[data-concept~="film-flagship"] #research .flagship-facts,
+html[data-concept~="film-flagship"] #research .flagship-actions { order: 2; }
+html[data-concept~="film-flagship"] #research .flagship-facts div { border: 0; background: var(--hair-y) right / 1px 100% no-repeat; }
+html[data-concept~="film-flagship"] #research .flagship-facts div:last-child { background: none; }
+html[data-concept~="film-flagship"] #research .flagship-facts dt { font-size: clamp(1.5rem, 2.4vw, 2rem); font-weight: 700; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+html[data-concept~="film-flagship"] #research .flagship-facts dd { margin-top: .4rem; font-size: .75rem; font-weight: 500; letter-spacing: .01em; line-height: 1.35; text-transform: none; }
+
+/* ---- diagrams at rest: mono plates, nodes, filaments; warmth only on accent nodes and data colour */
+html[data-concept~="film-flagship"] #research .thesis-visual { background: transparent; }
+html[data-concept~="film-flagship"] #research .flagship-jepa .thesis-visual {
+  background: linear-gradient(rgba(245,243,239,.03) 1px, transparent 1px) 0 0 / 36px 36px, linear-gradient(90deg, rgba(245,243,239,.03) 1px, transparent 1px) 0 0 / 36px 36px;
+}
+html[data-concept~="film-flagship"] #research .visual-label { color: var(--muted); font-size: .75rem; font-weight: 500; letter-spacing: .01em; text-transform: none; }
+html[data-concept~="film-flagship"] #research .dg { position: relative; }
+html[data-concept~="film-flagship"] #research .dg-stage { border: 1px solid var(--edge); border-radius: 0; background: #050403; isolation: isolate; }
+html[data-concept~="film-flagship"] #research .dg-stage header { color: var(--ink-2); font-size: .75rem; font-weight: 600; letter-spacing: .01em; text-transform: none; }
+html[data-concept~="film-flagship"] #research .dg-stage header span { color: var(--muted); font-weight: 500; letter-spacing: .01em; }
+html[data-concept~="film-flagship"] #research .dg-node { position: relative; border-color: var(--edge-node); border-radius: 4px; background: #000; color: var(--ink); font-weight: 600; }
+html[data-concept~="film-flagship"] #research .dg-node small { font-size: .75rem; }
+html[data-concept~="film-flagship"] #research .dg-accent { border-color: var(--ember); color: var(--ember-text); box-shadow: none; }
+html[data-concept~="film-flagship"] #research .dg-link { background: linear-gradient(90deg, rgba(216,212,204,.2), rgba(216,212,204,.55)); }
+html[data-concept~="film-flagship"] #research .dg-link::after { border-left-color: rgba(216,212,204,.6); }
+html[data-concept~="film-flagship"] #research .dg-bridge { color: var(--ink-2); }
+html[data-concept~="film-flagship"] #research .dg-bridge::before { background: linear-gradient(transparent, rgba(216,212,204,.45) 20%, rgba(216,212,204,.45) 80%, transparent); }
+html[data-concept~="film-flagship"] #research .dg-bridge .fas { color: var(--silver); }
+html[data-concept~="film-flagship"] #research .dg-tokens b { border-radius: 2px; }
+html[data-concept~="film-flagship"] #research .dg-verdict { border-top: 0; background: repeating-linear-gradient(90deg, var(--edge-2) 0 3px, transparent 3px 6px) top / 100% 1px no-repeat; }
+html[data-concept~="film-flagship"] #research .dg-verdict b { color: var(--ember-text); font-weight: 700; }
+
+/* the first accent node of each card carries the card's one soft haze */
+html[data-concept~="film-flagship"] #research .dg-stage:first-child .dg-accent::after {
+  content: ""; position: absolute; z-index: -1; inset: -45% -25%; pointer-events: none; opacity: .22;
+  background: radial-gradient(closest-side, rgba(255,179,71,.55), rgba(255,92,42,.32) 45%, rgba(122,26,10,.14) 72%, transparent);
+}
+
+/* JEPA freeze tokens: the map's cluster colours */
+html[data-concept~="film-flagship"] #research .dg-tokens i { opacity: .8; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(1) { background: #b9b39f; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(2) { background: #e8566c; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(3) { background: #f28c38; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(4) { background: #6ccb5f; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(5) { background: #45c4c0; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(6) { background: #4c8df6; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(7) { background: #c9f04a; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(8) { background: #a08cff; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(9) { background: #ff4d94; }
+html[data-concept~="film-flagship"] #research .dg-tokens i:nth-child(10) { background: #9cc6ff; }
+
+/* ---- ignition (from diagram-light): node edges warm once, links reach from both ends and spark */
+html[data-concept~="film-flagship"] #research .dg-node::before {
+  content: ""; position: absolute; inset: -1px; border: 1px solid var(--ember); border-radius: inherit; opacity: 0; pointer-events: none;
+}
+html[data-concept~="film-flagship"] #research .ff-on .dg-node::before { animation: ff-warm 520ms var(--d, 0ms) var(--fx-ignite) both; }
+html[data-concept~="film-flagship"] #research .ff-on .dg-node { animation: ff-up 420ms var(--d, 0ms) var(--fx-ignite) backwards; }
+html[data-concept~="film-flagship"] #research .ff-on .dg-tokens i { animation: ff-token 360ms var(--d, 0ms) var(--fx-ignite) backwards; }
+html[data-concept~="film-flagship"] #research .ff-h,
+html[data-concept~="film-flagship"] #research .ff-spark { display: none; position: absolute; pointer-events: none; }
+html[data-concept~="film-flagship"] #research .dg-link em { z-index: 1; }
+html[data-concept~="film-flagship"] #research .dg-link.ff-run { background: transparent; }
+html[data-concept~="film-flagship"] #research .dg-link.ff-run::after { animation: ffl-fade 200ms calc(var(--d, 0ms) + 300ms) both; }
+html[data-concept~="film-flagship"] #research .ff-run .ff-h,
+html[data-concept~="film-flagship"] #research .ff-run .ff-spark { display: block; }
+html[data-concept~="film-flagship"] #research .ff-h { top: 0; width: 50%; height: 100%; background: var(--ember); }
+html[data-concept~="film-flagship"] #research .dg-link-loss .ff-h { background: repeating-linear-gradient(90deg, var(--ember-text) 0 3px, transparent 3px 6px); }
+html[data-concept~="film-flagship"] #research .ff-h:first-child { left: 0; transform-origin: left; }
+html[data-concept~="film-flagship"] #research .ff-h + .ff-h { right: 0; transform-origin: right; }
+html[data-concept~="film-flagship"] #research .ff-run .ff-h { animation: ff-reach-x 300ms var(--d, 0ms) cubic-bezier(.3,0,.2,1) both; }
+html[data-concept~="film-flagship"] #research .ff-spark {
+  top: 50%; left: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%;
+  background: radial-gradient(closest-side, #fff4dc, var(--core) 30%, var(--ember) 55%, rgba(122,26,10,.5) 78%, transparent);
+}
+html[data-concept~="film-flagship"] #research .ff-run .ff-spark { animation: ff-spark 300ms calc(var(--d, 0ms) + 250ms) ease-out both; }
+
+/* ---- 01 JEPA: galaxy band under the freeze bridge */
+html[data-concept~="film-flagship"] #research .ff-galaxy { display: grid; gap: .5rem; padding: .25rem 0; }
+html[data-concept~="film-flagship"] #research .ff-gx-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; color: var(--muted); font-size: .75rem; font-weight: 500; }
+html[data-concept~="film-flagship"] #research .ff-seg { display: inline-flex; border: 1px solid var(--edge-2); }
+html[data-concept~="film-flagship"] #research .ff-seg button {
+  min-height: 32px; padding: 0 .7rem; border: 0; background: transparent; color: var(--muted);
+  font: inherit; font-size: .75rem; font-weight: 600; cursor: pointer; font-variant-numeric: tabular-nums;
+}
+html[data-concept~="film-flagship"] #research .ff-seg button + button { border-left: 1px solid var(--edge-2); }
+html[data-concept~="film-flagship"] #research .ff-seg button[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 -1px 0 var(--ember); }
+html[data-concept~="film-flagship"] #research .ff-seg button:focus-visible { outline: 2px solid rgba(255,92,42,.5); outline-offset: 1px; }
+html[data-concept~="film-flagship"] #research .ff-galaxy canvas { display: block; width: 100%; height: 180px; background: transparent; }
+html[data-concept~="film-flagship"] #research .ff-gx-note { margin: 0; color: var(--muted); font-size: .75rem; line-height: 1.45; }
+
+/* ---- 02 thesis: the filament bundle (SVG over the diagram, routed through empty padding only) */
+html[data-concept~="film-flagship"] #research .flagship-thesis .dg-bridge::before { display: none; }
+html[data-concept~="film-flagship"] #research .ff-fil { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+html[data-concept~="film-flagship"] #research .ff-fil path { fill: none; stroke-width: .8; stroke-linecap: round; stroke-dasharray: 1; }
+html[data-concept~="film-flagship"] #research .ff-trunk { stroke: rgba(216,212,204,.42); }
+html[data-concept~="film-flagship"] #research .ff-brain { stroke: rgba(255,179,71,.5); }
+html[data-concept~="film-flagship"] #research .ff-model { stroke: rgba(143,202,197,.55); }
+html[data-concept~="film-flagship"] #research .ff-on .ff-trunk { animation: ff-draw 650ms var(--d-trunk, 0ms) var(--fx-ignite) backwards; }
+html[data-concept~="film-flagship"] #research .ff-on .ff-brain,
+html[data-concept~="film-flagship"] #research .ff-on .ff-model { animation: ff-draw 480ms var(--d-fork, 0ms) var(--fx-ignite) backwards; }
+html[data-concept~="film-flagship"] #research .flagship-thesis .dg-row-pair .dg-node:first-child { border-color: rgba(255,179,71,.42); }
+html[data-concept~="film-flagship"] #research .flagship-thesis .dg-row-pair .dg-node:last-child { border-color: rgba(143,202,197,.38); }
+
+/* ---- 03 TC_ACC: letterbox frame, edit timeline, film strip */
+html[data-concept~="film-flagship"] #research .tcacc-visual { display: flex; align-items: center; padding: clamp(14px, 3vw, 40px); }
+html[data-concept~="film-flagship"] #research .tcacc-visual > img,
+html[data-concept~="film-flagship"] #research .tcacc-visual::after { display: none; }
+html[data-concept~="film-flagship"] #research .ff-cine { display: grid; gap: 14px; width: 100%; }
+html[data-concept~="film-flagship"] #research .ff-cine img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: cover; filter: grayscale(1) contrast(1.05) brightness(.8); }
+html[data-concept~="film-flagship"] #research .ff-shot { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: #000; }
+html[data-concept~="film-flagship"] #research .ff-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; visibility: hidden; filter: grayscale(1) contrast(1.05) brightness(.8); transition: filter 400ms; }
+html[data-concept~="film-flagship"] #research .ff-vid-on .ff-vid { visibility: visible; }
+html[data-concept~="film-flagship"] #research .ff-looking .ff-vid { filter: none; }
+html[data-concept~="film-flagship"] #research .ff-shot:focus-visible { outline: 2px solid rgba(255,92,42,.5); outline-offset: 2px; }
+/* bars crop 16:9 to 2.39:1; credits sit on the bars, never on the picture */
+html[data-concept~="film-flagship"] #research .ff-bar {
+  position: absolute; z-index: 2; inset-inline: 0; height: 12.8%; display: flex; align-items: center; padding-inline: 10px; background: #000;
+}
+html[data-concept~="film-flagship"] #research .ff-bar-t { top: 0; transform-origin: top; }
+html[data-concept~="film-flagship"] #research .ff-bar-b { bottom: 0; justify-content: flex-end; transform-origin: bottom; }
+html[data-concept~="film-flagship"] #research .ff-cr { color: var(--muted); font-size: .75rem; font-weight: 500; letter-spacing: .01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+html[data-concept~="film-flagship"] #research .ffl-wipe {
+  position: absolute; z-index: 1; inset: 0; background: #000; transform: translateY(-101%); visibility: hidden;
+  box-shadow: 0 1px 0 var(--ember), 0 2px 8px rgba(255,92,42,.35);
+}
+html[data-concept~="film-flagship"] #research .ff-cutting .ffl-wipe { visibility: visible; animation: ffl-wipe 680ms linear both; }
+
+html[data-concept~="film-flagship"] #research .ff-track { position: relative; }
+html[data-concept~="film-flagship"] #research .ff-tl {
+  position: static; display: flex; align-items: stretch; gap: 4px; margin: 0; padding: 0; border: 0; border-radius: 0; background: none;
+}
+html[data-concept~="film-flagship"] #research .ff-tl li {
+  flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
+  color: var(--ink-2); font-size: .75rem; font-weight: 600; letter-spacing: 0; text-transform: none; white-space: nowrap;
+}
+html[data-concept~="film-flagship"] #research .ff-tl li small { order: 2; margin: 0; color: var(--muted); font-size: .75rem; font-weight: 500; }
+/* one tick per stage inside each clip */
+html[data-concept~="film-flagship"] #research .ff-tl li::before,
+html[data-concept~="film-flagship"] #research .ff-tl li + li::before {
+  content: ""; display: block; order: 1; position: static; width: 100%; height: 10px; background:
+    linear-gradient(var(--edge-2), var(--edge-2)) top / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, rgba(216,212,204,.55) 0 1px, transparent 1px calc(100% / var(--n, 1)));
+}
+html[data-concept~="film-flagship"] #research .ff-tl .pipeline-gate { flex: 0 0 14px; justify-content: flex-start; padding-top: calc(.75rem * 1.2 + 6px); }
+html[data-concept~="film-flagship"] #research .ff-tl .pipeline-gate::before { display: none; }
+html[data-concept~="film-flagship"] #research .ff-tl .pipeline-gate span,
+html[data-concept~="film-flagship"] #research .ff-legend i {
+  display: block; width: 9px; height: 9px; margin: 0 auto; border: 1px solid var(--ember); background: #000; transform: rotate(45deg); font-size: 0; overflow: hidden;
+}
+html[data-concept~="film-flagship"] #research .ff-tl .pipeline-gate::after {
+  content: ""; position: absolute; z-index: -1; top: calc(.75rem * 1.2 + 10px); left: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px;
+  border-radius: 50%; opacity: 0; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255,179,71,.7), rgba(255,92,42,.35) 50%, rgba(122,26,10,.15) 75%, transparent);
+}
+html[data-concept~="film-flagship"] #research .ff-tl .pipeline-gate { position: relative; }
+html[data-concept~="film-flagship"] #research .ff-on .ff-tl li { animation: ff-stage 420ms var(--d, 0ms) var(--fx-ignite) backwards; }
+html[data-concept~="film-flagship"] #research .ff-on .ff-tl .pipeline-gate::after { animation: ff-gate 520ms var(--d, 0ms) ease-out both; }
+html[data-concept~="film-flagship"] #research .ff-head {
+  position: absolute; left: 0; top: calc(.75rem * 1.2 + 1px); width: 1px; height: 14px; opacity: 0; pointer-events: none;
+  background: linear-gradient(transparent, var(--core) 30%, var(--core) 70%, transparent); box-shadow: 0 0 6px rgba(255,92,42,.6);
+}
+html[data-concept~="film-flagship"] #research .ff-legend { text-wrap: balance; display: flex; align-items: center; gap: 8px; margin: -4px 0 0; color: var(--muted); font-size: .75rem; font-weight: 500; }
+html[data-concept~="film-flagship"] #research .ff-legend i { margin: 0 2px; flex: none; }
+
+html[data-concept~="film-flagship"] #research .ffl-strip {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 10px 6px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 5px, #000 5px 9px, transparent 9px 14px) 0 3px / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 5px, #000 5px 9px, transparent 9px 14px) 0 calc(100% - 3px) / 100% 4px no-repeat,
+    #0b0907;
+}
+html[data-concept~="film-flagship"] #research .ffl-strip button {
+  display: grid; align-content: start; gap: 5px; min-width: 0; padding: 0; border: 0; background: none; color: var(--muted); font: inherit; text-align: left; cursor: pointer;
+}
+html[data-concept~="film-flagship"] #research .ffl-strip img { aspect-ratio: 16 / 9; height: auto; outline: 1px solid var(--edge); outline-offset: -1px; transition: filter 280ms; }
+html[data-concept~="film-flagship"] #research .ffl-strip span,
+html[data-concept~="film-flagship"] #research .ffl-strip small { font-size: .75rem; font-weight: 500; line-height: 1.3; }
+html[data-concept~="film-flagship"] #research .ffl-strip small { margin-top: -4px; color: var(--dim); font-variant-numeric: tabular-nums; }
+html[data-concept~="film-flagship"] #research .ffl-strip button[aria-pressed="true"] { color: var(--ink); }
+html[data-concept~="film-flagship"] #research .ffl-strip button[aria-pressed="true"] img { outline: 1px solid var(--ember); }
+html[data-concept~="film-flagship"] #research .ffl-strip button:hover img { filter: grayscale(.4) brightness(.9); }
+html[data-concept~="film-flagship"] #research .ffl-strip button:focus-visible { outline: 2px solid rgba(255,92,42,.5); outline-offset: 2px; }
+
+/* ---- the eye: iris lens (a lit copy of the diagram, masked to a circle that follows the pointer) */
+html[data-concept~="film-flagship"] #research .flagship-visual { transition: --ff-r 420ms var(--fx-ignite); }
+html[data-concept~="film-flagship"] #research .flagship-visual.ff-looking { --ff-r: 84px; }
+html[data-concept~="film-flagship"] #research .ff-lens {
+  position: absolute; z-index: 3; inset: 0; pointer-events: none;
+  -webkit-mask: radial-gradient(circle at var(--lx, 50%) var(--ly, 50%), #000 var(--ff-r), transparent calc(var(--ff-r) + 1px));
+  mask: radial-gradient(circle at var(--lx, 50%) var(--ly, 50%), #000 var(--ff-r), transparent calc(var(--ff-r) + 1px));
+}
+html[data-concept~="film-flagship"] #research .flagship-visual:not(.ff-looking) .ff-lens { visibility: hidden; transition: visibility 0s 420ms; }
+html[data-concept~="film-flagship"] #research .ff-iris {
+  position: absolute; z-index: 4; left: var(--lx, 50%); top: var(--ly, 50%); width: calc(2 * var(--ff-r) + 16px); aspect-ratio: 1;
+  translate: -50% -50%; border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity 280ms;
+  background: repeating-conic-gradient(rgba(216,212,204,.32) 0 1.2deg, transparent 1.2deg 5deg),
+    radial-gradient(closest-side, transparent calc(100% - 9px), rgba(255,179,71,.35) calc(100% - 8px), transparent calc(100% - 4px));
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 8px), #000 calc(100% - 7px), #000 calc(100% - 1px), transparent);
+  mask: radial-gradient(closest-side, transparent calc(100% - 8px), #000 calc(100% - 7px), #000 calc(100% - 1px), transparent);
+  box-shadow: inset 0 0 0 1px rgba(216,212,204,.4);
+}
+html[data-concept~="film-flagship"] #research .ff-looking .ff-iris { opacity: 1; }
+
+/* the lit layer: same labels, every edge and filament in ember/gold, the stills in colour */
+html[data-concept~="film-flagship"] #research .ff-lens * { animation: none !important; transition: none !important; }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-h,
+html[data-concept~="film-flagship"] #research .ff-lens .ff-spark,
+html[data-concept~="film-flagship"] #research .ff-lens .dg-accent::after { display: none; }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-stage { border-color: rgba(255,92,42,.35); background: #0b0604; }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-stage header,
+html[data-concept~="film-flagship"] #research .ff-lens .dg-stage header span { color: var(--core); }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-node {
+  border-color: var(--ember); color: var(--ink);
+  background: radial-gradient(120% 90% at 50% 120%, rgba(255,92,42,.32), transparent 65%), #000;
+}
+html[data-concept~="film-flagship"] #research .ff-lens .dg-node small { color: var(--ember-text); }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-link {
+  background: linear-gradient(90deg, var(--ember), var(--core) 50%, var(--ember)); box-shadow: 0 0 6px rgba(255,92,42,.45);
+}
+html[data-concept~="film-flagship"] #research .ff-lens .dg-link-loss { background: repeating-linear-gradient(90deg, var(--core) 0 3px, transparent 3px 6px); box-shadow: none; }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-link::after { border-left-color: var(--core); }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-bridge { color: var(--ink); }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-bridge::before { background: linear-gradient(transparent, var(--ember) 20%, var(--core) 50%, var(--ember) 80%, transparent); }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-bridge .fas,
+html[data-concept~="film-flagship"] #research .ff-lens .ff-gx-head,
+html[data-concept~="film-flagship"] #research .ff-lens .ff-gx-note { color: var(--core); }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-tokens i { opacity: 1; }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-galaxy canvas { background: #050302; }
+html[data-concept~="film-flagship"] #research .ff-lens .dg-verdict b { color: var(--core); }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-fil path { stroke-width: 1.3; stroke-dashoffset: 0; }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-trunk { stroke: var(--ember-text); }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-brain { stroke: var(--core); }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-model { stroke: var(--teal); }
+html[data-concept~="film-flagship"] #research .ff-lens img { filter: none; }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-cr,
+html[data-concept~="film-flagship"] #research .ff-lens .ff-tl li,
+html[data-concept~="film-flagship"] #research .ff-lens .ff-legend { color: var(--core); opacity: 1; }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-tl li::before {
+  background: linear-gradient(var(--ember), var(--ember)) top / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--core) 0 1px, transparent 1px calc(100% / var(--n, 1)));
+}
+html[data-concept~="film-flagship"] #research .ff-lens .ff-tl .pipeline-gate::after { opacity: .9; }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-tl .pipeline-gate span { background: var(--ember); }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-bar { transform: none; }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-shot { background: transparent; }
+html[data-concept~="film-flagship"] #research .ff-lens .ff-vid-on img { visibility: hidden; }
+
+html[data-concept~="film-flagship"] #research .ff-lens .ff-head,
+html[data-concept~="film-flagship"] #research .ff-lens .ffl-wipe { display: none; }
+
+@keyframes ff-warm { 30% { opacity: 1; } to { opacity: 0; } }
+@keyframes ff-up { from { box-shadow: 0 0 0 1px var(--ember), 0 0 22px rgba(255, 92, 42, .45); } } /* a glow only: content is never hidden */
+@keyframes ff-token { from { transform: scaleY(.3); } }
+@keyframes ff-reach-x { from { transform: scaleX(0); } }
+@keyframes ff-reach-y { from { transform: scaleY(0); } }
+@keyframes ffl-fade { from { opacity: 0; } }
+@keyframes ff-spark { from { opacity: 0; transform: scale(.2); } 35% { opacity: 1; transform: scale(1.3); } to { opacity: 0; transform: scale(.6); } }
+@keyframes ff-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes ff-bar { from { transform: scaleY(0); } }
+@keyframes ff-stage { from { color: var(--core); } }
+@keyframes ff-gate { from { opacity: 0; transform: scale(.4); } 40% { opacity: 1; transform: scale(1.1); } to { opacity: 0; transform: none; } }
+@keyframes ffl-wipe { 0% { transform: translateY(-101%); animation-timing-function: cubic-bezier(.7,0,.84,0); } 44% { transform: none; } 57% { transform: none; animation-timing-function: cubic-bezier(.16,1,.3,1); } 100% { transform: translateY(101%); } }
+
+@media (max-width: 899px) {
+  html[data-concept~="film-flagship"] #research .flagship-copy,
+  html[data-concept~="film-flagship"] #research .flagship-card:nth-child(even) .flagship-copy { background: none; }
+  html[data-concept~="film-flagship"] #research .flagship-visual { background-color: transparent; }
+}
+
+@media (max-width: 640px) {
+  html[data-concept~="film-flagship"][data-film-eyebrow="credit"] #research .editorial-heading { grid-template-columns: 1fr; }
+  html[data-concept~="film-flagship"][data-film-eyebrow="credit"] #research .editorial-heading .eyebrow { grid-column: 1; grid-row: 2; margin-top: -.4rem; }
+  html[data-concept~="film-flagship"][data-film-eyebrow="credit"] #research .editorial-heading > p:last-child { grid-row: 3; }
+  /* facts stay 3 across */
+  html[data-concept~="film-flagship"] #research .flagship-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding-top: 1.5rem; margin-bottom: 1.5rem; }
+  html[data-concept~="film-flagship"] #research .flagship-facts div,
+  html[data-concept~="film-flagship"] #research .flagship-facts div + div { padding: 0 .75rem; border: 0; }
+  html[data-concept~="film-flagship"] #research .flagship-facts div:first-child { padding-left: 0; }
+  html[data-concept~="film-flagship"] #research .flagship-facts dt { font-size: 1.35rem; }
+  html[data-concept~="film-flagship"] #research .ff-galaxy canvas { height: 150px; }
+  html[data-concept~="film-flagship"] #research .tcacc-visual { padding-inline: 4px; }
+  html[data-concept~="film-flagship"] #research .ff-tl { gap: 3px; }
+  html[data-concept~="film-flagship"] #research .ff-tl li { font-weight: 500; }
+  html[data-concept~="film-flagship"] #research .ff-tl .pipeline-gate { flex-basis: 11px; }
+  html[data-concept~="film-flagship"] #research .ffl-strip { gap: 4px; padding: 10px 4px; }
+  html[data-concept~="film-flagship"] #research .ff-head { display: none; }
+  /* links run vertically on phones */
+  html[data-concept~="film-flagship"] #research .ff-h { left: 0; width: 100%; height: 50%; }
+  html[data-concept~="film-flagship"] #research .ff-h:first-child { top: 0; transform-origin: top; }
+  html[data-concept~="film-flagship"] #research .ff-h + .ff-h { top: auto; bottom: 0; transform-origin: bottom; }
+  html[data-concept~="film-flagship"] #research .dg-link-loss .ff-h { background: repeating-linear-gradient(var(--ember-text) 0 3px, transparent 3px 6px); }
+  html[data-concept~="film-flagship"] #research .ff-run .ff-h { animation-name: ff-reach-y; }
+  html[data-concept~="film-flagship"] #research .dg-link { background: linear-gradient(rgba(216,212,204,.2), rgba(216,212,204,.55)); }
+  html[data-concept~="film-flagship"] #research .dg-link::after { border-left-color: transparent; border-top-color: rgba(216,212,204,.6); }
+  html[data-concept~="film-flagship"] #research .ff-lens .dg-link::after { border-left-color: transparent; border-top-color: var(--core); }
+  html[data-concept~="film-flagship"] #research .ff-lens .dg-link { background: linear-gradient(var(--ember), var(--core) 50%, var(--ember)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-concept~="film-flagship"] #research .flagship-visual { transition: none; }
+  html[data-concept~="film-flagship"] #research .ff-cutting .ffl-wipe { animation: none; }
+}
+
+/* the extra facts: hidden text in the middle of the lens, seen only through it */
+html[data-concept~="film-flagship"] #research .ffl-read {
+  position: absolute; z-index: 2; left: var(--lx, 50%); top: var(--ly, 50%); translate: -50% -50%;
+  width: 144px; display: none; padding: 10px 8px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(8, 5, 4, .94) 70%, rgba(8, 5, 4, 0));
+  color: var(--core); font-size: .68rem; font-weight: 500; line-height: 1.32; text-align: center; white-space: pre-line;
+}
+html[data-concept~="film-flagship"] #research .ff-noted .ffl-read { display: block; }

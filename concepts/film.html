@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>All prototypes</title>
+    <style>
+        body { margin: 0; background: #000; color: #f5f3ef; font: 13px -apple-system, BlinkMacSystemFont, sans-serif; }
+        nav { display: grid; gap: 0.35rem; padding: 0.6rem 1rem; border-bottom: 1px solid #222; max-height: 38vh; overflow-y: auto; }
+        nav div { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
+        nav strong { width: 7.5rem; color: #aaa7a2; font-weight: 500; }
+        button { padding: 0.32rem 0.6rem; border: 1px solid #333; border-radius: 6px; background: #111; color: inherit; font: inherit; cursor: pointer; }
+        button[aria-pressed="true"] { border-color: #ff5c2a; color: #ffb79f; }
+        button.liked::after { content: " ★"; color: #ffb347; }
+        nav a { color: #aaa7a2; }
+        iframe { display: block; width: 100%; height: 100vh; border: 0; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div><strong>Whole film</strong>
+            <button class="liked" data-url="/?concept=film&intro=eye">Whole site + eye intro</button>
+            <button data-url="/?concept=film">Whole site (no intro)</button>
+            <button data-url="/">Current site</button>
+            <a id="open" href="/" target="_blank">Open full page ↗</a>
+        </div>
+        <div><strong>Intro</strong>
+            <button class="liked" data-url="/?concept=film-hero,intro&intro=eye">The eye</button>
+            <button data-url="/?concept=film-hero,intro&intro=flare">Flare</button>
+            <button data-url="/?concept=film-hero,intro&intro=name">The name</button>
+            <button data-url="/?concept=event-horizon,intro&intro=eye">Eye → ring hero</button>
+        </div>
+        <div><strong>Hero</strong>
+            <button data-url="/?concept=film-hero">Black hole (film)</button>
+            <button data-url="/?concept=event-horizon">Event horizon ring</button>
+            <button data-url="/?concept=reach-engrave">Hands: engraved vs grid</button>
+            <button data-url="/?concept=reach-network">Hands: neurons vs network</button>
+            <button data-url="/?concept=hero-reach">Hands: photo (rejected)</button>
+        </div>
+        <div><strong>Homepage parts</strong>
+            <button data-url="/?concept=film-middle#aboutMe">About · skills · websites</button>
+            <button data-url="/?concept=film-middle&film-photo=graded#aboutMe">Photo: graded</button>
+            <button data-url="/?concept=film-middle&film-photo=original#aboutMe">Photo: original</button>
+            <button data-url="/?concept=film-flagship#research">Flagship cards (film)</button>
+            <button data-url="/?concept=diagram-light#research">Diagram light</button>
+            <button data-url="/?concept=thesis-hands-drawn#research">Thesis card: drawn hands</button>
+            <button data-url="/?concept=thesis-hands#research">Thesis card: photo hands</button>
+            <button data-url="/?concept=film-frame#contact">Nav · contact · MORA-01</button>
+            <button class="liked" data-url="/?concept=fade-to-black#contact">Fade to black</button>
+        </div>
+        <div><strong>Decisions</strong>
+            <button data-url="/?concept=film-hero,eyebrow-credit#research">Label as credit</button>
+            <button data-url="/?concept=film-hero,lava-haze#aboutMe">Lava: ember haze</button>
+            <button data-url="/?concept=film-hero,lava-none#aboutMe">Lava: none</button>
+        </div>
+        <div><strong>Case studies</strong>
+            <button data-url="/thesis.html?concept=film-thesis,film-frame">Thesis (film)</button>
+            <button data-url="/thesis.html?concept=thesis-hands">Thesis: hands slider</button>
+            <button data-url="/jepa-transformer.html?concept=film-jepa,film-frame">JEPA (film)</button>
+            <button data-url="/jepa-transformer.html?concept=jepa-collapse">JEPA: collapse</button>
+            <button data-url="/tc-acc.html?concept=film-tcacc,film-frame">TC_ACC (film)</button>
+        </div>
+        <div><strong>Other pages</strong>
+            <button class="liked" data-url="/404.html?concept=fade-to-black">404: black hole</button>
+            <button data-url="/404.html?concept=film-pages">404: the eye</button>
+            <button data-url="/personal.html?concept=film-pages,film-frame">Outside work</button>
+            <button data-url="/privacy.html?concept=film-pages">Privacy</button>
+        </div>
+    </nav>
+    <iframe title="Prototype"></iframe>
+    <script>
+        const frame = document.querySelector('iframe');
+        const buttons = document.querySelectorAll('button');
+        const show = (url) => {
+            frame.src = url;
+            document.getElementById('open').href = url;
+            buttons.forEach((b) => b.setAttribute('aria-pressed', b.dataset.url === url));
+        };
+        buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.url)));
+        show(buttons[0].dataset.url);
+    </script>
+</body>
+</html>

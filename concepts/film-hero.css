@@ -1,0 +1,274 @@
+/* film-hero: the opening frame. One Interstellar black hole above the title card, text on calm black below it. */
+html[data-concept~="film-hero"] #home {
+  --ink: #f5f3ef;
+  --ink-2: #d6d3ce;
+  --muted: #aaa7a2;
+  --core: #ffb347;
+  --ember: #ff5c2a;
+  --edge-2: rgba(245, 243, 239, 0.16);
+  --fx-ignite: cubic-bezier(0.16, 1, 0.3, 1);
+  /* hole radius: the canvas is 10r wide and 3.1r tall, hole centre at (5r, 1.7r) */
+  --fh-r: clamp(30px, min(13vw, 11svh), 100px);
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  height: auto;
+  min-height: 100svh;
+  box-sizing: border-box;
+  padding: 84px 16px 20px;
+  /* opaque black hides the lava blobs behind the hero only */
+  background: linear-gradient(#000 88%, transparent);
+}
+
+html[data-concept~="film-hero"] .fh-art {
+  position: relative;
+  flex: none;
+  width: 100%;
+  height: calc(var(--fh-r) * 3.1);
+  margin-top: auto;
+  pointer-events: none;
+  translate: var(--lx, 0) var(--ly, 0);
+  transition: translate 1.2s var(--fx-ignite);
+}
+
+html[data-concept~="film-hero"] .fh-art > * {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: calc(var(--fh-r) * 10);
+  height: 100%;
+  translate: -50% 0;
+}
+
+/* intro hand-off: an invisible anchor at the hole centre, and the intro's ring clone drawn as this hole's photon ring */
+html[data-concept~="film-hero"] .fh-art .eh {
+  top: calc(var(--fh-r) * 1.7);
+  width: 0;
+  height: 0;
+  translate: none;
+  visibility: hidden;
+}
+html[data-concept~="film-hero"] .fh-art .eh-dim { width: calc(var(--fh-r) * 2 + 80px); }
+html[data-concept~="film-hero"] .fi .eh-ring {
+  position: absolute;
+  width: calc(var(--r) * 2 + 8px);
+  height: calc(var(--r) * 2 + 8px);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--doppler, conic-gradient(#ff5c2a, #7a1a0a 22%, #4a0f06 32%, #7a1a0a 42%, #ff5c2a 55%, #ffb347 66%, #fff4dc 75%, #ffb347 84%, #ff5c2a));
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4px), #000 calc(100% - 2.5px), transparent calc(100% - 1px));
+  mask: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4px), #000 calc(100% - 2.5px), transparent calc(100% - 1px));
+}
+
+/* slow Doppler shimmer on the photon ring: the only ambient loop in the hero */
+html[data-concept~="film-hero"] .fh-art .fh-shimmer {
+  top: calc(var(--fh-r) * 0.55);
+  width: calc(var(--fh-r) * 2.3);
+  height: calc(var(--fh-r) * 2.3);
+  border-radius: 50%;
+  background: conic-gradient(from 200deg, transparent, rgba(255, 244, 220, 0.9) 12%, rgba(255, 179, 71, 0.5) 22%, transparent 40%, transparent 100%);
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% / 1.15 - 1px), #000 calc(100% / 1.15 + 0.5px), transparent calc(100% / 1.15 + 3px));
+  mask: radial-gradient(closest-side, transparent calc(100% / 1.15 - 1px), #000 calc(100% / 1.15 + 0.5px), transparent calc(100% / 1.15 + 3px));
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  animation: fh-shimmer 24s ease-in-out infinite alternate;
+}
+
+html[data-concept~="film-hero"] .fh-off .fh-shimmer,
+html.fx-intro:not(.fx-intro-done)[data-concept~="film-hero"] .fh-shimmer { animation-play-state: paused; }
+
+@keyframes fh-shimmer { to { rotate: -40deg; } }
+
+/* own entrance (only when no intro plays): mono silver hole, gold irises out from the Doppler-bright left edge */
+@property --fh-iris { syntax: '<length>'; inherits: false; initial-value: 0px; }
+
+html[data-concept~="film-hero"] .fh-ignite canvas:first-child { animation: fh-dolly 0.9s var(--fx-ignite) both; }
+html[data-concept~="film-hero"] .fh-ignite .fh-mono {
+  filter: grayscale(1) brightness(1.15);
+  --fh-iris: 0px;
+  -webkit-mask: radial-gradient(circle at 40% 55%, transparent var(--fh-iris), #000 calc(var(--fh-iris) + 24px));
+  mask: radial-gradient(circle at 40% 55%, transparent var(--fh-iris), #000 calc(var(--fh-iris) + 24px));
+  animation: fh-dolly 0.9s var(--fx-ignite) both, fh-iris 1.4s var(--fx-ignite) 0.3s forwards;
+}
+
+@keyframes fh-dolly { from { scale: 0.6; opacity: 0; } }
+@keyframes fh-iris { to { --fh-iris: 120vmax; } }
+
+/* title card, on plain black under the hole */
+html[data-concept~="film-hero"] #home .hero-content {
+  margin: 0 auto auto;
+  max-width: 44rem;
+  position: relative;
+  z-index: 1;
+}
+
+html[data-concept~="film-hero"] #home h1 {
+  margin: 0.4rem 0 0.75rem;
+  font-size: clamp(2.75rem, 6.5vw, 5.25rem);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+}
+
+html[data-concept~="film-hero"] #home h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--core);
+}
+
+html[data-concept~="film-hero"] #home .tagline {
+  max-width: 34em;
+  margin: 0 auto 1.75rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--ink-2);
+  opacity: 1;
+}
+
+/* typed tagline: the full sentence reserves the line box from frame 1 (no reflow) */
+html[data-concept~="film-hero"] .fh-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+html[data-concept~="film-hero"] .fh-rest { visibility: hidden; }
+
+html[data-concept~="film-hero"] .fh-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin: 0 -1px;
+  vertical-align: -0.12em;
+  background: var(--ember);
+}
+
+html[data-concept~="film-hero"] .fh-done .fh-caret { animation: fh-caret 0.5s steps(1) 4 both, fh-fade 0.3s 2s forwards; }
+@keyframes fh-caret { 50% { opacity: 0; } }
+@keyframes fh-fade { to { opacity: 0; } }
+
+/* CTAs: no solid orange; light from below, sharp corners */
+html[data-concept~="film-hero"] #home .cta-buttons { gap: 12px; justify-content: center; }
+
+html[data-concept~="film-hero"] #home .primary-btn,
+html[data-concept~="film-hero"] #home .secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-size 0.28s, scale 0.12s;
+}
+
+html[data-concept~="film-hero"] #home .primary-btn {
+  color: var(--ink);
+  border: 1px solid rgba(255, 179, 71, 0.55);
+  background: radial-gradient(120% 140% at 50% 130%, rgba(255, 92, 42, 0.32), transparent 62%) 50% 100% / 100% 100% no-repeat;
+}
+
+/* a 10px black hole before the label: this button flies into it */
+html[data-concept~="film-hero"] #home .primary-btn::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+  background: radial-gradient(circle, #000 0 3.4px, var(--core) 4px, var(--ember) 4.8px, rgba(255, 92, 42, 0.25) 5.4px, transparent 6px);
+}
+
+html[data-concept~="film-hero"] #home .secondary-btn {
+  color: var(--ink-2);
+  border: 1px solid var(--edge-2);
+  background: transparent;
+}
+
+html[data-concept~="film-hero"] #home .primary-btn:hover,
+html[data-concept~="film-hero"] #home .primary-btn:focus-visible {
+  transform: none;
+  border-color: var(--core);
+  background-size: 100% 150%;
+}
+
+html[data-concept~="film-hero"] #home .secondary-btn:hover,
+html[data-concept~="film-hero"] #home .secondary-btn:focus-visible {
+  transform: none;
+  border-color: var(--ember);
+  color: var(--ink);
+}
+
+html[data-concept~="film-hero"] #home .primary-btn:active,
+html[data-concept~="film-hero"] #home .secondary-btn:active { scale: 0.97; }
+
+/* bottom credit line: the three flagship works, titles as on their cards */
+html[data-concept~="film-hero"] .fh-credits {
+  margin: 28px 0 0;
+  padding-inline: 56px;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+html[data-concept~="film-hero"] .fh-credits a {
+  color: var(--ink-2);
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--ember), var(--core)) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.28s var(--fx-ignite), color 0.28s;
+}
+
+html[data-concept~="film-hero"] .fh-credits a:hover,
+html[data-concept~="film-hero"] .fh-credits a:focus-visible { color: var(--ink); background-size: 100% 1px; }
+
+/* persistent frame, top edge: the nav's bottom falloff hairline */
+html[data-concept~="film-hero"] .navbar::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(245, 243, 239, 0.16) 12%, rgba(245, 243, 239, 0.16) 88%, transparent);
+}
+
+/* "See flagship work": the camera falls into the hole, the work irises open from the same point */
+html.fh-flying::view-transition-old(root) {
+  transform-origin: var(--fh-vx) var(--fh-vy);
+  animation: fh-fall 0.38s cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+
+html.fh-flying::view-transition-new(root) {
+  animation: fh-open 0.44s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+}
+
+@keyframes fh-fall { to { transform: scale(16); } }
+@keyframes fh-open {
+  from { clip-path: circle(0 at var(--fh-vx) var(--fh-vy)); }
+  to { clip-path: circle(150vmax at var(--fh-vx) var(--fh-vy)); }
+}
+
+@media (max-width: 599px) {
+  html[data-concept~="film-hero"] #home { padding-top: 72px; }
+  html[data-concept~="film-hero"] #home .cta-buttons { flex-direction: column; align-items: center; }
+  html[data-concept~="film-hero"] #home .cta-buttons > * { width: min(100%, 300px); }
+  /* credits sit under the CTAs on phones, clear of the fixed MORA-01 button */
+  html[data-concept~="film-hero"] #home .hero-content { margin-bottom: 0; }
+  html[data-concept~="film-hero"] .fh-credits { margin-bottom: auto; padding-inline: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-concept~="film-hero"] .fh-art .fh-shimmer { animation: none; }
+  html[data-concept~="film-hero"] .fh-art { transition: none; }
+}

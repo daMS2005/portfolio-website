@@ -13,23 +13,42 @@
     : ['event-horizon', 'film-middle', 'film-flagship', 'film-frame', 'fade-to-black', 'intro'];
   const names = name.split(',').flatMap((n) => (n === 'film' ? film : [n]));
   document.documentElement.dataset.concept = names.join(' ');
-  // hide the page until the design's CSS is in, so the plain site never flashes first
+  // hide the page until the design's CSS and scripts are in, so the plain site never shows and then rebuilds
   const root = document.documentElement.style;
   root.visibility = 'hidden';
-  const show = () => { root.visibility = ''; };
-  setTimeout(show, 2500);
-  let pending = names.length;
+  let shown = false;
+  const show = () => { if (!shown) { shown = true; root.visibility = ''; setTimeout(watch, 1000); } };
+  setTimeout(show, 3000);
+  let pending = names.length * 2;
+  const done = () => { if (!--pending) show(); };
   for (const n of names) {
     const css = document.createElement('link');
     css.rel = 'stylesheet';
     css.href = `/concepts/${n}.css`;
-    css.onload = css.onerror = () => { if (!--pending) show(); };
+    css.onload = css.onerror = done;
     document.head.append(css);
     const js = document.createElement('script');
     js.type = 'module';
     js.src = `/concepts/${n}.js`;
-    js.onerror = () => js.remove();
+    js.onload = done;
+    js.onerror = () => { js.remove(); done(); };
     document.body.append(js);
+  }
+  // slow hardware: if frames drop, freeze the endless decorative loops (ring spin, orbits, lava) rather than stutter
+  function watch() {
+    if (document.documentElement.classList.contains('fx-intro')) return setTimeout(watch, 500); // the intro's own frames don't count
+    let n = 0, slow = 0, last = performance.now();
+    requestAnimationFrame(function f() {
+      const t = performance.now(); // the rAF timestamp hides dropped frames in Chrome
+      if (t - last > 34) slow++;
+      last = t;
+      if (++n < 120) return requestAnimationFrame(f);
+      if (slow < 30 || document.hidden) return;
+      document.documentElement.classList.add('fx-lite');
+      const freeze = () => document.getAnimations().forEach((a) => a.effect?.getTiming().iterations === Infinity && a.pause());
+      freeze();
+      setInterval(freeze, 2000);
+    });
   }
   // keep a hand-picked concept when following links between pages
   if (param) document.addEventListener('click', (e) => {

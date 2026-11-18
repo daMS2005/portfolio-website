@@ -10,7 +10,6 @@ try {
   ok = !location.hash && nav?.type !== 'back_forward' && document.visibilityState === 'visible'
     && !matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData
     && (pick !== null || (nav?.type === 'navigate' && !internal && !sessionStorage.fxIntro));
-  if (ok) sessionStorage.fxIntro = 1;
 } catch { ok = false; }
 
 const IGN = 'cubic-bezier(.16,1,.3,1)', FALL = 'cubic-bezier(.7,0,.84,0)';
@@ -22,7 +21,7 @@ if (ok) {
   const fi = document.createElement('div');
   fi.className = 'fi';
   fi.setAttribute('aria-hidden', 'true');
-  fi.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:#000;animation:fi-failsafe 0s 2.6s forwards';
+  fi.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:#000;animation:fi-failsafe 0s 4.5s forwards';
   document.body.append(fi);
   const born = performance.now();
   const anims = [];
@@ -42,7 +41,7 @@ if (ok) {
   };
   function skip() { if (anims.length) { anims.forEach((a) => a.finish()); out(120); } else cleanup(); }
   for (const t of ['pointerdown', 'keydown', 'wheel', 'touchstart']) addEventListener(t, skip, { capture: true, passive: true });
-  setTimeout(cleanup, 2600);
+  setTimeout(cleanup, 4500);
 
   const img = new Image();
   if (kind === 'eye') img.src = '/concepts/assets/hand-human.webp';
@@ -57,7 +56,8 @@ if (ok) {
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     const hands = kind === 'eye' && await Promise.race([img.decode().then(() => true, () => false), wait(120)]);
     const eh = document.querySelector('.hero .eh'), dim = eh?.querySelector('.eh-dim');
-    if (done || !dim || performance.now() - born > 500) return cleanup();
+    if (done || !dim || performance.now() - born > 1500) return cleanup();
+    try { sessionStorage.fxIntro = 1; } catch {} // seen only once it really plays
 
     const W = innerWidth, H = innerHeight, phone = W < 700;
     const { left: cx, top: cy } = eh.getBoundingClientRect();

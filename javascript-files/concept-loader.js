@@ -32,7 +32,7 @@
     js.src = `/concepts/${n}.js`;
     js.onload = done;
     js.onerror = () => { js.remove(); done(); };
-    document.body.append(js);
+    document.head.append(js); // modules still run after the page is parsed
   }
   // slow hardware: if frames drop, freeze the endless decorative loops (ring spin, orbits, lava) rather than stutter
   function watch() {

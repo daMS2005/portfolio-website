@@ -267,6 +267,50 @@
             <div class="project-records">
                 <article class="project-record">
                     <header class="project-record-header">
+                        <div><span class="work-type">Open source &middot; MIT &middot; Nov 2026</span><h3>Squawk</h3></div>
+                        <div class="project-actions" aria-label="Squawk links">
+                            <a class="project-action" href="https://qwackagents.com" target="_blank" rel="noopener noreferrer">qwackagents.com</a>
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/squawk" target="_blank" rel="noopener noreferrer" aria-label="Open Squawk on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a>
+                        </div>
+                    </header>
+                    <p class="project-summary">A private team chat for coding agents. When several people work on one project, their agents (Claude Code or any MCP client) DM each other, talk in group channels, claim files and hand off work.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>Scope</span> Remote MCP server, Claude Code plugin, web app, support agent and infrastructure. Anyone can self-host it in their own Google Cloud project.</p>
+                            <ul class="project-evidence">
+                                <li>Teams are invite-only. Each member gets a personal token, every query is scoped to the caller's team, and tokens and invite codes are stored only as SHA-256 hashes.</li>
+                                <li>Urgent messages reach a teammate's agent at its next tool call. Premium projects can turn on end-to-end encryption (AES-256-GCM), so whoever runs the server can't read them.</li>
+                                <li>Everything is Terraform: Cloud Run, Firestore, Pub/Sub, Cloud Functions and a Dialogflow CX support agent on Gemini, with tests and keyless deploys from GitHub Actions.</li>
+                            </ul>
+                            <div class="project-stack" aria-label="Squawk technologies"><span>Python</span><span>MCP</span><span>Claude Code</span><span>Node.js</span><span>Cloud Run</span><span>Firestore</span><span>Pub/Sub</span><span>Terraform</span></div>
+                        </div>
+                    </details>
+                </article>
+                <article class="project-record">
+                    <header class="project-record-header">
+                        <div><span class="work-type">Applied AI &middot; Google Cloud &middot; Nov 2026</span><h3>Northwind Resolve</h3></div>
+                        <div class="project-actions" aria-label="Northwind Resolve links">
+                            <a class="project-action" href="https://complaint-agent-938446768670.us-central1.run.app" target="_blank" rel="noopener noreferrer">Live demo</a>
+                            <a class="project-action project-action-icon" href="https://github.com/daMS2005/complaint-intake-agent" target="_blank" rel="noopener noreferrer" aria-label="Open Northwind Resolve on GitHub" title="GitHub repository"><i class="fab fa-github" aria-hidden="true"></i></a>
+                        </div>
+                    </header>
+                    <p class="project-summary">Complaint handling for a fictional retail bank. A customer describes a problem to an AI assistant, which files a case with the right urgency and legal deadline, and a specialist resolves it before that deadline. The regulations, deadlines and industry data are real.</p>
+                    <details class="project-disclosure">
+                        <summary><span class="when-closed">Role, engineering details &amp; stack</span><span class="when-open">Hide project details</span><i class="fas fa-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="project-disclosure-body">
+                            <p class="project-role"><span>Design</span> AI does the busywork and people make the decisions. Every case records what the model suggested, specialists can overrule it, and each override is logged.</p>
+                            <ul class="project-evidence">
+                                <li>Google ADK agents on Gemini: a coordinator hands customers to intake and policy agents, and an analyst agent answers trend questions from BigQuery's CFPB complaint data.</li>
+                                <li>Deadlines follow Regulation E (10 business days) and the CFPB's 15 days. Card numbers and SSNs are redacted before text reaches a model, and every case event goes to BigQuery as an audit trail.</li>
+                                <li>Without Vertex AI, the same app runs on a local open-source stack (Qwen3 on Ollama). A status page shows which stack is live.</li>
+                            </ul>
+                            <div class="project-stack" aria-label="Northwind Resolve technologies"><span>Python</span><span>FastAPI</span><span>Google ADK</span><span>Gemini</span><span>Dialogflow CX</span><span>Firestore</span><span>BigQuery</span><span>Terraform</span></div>
+                        </div>
+                    </details>
+                </article>
+                <article class="project-record">
+                    <header class="project-record-header">
                         <div><span class="work-type">Hackathon &middot; team of four &middot; New York, Nov 2026</span><h3>CAMOX Evidence Agent</h3></div>
                         <div class="project-actions" aria-label="CAMOX Evidence Agent links">
                             <a class="project-action" href="https://camox.onrender.com/v2/" target="_blank" rel="noopener noreferrer">Live demo</a>

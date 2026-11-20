@@ -27,7 +27,7 @@ const PRELIT = { thesis: 'research', jepa: 'research', 'tc-acc': 'projects', per
 // ---------- nav: DM + a two-line corner credit ----------
 const nav = $('.navbar');
 let creditSub = null;
-const defaultSub = isHome ? 'New York · 2026' : document.title.split(' · ')[0];
+const defaultSub = isHome ? 'Software & AI Engineer' : document.title.split(' · ')[0];
 if (nav) {
   const sentinel = el('div', 'ff-sentinel');
   document.body.prepend(hide(sentinel));

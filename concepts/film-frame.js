@@ -39,6 +39,9 @@ if (nav) {
   if (logo) logo.tagName === 'A' ? logo.append(credit) : logo.after(credit);
   const list = $('#primary-navigation');
   const research = list && $$('a', list).find((a) => a.getAttribute('href').endsWith('#research'));
+  const label = () => { if (research) research.textContent = phone.matches ? 'Flagship' : 'Research'; };
+  label();
+  phone.addEventListener('change', label);
   research?.closest('li').after(...FLAGSHIPS.map(([t, h]) => el('li', 'ff-sub', `<a href="${h}">${t}</a>`)));
   if (list && !list.classList.contains('legal-nav')) list.append(el('li', 'ff-social', SOCIAL));
   const setH = () => document.documentElement.style.setProperty('--ff-nav-h', `${nav.offsetHeight}px`);

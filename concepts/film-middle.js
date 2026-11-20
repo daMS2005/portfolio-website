@@ -84,37 +84,6 @@ if (records) {
     records.classList.add('fm-chain');
     setTimeout(() => records.classList.remove('fm-chain'), 1200);
   }, true);
-  // Squawk: glowing ducklings wander along the bottom of its card. Sprite cells: walk, walk, peck, sit, look up, flap.
-  const pond = $('[data-ducks]', records);
-  if (pond) {
-    pond.insertAdjacentHTML('beforeend', `<div class="fm-ducks" aria-hidden="true">${'<i class="fm-dk"></i>'.repeat(3)}</div>`);
-    const track = $('.fm-ducks', pond), CELL = [1.545, 20.995, 40.389, 59.668, 78.375, 98.169];
-    $$('.fm-dk', track).forEach((dk, i) => {
-      let x = 20 + i * 44, dir = 1;
-      const pose = (f) => { dk.style.backgroundPositionX = `${CELL[f]}%`; };
-      const place = () => { dk.style.transform = `translateX(${x}px) scaleX(${dir})`; };
-      place();
-      pose(RM ? 3 : [4, 2, 3][i]);
-      if (RM) return;
-      const idle = () => {
-        dk.classList.remove('is-walking');
-        pose([2, 2, 3, 4, 5][Math.floor(Math.random() * 5)]);
-        setTimeout(walk, 1500 + Math.random() * 4000);
-      };
-      const walk = () => {
-        const max = track.clientWidth - 40, from = Math.min(x, max);
-        let to = Math.random() * max;
-        if (Math.abs(to - from) < 80) to = from < max / 2 ? from + 140 : from - 140;
-        to = Math.max(0, Math.min(max, to));
-        dir = to < from ? -1 : 1;
-        x = to;
-        dk.classList.add('is-walking');
-        dk.animate([{ transform: `translateX(${from}px) scaleX(${dir})` }, { transform: `translateX(${to}px) scaleX(${dir})` }], { duration: (Math.abs(to - from) / 36) * 1000 }).onfinish = idle;
-        place();
-      };
-      setTimeout(walk, 800 + i * 1400);
-    });
-  }
 }
 
 /* ---------- Skills: one neuron per group, dendrites = item count ---------- */

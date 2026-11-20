@@ -9,7 +9,7 @@ if (hero && content && !hero.querySelector('.eh')) {
   const figures = [0.3, 25.5, 49.15, 72.2, 97.7].map((sx, i) => ({ sx, d: 1.44, t: 120, a: i * 72 + 18, h: 48, tilt: 0 }));
 
   // the relocation line, worded as in Contact
-  content.querySelector('.tagline')?.insertAdjacentHTML('afterend', '<p class="eh-where"><span>New York, NY</span> · <span>Open to relocation in the US</span></p>');
+  content.querySelector('.tagline')?.insertAdjacentHTML('afterend', '<p class="eh-where"><span>Open to relocation in the US</span></p>');
 
   const eh = document.createElement('div');
   eh.className = 'eh';

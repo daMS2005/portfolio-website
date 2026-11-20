@@ -84,6 +84,17 @@ if (records) {
     records.classList.add('fm-chain');
     setTimeout(() => records.classList.remove('fm-chain'), 1200);
   }, true);
+  // Squawk: three glowing ducklings stroll along the bottom of its card
+  $('[data-ducks]', records)?.insertAdjacentHTML('beforeend', `<div class="fm-ducks" aria-hidden="true">
+    <svg width="0" height="0" style="position:absolute"><defs>
+      <radialGradient id="fm-dk-g" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#fff4dc"/><stop offset=".45" stop-color="#ffb347"/><stop offset="1" stop-color="#ff5c2a"/></radialGradient>
+      <symbol id="fm-dk" viewBox="0 0 24 20"><g fill="url(#fm-dk-g)"><path d="M2.6 11.6.4 8.8l4.2 1.8z"/><ellipse cx="10" cy="13.4" rx="8" ry="5.2"/><circle cx="16.6" cy="6.8" r="4.3"/></g>
+        <path d="m20.4 6.2 3.4 1.1-3.3 1.4z" fill="#ff5c2a"/><circle cx="17.8" cy="5.9" r=".75" fill="#3a1206"/>
+        <path d="M6.5 12.5q3.5 3.2 7.2.2" fill="none" stroke="#ff8a3c" stroke-width=".9" opacity=".7"/>
+        <path d="m8.8 18.4-.4 1.6m3.8-1.6.4 1.6" stroke="#ff5c2a" stroke-width="1.2" stroke-linecap="round"/></symbol>
+    </defs></svg>
+    ${[[52, -0.5], [26, -0.25], [0, 0]].map(([o, d], i) => `<span class="fm-duckling" style="--o:${o}px;--dl:${d}s;--wd:${-i * 0.13}s"><svg viewBox="0 0 24 20"><use href="#fm-dk"/></svg></span>`).join('')}
+  </div>`);
 }
 
 /* ---------- Skills: one neuron per group, dendrites = item count ---------- */

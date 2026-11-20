@@ -73,7 +73,7 @@
         <div id="dash">
             <button class="refresh" id="refresh">Refresh</button>
             <h1>Site Stats</h1>
-            <p class="sub" id="notice">Cookieless analytics &middot; bots filtered &middot; this browser and your network aren't counted</p>
+            <p class="sub" id="notice">Cookieless analytics &middot; bots and friends filtered &middot; this browser and your network aren't counted</p>
             <p class="dash-err" id="dashErr" aria-live="polite"></p>
             <div class="range">
                 <select id="preset" aria-label="Date range">
@@ -119,6 +119,7 @@
             </div>
             <div class="panel">
                 <h2>Recent visitors</h2>
+                <p class="sub" id="hiddenNote"></p>
                 <div class="vfilter"><input id="vfilter" placeholder="Filter by visitor code" aria-label="Filter by visitor code" autocomplete="off"><button id="vclear" type="button">Show all</button></div>
                 <div id="visits"></div>
             </div>
@@ -209,6 +210,8 @@
                 `<div class="day" style="height:${(sums[i] / max) * 100}%" title="${day}: ${sums[i]} events"><span>${day.slice(8)}</span></div>`
             ).join('');
 
+            const h = d.hidden || {};
+            document.getElementById('hiddenNote').textContent = `${h.bot || 0} bot and ${h.friend || 0} friend page loads hidden`;
             last = d;
             renderVisits();
         }

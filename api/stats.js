@@ -1,6 +1,7 @@
 // Gated analytics readout. Opens with Daniel's private link (its key's SHA-256 is
 // below; the key itself is never in this public repo) or the Vercel env var STATS_PASSWORD.
 import { createHash } from 'node:crypto';
+import { hiddenAs } from './track.js';
 
 const ipHash = (ip) => createHash('sha256').update(String(ip)).digest('hex').slice(0, 32);
 const KEY_SHA256 = '0e130498da689896131ff87d6f8d50f604eef3d59f3db2df3a7db37053b86b40';
@@ -120,7 +121,10 @@ export default async function handler(req, res) {
     const recentQuestions = parseList(out[KEYS.length + 2][0]).filter(inRange);
 
     // each visit's timeline: pages, sections, clicks and time on page (newest 200 in the range)
-    const recentVisits = parseList(out[KEYS.length + 3][0]).filter(inRange).slice(0, 200);
+    // bots and friends stay off the list; visits from before tagging are judged by the same rules
+    const hidden = { bot: 0, friend: 0 };
+    const recentVisits = parseList(out[KEYS.length + 3][0]).filter(inRange)
+      .filter((v) => { const h = v.hide || hiddenAs(v); if (h) hidden[h]++; return !h; }).slice(0, 200);
     const steps = recentVisits.length ? await redis(recentVisits.map((v) => ['LRANGE', `s:${v.sid}`, '0', '-1'])) : [];
     recentVisits.forEach((v, i) => { v.steps = parseList(steps[i]); });
 
@@ -155,6 +159,7 @@ export default async function handler(req, res) {
       daily,
       recentQuestions,
       recentVisits,
+      hidden,
     });
   } catch (e) {
     console.error('stats error', e);

@@ -38,6 +38,20 @@ function parseUA(ua) {
   return { browser, os, bot };
 }
 
+// Bots that fake a normal browser, and friends: their visits skip every counter and stay off the stats page.
+const FRIENDS = [(v) => v.country === 'DO', (v) => v.city === 'Madrid', (v) => v.city === 'Ann Arbor' && /^es/.test(v.lang || '')];
+const offset = (tz) => { try { return new Date().toLocaleString('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).split(' ').pop(); } catch { return tz; } };
+export function hiddenAs(v) {
+  if (FRIENDS.some((f) => f(v))) return 'friend';
+  const [sw, sh] = String(v.scr || '').split('x').map(Number);
+  if (['UTC', 'Etc/UTC', 'Etc/Unknown'].includes(v.tz)) return 'bot'; // people's clocks have a real time zone
+  if (sw === 800 && sh === 600) return 'bot'; // headless Chrome's default screen
+  if (v.device === 'mobile') return '';
+  if (v.vw === sw && v.vh === sh) return 'bot'; // a page with no browser window around it
+  if (v.ipTz && offset(v.ipTz) !== offset(v.tz)) return 'bot'; // clock set far from the network: cloud link scanners
+  return '';
+}
+
 function refSource(ref, utm) {
   if (utm) return String(utm).slice(0, 40);
   if (!ref) return 'direct';
@@ -90,18 +104,24 @@ export default async function handler(req, res) {
     });
     return (await r.json()).map((x) => x.result);
   };
-  // one round trip: is this Daniel's network, and today's salt for the visitor code
-  const [ownerAt, , salt] = await redis([
+  // one round trip: is this Daniel's network, today's salt for the visitor code, and was this page load hidden
+  const [ownerAt, , salt, hiddenBefore] = await redis([
     ['HGET', 'owner:ips', ipHash(ip)],
     ['SET', `salt:${day}`, randomBytes(16).toString('hex'), 'NX', 'EX', '172800'],
     ['GET', `salt:${day}`],
+    ['GET', `h:${sid}`],
   ]).catch(() => []);
   if (ownerAt && Date.now() - Number(ownerAt) < 30 * 86400_000) return res.status(204).end();
   // visitor code: groups one person's pages for a day. A hash of the IP and browser with a salt
   // that is deleted after two days, so it can't be reversed or linked across days.
   const vid = salt ? createHash('sha256').update(`${salt}|${ip}|${req.headers['user-agent'] || ''}`).digest('hex').slice(0, 8) : undefined;
 
-  const cmds = [
+  const scr = b.sw && b.sh ? `${b.sw}x${b.sh}` : undefined;
+  const hide = ev === 'pageview'
+    ? hiddenAs({ country, city, device, scr, vw: b.vw, vh: b.vh, lang: b.lang, tz: b.tz, ipTz: req.headers['x-vercel-ip-timezone'] })
+    : hiddenBefore || '';
+
+  let cmds = [
     ['HINCRBY', `ev:${day}`, ev, '1'],
     ['HINCRBY', 'ev:total', ev, '1'],
   ];
@@ -129,10 +149,11 @@ export default async function handler(req, res) {
         t: now, sid, vid, country, city, source,
         browser: ua.browser, os: ua.os, device,
         page: String(m || '').slice(0, 60), vw: b.vw, vh: b.vh, lang: b.lang, tz: b.tz,
-        ref: refPage, scr: b.sw && b.sh ? `${b.sw}x${b.sh}` : undefined, dpr: b.dpr, dark: b.dark, reduced: b.reduced,
+        ref: refPage, scr, dpr: b.dpr, dark: b.dark, reduced: b.reduced, hide: hide || undefined,
       })],
       ['LTRIM', 'visits:recent', '0', '999'],
     );
+    if (hide) cmds.push(['SET', `h:${sid}`, hide, 'EX', '2592000']);
   }
 
   if (typeof sid === 'string' && /^[a-z0-9]{6,24}$/.test(sid)) {
@@ -166,6 +187,8 @@ export default async function handler(req, res) {
       }
     }
   }
+
+  if (hide) cmds = cmds.filter((c) => c[0] !== 'HINCRBY'); // keep the timeline, count nothing
 
   // every all-time counter also gets a per-day copy, kept 400 days, so the dashboard can filter by date
   for (const [, key, field, n] of cmds.filter((c) => c[0] === 'HINCRBY' && /:(total|views|seconds)$/.test(c[1]) && c[1] !== 'ev:total')) {

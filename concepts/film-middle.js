@@ -84,17 +84,37 @@ if (records) {
     records.classList.add('fm-chain');
     setTimeout(() => records.classList.remove('fm-chain'), 1200);
   }, true);
-  // Squawk: three glowing ducklings stroll along the bottom of its card
-  $('[data-ducks]', records)?.insertAdjacentHTML('beforeend', `<div class="fm-ducks" aria-hidden="true">
-    <svg width="0" height="0" style="position:absolute"><defs>
-      <radialGradient id="fm-dk-g" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#fff4dc"/><stop offset=".45" stop-color="#ffb347"/><stop offset="1" stop-color="#ff5c2a"/></radialGradient>
-      <symbol id="fm-dk" viewBox="0 0 24 20"><g fill="url(#fm-dk-g)"><path d="M2.6 11.6.4 8.8l4.2 1.8z"/><ellipse cx="10" cy="13.4" rx="8" ry="5.2"/><circle cx="16.6" cy="6.8" r="4.3"/></g>
-        <path d="m20.4 6.2 3.4 1.1-3.3 1.4z" fill="#ff5c2a"/><circle cx="17.8" cy="5.9" r=".75" fill="#3a1206"/>
-        <path d="M6.5 12.5q3.5 3.2 7.2.2" fill="none" stroke="#ff8a3c" stroke-width=".9" opacity=".7"/>
-        <path d="m8.8 18.4-.4 1.6m3.8-1.6.4 1.6" stroke="#ff5c2a" stroke-width="1.2" stroke-linecap="round"/></symbol>
-    </defs></svg>
-    ${[[52, -0.5], [26, -0.25], [0, 0]].map(([o, d], i) => `<span class="fm-duckling" style="--o:${o}px;--dl:${d}s;--wd:${-i * 0.13}s"><svg viewBox="0 0 24 20"><use href="#fm-dk"/></svg></span>`).join('')}
-  </div>`);
+  // Squawk: glowing ducklings wander along the bottom of its card. Sprite cells: walk, walk, peck, sit, look up, flap.
+  const pond = $('[data-ducks]', records);
+  if (pond) {
+    pond.insertAdjacentHTML('beforeend', `<div class="fm-ducks" aria-hidden="true">${'<i class="fm-dk"></i>'.repeat(3)}</div>`);
+    const track = $('.fm-ducks', pond), CELL = [1.545, 20.995, 40.389, 59.668, 78.375, 98.169];
+    $$('.fm-dk', track).forEach((dk, i) => {
+      let x = 20 + i * 44, dir = 1;
+      const pose = (f) => { dk.style.backgroundPositionX = `${CELL[f]}%`; };
+      const place = () => { dk.style.transform = `translateX(${x}px) scaleX(${dir})`; };
+      place();
+      pose(RM ? 3 : [4, 2, 3][i]);
+      if (RM) return;
+      const idle = () => {
+        dk.classList.remove('is-walking');
+        pose([2, 2, 3, 4, 5][Math.floor(Math.random() * 5)]);
+        setTimeout(walk, 1500 + Math.random() * 4000);
+      };
+      const walk = () => {
+        const max = track.clientWidth - 40, from = Math.min(x, max);
+        let to = Math.random() * max;
+        if (Math.abs(to - from) < 80) to = from < max / 2 ? from + 140 : from - 140;
+        to = Math.max(0, Math.min(max, to));
+        dir = to < from ? -1 : 1;
+        x = to;
+        dk.classList.add('is-walking');
+        dk.animate([{ transform: `translateX(${from}px) scaleX(${dir})` }, { transform: `translateX(${to}px) scaleX(${dir})` }], { duration: (Math.abs(to - from) / 36) * 1000 }).onfinish = idle;
+        place();
+      };
+      setTimeout(walk, 800 + i * 1400);
+    });
+  }
 }
 
 /* ---------- Skills: one neuron per group, dendrites = item count ---------- */

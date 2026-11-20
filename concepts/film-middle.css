@@ -97,15 +97,14 @@ html[data-concept~="film-middle"] {
       position: relative; background: var(--fm-hair) top / 100% 1px no-repeat;
     }
     .fm-ducks {
-      position: absolute; left: clamp(1.35rem, 2.4vw, 2.1rem); right: clamp(1.35rem, 2.4vw, 2.1rem); bottom: 0; height: 18px;
-      container-type: inline-size; pointer-events: none;
+      position: absolute; left: clamp(1.35rem, 2.4vw, 2.1rem); right: clamp(1.35rem, 2.4vw, 2.1rem); bottom: 0; height: 40px; pointer-events: none;
     }
-    .fm-duckling { position: absolute; left: 0; bottom: 0; width: 22px; height: 18px; animation: fm-stroll 34s linear var(--dl) infinite; }
-    .fm-duckling svg {
-      display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 100%;
-      filter: drop-shadow(0 0 2px rgba(255,179,71,.9)) drop-shadow(0 0 7px rgba(255,92,42,.55));
-      animation: fm-waddle .36s ease-in-out var(--wd) infinite alternate;
+    /* 300px cells of the 2048x512 sprite, feet on the card's bottom line */
+    .fm-dk {
+      position: absolute; left: 0; bottom: -3px; width: 40px; height: 40px; opacity: .92;
+      background: url(assets/ducklings-alpha.webp) 1.545% 89.62% / 682.67% 170.67% no-repeat;
     }
+    .fm-dk.is-walking { animation: fm-dk-step .44s steps(2) infinite; }
     .project-record::before {
       content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; pointer-events: none;
       background: linear-gradient(180deg, transparent, var(--fm-ember) 10%, var(--fm-core) 50%, var(--fm-ember) 90%, transparent);
@@ -281,15 +280,7 @@ html[data-concept~="film-middle"] {
   }
 }
 
-/* walk right, hang out, turn, walk back, hang out */
-@keyframes fm-stroll {
-  0% { transform: translateX(var(--o)); }
-  38%, 50% { transform: translateX(calc(100cqw - 90px + var(--o))); }
-  50.1% { transform: translateX(calc(100cqw - 90px + var(--o))) scaleX(-1); }
-  88%, 99.9% { transform: translateX(var(--o)) scaleX(-1); }
-  100% { transform: translateX(var(--o)); }
-}
-@keyframes fm-waddle { from { transform: rotate(-7deg); } to { transform: rotate(7deg) translateY(-1px); } }
+@keyframes fm-dk-step { from { background-position-x: 1.545%; } to { background-position-x: 40.389%; } }
 @keyframes fm-up { from { opacity: 0; transform: translateY(4px); } }
 @keyframes fm-sig { from { stroke-dashoffset: .4; } to { stroke-dashoffset: -1; } }
 @keyframes fm-ax { from { stroke-dashoffset: .2; } to { stroke-dashoffset: -1; } }

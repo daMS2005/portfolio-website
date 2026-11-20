@@ -14,7 +14,7 @@ const once = (node, fn, threshold = 0.15) => {
 const path = location.pathname;
 const isHome = path === '/' || /\/index(\.html)?$/.test(path);
 
-const SOCIAL = [['GitHub', 'https://github.com/daMS2005'], ['LinkedIn', 'https://www.linkedin.com/in/daniel-arturo-mora-00747524b/'], ['Hugging Face', 'https://huggingface.co/dams2005']]
+const SOCIAL = [['GitHub', 'https://github.com/daMS2005'], ['LinkedIn', 'https://www.linkedin.com/in/daniel-mora-00747524b/'], ['Hugging Face', 'https://huggingface.co/dams2005']]
   .map(([t, h]) => `<a href="${h}" target="_blank" rel="noopener noreferrer">${t}</a>`).join('');
 const FLAGSHIPS = [['JEPA Transformer', '/jepa-transformer.html'], ['Brain–LLM Feature Correspondence', '/thesis.html'], ['TC_ACC Documentary Studio', '/tc-acc.html']];
 

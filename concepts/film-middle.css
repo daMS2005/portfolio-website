@@ -81,6 +81,7 @@ html[data-concept~="film-middle"] {
     transition: color 280ms var(--fm-ignite) var(--d);
   }
   & .fm-label[data-i="1"], & .fm-label[data-i="2"], & .fm-label[data-i="3"] { padding-left: 2px; }
+  & .fm-label[data-i="4"] { background: none; }
   & #aboutMe.fm-on {
     .fm-leg { stroke-dashoffset: 0; }
     .fm-atmo-g { opacity: 1; }

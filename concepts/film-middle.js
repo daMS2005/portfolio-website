@@ -24,8 +24,8 @@ if (about) {
   const box = $('.about-image', about);
 
   // Cities in the order of his paragraph; x/y from earth-atlantic.json (orthographic, centre 30N 38W).
-  const CITIES = ['Santo Domingo', 'Segovia', 'Madrid', 'San Sebastián', 'New York'];
-  const AT = [300, 900, 960, 1080, 1700]; // ms after entering view, when the route reaches each light
+  const CITIES = ['Santo Domingo', 'Segovia', 'Madrid', 'San Sebastián'];
+  const AT = [300, 900, 960, 1080]; // ms after entering view, when the route reaches each light
   const p = $('.about-text p', about);
   let html = p.innerHTML;
   CITIES.forEach((c, i) => { html = html.replace(c, `<span class="fm-city" data-i="${i}" style="--d:${AT[i]}ms">${c}</span>`); });
@@ -37,13 +37,12 @@ if (about) {
   const globe = $('.fm-globe', box);
 
   fetch(A + 'earth-atlantic.json').then((r) => r.json()).then((e) => {
-    const c = e.cities;
+    const c = e.cities.slice(0, 4);
     const xy = (i) => `${c[i].x} ${c[i].y}`;
     const legs = [ // [path, start ms, duration ms]
       [`M${xy(0)}Q238 214 ${xy(1)}`, 300, 600],
       [`M${xy(1)}L${xy(2)}`, 900, 60],
       [`M${xy(2)}L${xy(3)}`, 960, 120],
-      [`M${xy(3)}Q250 108 ${xy(4)}`, 1080, 620],
     ];
     const atmo = (id, a, b) => `<radialGradient id="${id}" cx="250" cy="250" r="266" gradientUnits="userSpaceOnUse">
       <stop offset=".9" stop-color="${a}" stop-opacity="0"/><stop offset=".936" stop-color="${a}" stop-opacity=".12"/>
@@ -58,7 +57,7 @@ if (about) {
       ${legs.map(([d, s, t]) => `<path class="fm-leg" pathLength="1" d="${d}" style="--d:${s}ms;--t:${t}ms"/>`).join('')}
       <path class="fm-lead" d="M${c[3].x + 3} ${c[3].y - 1}L368 158M${c[1].x + 3} ${c[1].y - 0.5}L368 186M${c[2].x + 3} ${c[2].y + 1}L368 214"/>
       ${c.map((k, i) => `<g class="fm-light${i === 4 ? ' fm-now' : ''}" data-i="${i}" style="--d:${AT[i]}ms" transform="translate(${k.x} ${k.y})"><circle class="fm-halo" r="${i === 4 ? 15 : 9}" fill="url(#fmGlow)"/><circle class="fm-core" r="${i === 4 ? 2 : 1.5}"/></g>`).join('')}`;
-    const labels = [[c[0].x + 7, c[0].y + 1], [370, 186], [370, 214], [370, 158], [c[4].x + 7, c[4].y + 10]];
+    const labels = [[c[0].x + 7, c[0].y + 1], [370, 186], [370, 214], [370, 158]];
     globe.insertAdjacentHTML('beforeend', labels.map(([x, y], i) =>
       `<span class="fm-label" data-i="${i}" style="${pct(x, y)};--d:${AT[i]}ms">${CITIES[i]}</span>`).join(''));
 

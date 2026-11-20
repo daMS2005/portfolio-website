@@ -68,6 +68,11 @@ html[data-concept~="film-middle"] {
       transition: opacity 520ms var(--fm-ignite) var(--d), transform 520ms var(--fm-ignite) var(--d);
     }
     .fm-light.is-flare .fm-halo { transform: scale(1.7); opacity: 1; transition-delay: 0s; }
+    .fm-us {
+      fill: rgba(255,92,42,0); stroke: rgba(216,212,204,.26); stroke-width: .6; vector-effect: non-scaling-stroke;
+      transition: fill 900ms var(--fm-ignite) var(--d), stroke 900ms var(--fm-ignite) var(--d), filter 900ms var(--fm-ignite) var(--d);
+    }
+    .fm-us.is-flare { fill: rgba(255,179,71,.42) !important; transition-delay: 0s; }
   }
   & .fm-label {
     position: absolute; transform: translateY(-50%); white-space: nowrap;
@@ -80,7 +85,7 @@ html[data-concept~="film-middle"] {
     .fm-leg { stroke-dashoffset: 0; }
     .fm-atmo-g { opacity: 1; }
     .fm-core { fill: var(--fm-core); }
-    .fm-now .fm-core { fill: var(--fm-hot); }
+    .fm-us { fill: rgba(255,92,42,.26); stroke: var(--fm-core); filter: drop-shadow(0 0 6px rgba(255,92,42,.7)); }
     .fm-halo { opacity: 1; transform: scale(1); }
     .fm-label { color: var(--fm-muted); }
     .fm-label[data-i="4"] { color: var(--fm-ink); }

@@ -51,7 +51,7 @@ About Daniel:
   Never give financial advice or reveal private holdings,
   returns or account details on his behalf.
 - Contact: contact@daniel-mora.com (mailto link in the Contact section) and
-  LinkedIn at https://www.linkedin.com/in/daniel-mora-00747524b/.
+  LinkedIn at https://www.linkedin.com/in/daniel-arturo-mora-00747524b/.
   GitHub: daMS2005. Hugging Face: dams2005.
 - Bachelor thesis, supervised by Dr. Luciano Dyballa, now written up as a
   paper: "Can We Detect Shared Features Between Language Models and the Brain?". It is a preprint and is not peer-reviewed. Never

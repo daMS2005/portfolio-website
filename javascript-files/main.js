@@ -10,11 +10,16 @@ function scrollToSection(sectionId) {
     });
 }
 
-// /about, /projects ...: the home page opened at that section
-const landing = location.pathname.slice(1);
-if (/^(about|research|projects|skills|websites|contact)$/.test(landing)) {
-    addEventListener('load', () => document.getElementById(landing === 'about' ? 'aboutMe' : landing)?.scrollIntoView({ block: 'start', behavior: 'instant' }));
+// The home page's sections live at /about, /projects ... (its nav links carry data-s="<section id>")
+const onHome = !!document.getElementById('aboutMe');
+const sectionOf = (path) => {
+    const p = path.slice(1);
+    return p === '' ? 'home' : p === 'about' ? 'aboutMe' : /^(research|projects|skills|websites|contact)$/.test(p) ? p : null;
+};
+if (onHome && location.pathname !== '/') {
+    addEventListener('load', () => document.getElementById(sectionOf(location.pathname))?.scrollIntoView({ block: 'start', behavior: 'instant' }));
 }
+addEventListener('popstate', () => onHome && scrollToSection(sectionOf(location.pathname)));
 
 const skipLink = document.querySelector('.skip-link');
 const mainContent = document.getElementById('main-content');
@@ -26,10 +31,13 @@ skipLink?.addEventListener('click', event => {
     scrollToSection('main-content');
 });
 
-document.querySelectorAll('a[href^="#"]:not(.skip-link)').forEach(anchor => {
+document.querySelectorAll('a[href^="#"]:not(.skip-link), a[data-s]').forEach(anchor => {
     anchor.addEventListener('click', event => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button) return; // new tab: the clean URL opens there
         event.preventDefault();
-        scrollToSection(anchor.getAttribute('href').slice(1));
+        const href = anchor.getAttribute('href');
+        scrollToSection(anchor.dataset.s || href.slice(1));
+        if (anchor.dataset.s && location.pathname !== href) history.pushState(null, '', href);
     });
 });
 

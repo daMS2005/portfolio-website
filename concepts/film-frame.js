@@ -81,7 +81,7 @@ function watch() {
   current = null;
   sections.length = 0;
   sections.push(...(isHome
-    ? $$('.nav-links a[href^="#"]').map((a, i) => ({ node: $(a.hash), credit: () => `${pad(i + 1)} · ${a.textContent.trim()}`, link: a, key: a.hash.slice(1) }))
+    ? $$('.nav-links a[data-s]').map((a, i) => ({ node: $(`#${a.dataset.s}`), credit: () => `${pad(i + 1)} · ${a.textContent.trim()}`, link: a, key: a.dataset.s }))
     : $$('main h2').map((h, i) => ({ node: h.closest('section') || h, credit: () => (h.parentElement.matches('.detail-section-header') ? h.previousElementSibling?.textContent : `${pad(i + 1)} · ${h.textContent.trim()}`) }))));
   sections.filter((s) => s.node).forEach((s) => io.observe(s.node));
 }

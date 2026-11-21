@@ -98,11 +98,11 @@
     else if (href.includes('instagram.com')) e = 'outbound-instagram';
     else if (/thesis\.pdf$/.test(href)) e = 'thesis-download';
     else if (href.startsWith('mailto:')) e = 'contact-email';
-    else if (href.startsWith('#')) e = 'nav';
+    else if (href.startsWith('#') || el.dataset?.s) e = 'nav';
     else if (el.classList.contains('website-card')) e = 'website-card';
     else if (el.closest('.project-card')) e = 'project-card';
 
-    send(e, href.slice(0, 80), { label, page: location.pathname });
+    send(e, href.slice(0, 80), { label, page: document.getElementById('aboutMe') ? '/' : location.pathname }); // home sections count as /
   }, { capture: true, passive: true });
 
   // ---- end of visit: total time + per-section dwell ----

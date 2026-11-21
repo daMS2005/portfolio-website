@@ -36,7 +36,7 @@ if (about) {
   box.insertAdjacentHTML('beforeend', `<div class="fm-globe" aria-hidden="true"><svg viewBox="${VB.join(' ')}"></svg></div>`);
   const globe = $('.fm-globe', box);
 
-  fetch(A + 'earth-atlantic.json').then((r) => r.json()).then((e) => {
+  fetch(A + 'earth-atlantic.json?v=us').then((r) => r.json()).then((e) => {
     const c = e.cities, us = e.usCentre; // c[4] is the East Coast landfall
     const xy = (i) => `${c[i].x} ${c[i].y}`;
     const legs = [ // [path, start ms, duration ms]

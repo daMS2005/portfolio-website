@@ -306,7 +306,7 @@ function lens(visual, content, paint) {
 
   const cine = el('div', 'ff-cine');
   const shot = el('a', 'ff-shot');
-  shot.href = '/tc-acc.html';
+  shot.href = '/tc-acc';
   shot.setAttribute('aria-label', 'Watch the TC_ACC episodes in the case study');
   const img = Object.assign(el('img'), { src: src(cur), alt: `Still from the ${EP[cur][3]}`, width: 854, height: 480, loading: 'lazy', decoding: 'async' });
   const name = el('span', 'ff-cr', title(cur)), run = el('span', 'ff-cr', EP[cur][2]);

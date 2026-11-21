@@ -32,8 +32,8 @@ if (contact) {
     <i class="ftb-eye-haze"></i><div class="ftb-ball"><div class="ftb-look"><div class="ftb-hole"><span class="ftb-rim"></span></div></div></div>
     <svg viewBox="0 0 400 240"><path class="ftb-crease" d="M80 72Q200-6 320 72"/><path class="ftb-lid" d="M20 120Q200-20 380 120"/><path d="M20 120Q200 260 380 120"/></svg></div>`;
   // [href, label, full title, x %, y %, pose in figures-alpha.webp, mirrored]
-  const figs = [['/', 'Home', 'Back to the homepage', 14, 12, 0, -1], ['/jepa-transformer.html', 'Forecasting model', 'JEPA Transformer', 86, 12, 4, 1],
-    ['/thesis.html', 'Brain–LLM study', 'Brain–LLM Feature Correspondence', 14, 82, 3, 1], ['/tc-acc.html', 'Agentic harness', 'TC_ACC Documentary Studio', 86, 82, 1, -1]];
+  const figs = [['/', 'Home', 'Back to the homepage', 14, 12, 0, -1], ['/jepa-transformer', 'Forecasting model', 'JEPA Transformer', 86, 12, 4, 1],
+    ['/thesis', 'Brain–LLM study', 'Brain–LLM Feature Correspondence', 14, 82, 3, 1], ['/tc-acc', 'Agentic harness', 'TC_ACC Documentary Studio', 86, 82, 1, -1]];
   figs.forEach(([href, label, title, x, y, p, f], i) => {
     const a = Object.assign(document.createElement('a'), { className: 'ftb-fig', href, innerHTML: `<i></i><span>${label}</span><small>${title}</small>` });
     a.style.cssText = `left:${x}%;top:${y}%;--dx:${(50 - x) * 0.3}cqw;--dy:${(50 - y) * 0.3}cqw;--sx:${[0.24, 25.5, 49.15, 72.2, 97.7][p]}%;--f:${f};animation-delay:${-i * 5}s`;

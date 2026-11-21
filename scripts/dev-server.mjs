@@ -153,6 +153,8 @@ http.createServer(async (req, res) => {
   // static files
   let p = url.pathname === '/' ? '/index.html' : url.pathname;
   if (p === '/stats') p = '/stats.html';
+  if (/^\/(about|research|projects|skills|websites|contact)$/.test(p)) p = '/index.html';
+  else if (/^\/(personal|thesis|tc-acc|jepa-transformer|privacy|terms)$/.test(p)) p += '.html';
   try {
     const filePath = join(process.cwd(), normalize(p).replace(/^\/+/, ''));
     const info = await stat(filePath);

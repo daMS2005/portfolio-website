@@ -10,6 +10,12 @@ function scrollToSection(sectionId) {
     });
 }
 
+// /about, /projects ...: the home page opened at that section
+const landing = location.pathname.slice(1);
+if (/^(about|research|projects|skills|websites|contact)$/.test(landing)) {
+    addEventListener('load', () => document.getElementById(landing === 'about' ? 'aboutMe' : landing)?.scrollIntoView({ block: 'start', behavior: 'instant' }));
+}
+
 const skipLink = document.querySelector('.skip-link');
 const mainContent = document.getElementById('main-content');
 

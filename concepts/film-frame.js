@@ -12,11 +12,11 @@ const once = (node, fn, threshold = 0.15) => {
   io.observe(node);
 };
 const path = location.pathname;
-const isHome = path === '/' || /\/index(\.html)?$/.test(path);
+const isHome = /^\/(index(\.html)?|about|research|projects|skills|websites|contact)?$/.test(path);
 
 const SOCIAL = [['GitHub', 'https://github.com/daMS2005'], ['LinkedIn', 'https://www.linkedin.com/in/daniel-arturo-mora-00747524b/'], ['Hugging Face', 'https://huggingface.co/dams2005']]
   .map(([t, h]) => `<a href="${h}" target="_blank" rel="noopener noreferrer">${t}</a>`).join('');
-const FLAGSHIPS = [['JEPA Transformer', '/jepa-transformer.html'], ['Brain–LLM Feature Correspondence', '/thesis.html'], ['TC_ACC Documentary Studio', '/tc-acc.html']];
+const FLAGSHIPS = [['JEPA Transformer', '/jepa-transformer'], ['Brain–LLM Feature Correspondence', '/thesis'], ['TC_ACC Documentary Studio', '/tc-acc']];
 
 // The hero tagline verbatim; each keyword lights once when its section first enters view.
 let LINE = 'I build software that runs in the real world: web products and machine-learning systems.';
@@ -38,7 +38,7 @@ if (nav) {
   creditSub.textContent = defaultSub;
   if (logo) logo.tagName === 'A' ? logo.append(credit) : logo.after(credit);
   const list = $('#primary-navigation');
-  const research = list && $$('a', list).find((a) => a.getAttribute('href').endsWith('#research'));
+  const research = list && $$('a', list).find((a) => /[#/]research$/.test(a.getAttribute('href')));
   const label = () => { if (research) research.textContent = phone.matches ? 'Flagship' : 'Research'; };
   label();
   phone.addEventListener('change', label);

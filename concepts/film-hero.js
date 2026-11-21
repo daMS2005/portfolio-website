@@ -9,7 +9,7 @@ if (hero && content) {
   const store = (k, v) => { try { return v ? sessionStorage.setItem(k, v) : sessionStorage.getItem(k); } catch { return null; } };
   const navType = performance.getEntriesByType('navigation')[0]?.type;
   // end state at once: reduced motion, hash, back/forward, or already seen this session
-  const calm = reduce.matches || !!location.hash || navType === 'back_forward' || !!store('fh-seen');
+  const calm = reduce.matches || !!location.hash || location.pathname !== '/' || navType === 'back_forward' || !!store('fh-seen');
   // the intro (another concept) owns the arrival; we only finish the tagline after its cut
   const intro = html.classList.contains('fx-intro') || /(^| )(film-)?intro( |$)/.test(html.dataset.concept || '');
   if (!calm) store('fh-seen', '1');
@@ -180,7 +180,7 @@ if (hero && content) {
   // ---- bottom credit line: the three flagship works (titles as on their cards)
   const credits = document.createElement('p');
   credits.className = 'fh-credits';
-  credits.innerHTML = '<a href="/jepa-transformer.html">JEPA Transformer</a> · <a href="/thesis.html">Brain–LLM Feature Correspondence</a> · <a href="/tc-acc.html">TC_ACC Documentary Studio</a>';
+  credits.innerHTML = '<a href="/jepa-transformer">JEPA Transformer</a> · <a href="/thesis">Brain–LLM Feature Correspondence</a> · <a href="/tc-acc">TC_ACC Documentary Studio</a>';
   hero.append(credits);
 
   // ---- "See flagship work": fall into the hole, the work irises open from the same point

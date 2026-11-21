@@ -10,7 +10,7 @@ const once = (el, fn) => {
   io.observe(el);
 };
 const legalLinks = '<p class="footer-legal"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Use</a></p>';
-const navLinks = '<li><a href="/">Home</a></li><li><a href="/#research">Research</a></li><li><a href="/#contact">Contact</a></li>';
+const navLinks = '<li><a href="/">Home</a></li><li><a href="/research">Research</a></li><li><a href="/contact">Contact</a></li>';
 const navHTML = `<div class="nav-content"><a class="logo logo-link" href="/">DM</a><ul class="nav-links legal-nav">${navLinks}</ul></div>`;
 
 const personal = document.querySelector('main.personal-page');

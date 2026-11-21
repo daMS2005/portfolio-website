@@ -6,7 +6,7 @@ const html = document.documentElement;
 let ok = false;
 try {
   const nav = performance.getEntriesByType('navigation')[0];
-  ok = !location.hash && nav?.type !== 'back_forward' && document.visibilityState === 'visible'
+  ok = !location.hash && location.pathname === '/' && nav?.type !== 'back_forward' && document.visibilityState === 'visible'
     && !matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData;
 } catch { ok = false; }
 
